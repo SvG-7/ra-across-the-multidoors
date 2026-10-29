@@ -7,7 +7,7 @@ import { ComicNavbar } from './components/ui/ComicNavbar';
 import { AttendeeChapterView } from './components/attendee/AttendeeChapterView';
 import { PresenterView } from './components/presenter/PresenterView';
 import { PresentationDisplay } from './components/display/PresentationDisplay';
-import { SpideySwingingTransition } from './components/animation/SpideySwingingTransition';
+import { SpiderManTransition, TransitionType } from './components/animation/SpiderManTransition';
 import { Lock, AlertCircle } from 'lucide-react';
 
 export function App() {
@@ -16,8 +16,13 @@ export function App() {
   const [collectiveContributions, setCollectiveContributions] = useState<CollectiveContribution[]>([]);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
-  const [isSwinging, setIsSwinging] = useState(false);
-  const [swingDirection, setSwingDirection] = useState<'forward' | 'backward'>('forward');
+  const [transitionState, setTransitionState] = useState<{
+    isActive: boolean;
+    type: TransitionType;
+  }>({
+    isActive: false,
+    type: '1_to_2',
+  });
 
   // Protected Admin / Presentation Team Mode State
   const [viewMode, setViewMode] = useState<'attendee' | 'presenter' | 'display'>(() => {
@@ -90,17 +95,25 @@ export function App() {
     sessionManager.toggleStoryId(id);
   };
 
-  const triggerSwing = (direction: 'forward' | 'backward') => {
+  const triggerTransition = (type: TransitionType) => {
     if (!reducedMotion) {
-      setSwingDirection(direction);
-      setIsSwinging(true);
+      setTransitionState({ isActive: true, type });
     }
   };
 
   const handleNextChapter = () => {
     if (session.currentChapter < 7) {
-      triggerSwing('forward');
-      const nextChapter = session.currentChapter + 1;
+      const fromCh = session.currentChapter;
+      const nextChapter = fromCh + 1;
+      const typeKey: TransitionType = 
+        fromCh === 1 ? '1_to_2' :
+        fromCh === 2 ? '2_to_3' :
+        fromCh === 3 ? '3_to_4' :
+        fromCh === 4 ? '4_to_5' :
+        fromCh === 5 ? '5_to_6' :
+        fromCh === 6 ? '6_to_7' : '1_to_2';
+
+      triggerTransition(typeKey);
       sessionManager.setChapter(nextChapter);
       window.scrollTo(0, 0);
     }
@@ -108,7 +121,7 @@ export function App() {
 
   const handlePrevChapter = () => {
     if (session.currentChapter > 1) {
-      triggerSwing('backward');
+      triggerTransition('backward');
       const prevChapter = session.currentChapter - 1;
       sessionManager.setChapter(prevChapter);
       window.scrollTo(0, 0);
@@ -117,10 +130,25 @@ export function App() {
 
   const handleJumpToChapter = (chapterNumber: number) => {
     if (chapterNumber !== session.currentChapter) {
-      triggerSwing(chapterNumber > session.currentChapter ? 'forward' : 'backward');
+      if (chapterNumber < session.currentChapter) {
+        triggerTransition('backward');
+      } else {
+        const typeKey: TransitionType = 
+          chapterNumber === 2 ? '1_to_2' :
+          chapterNumber === 3 ? '2_to_3' :
+          chapterNumber === 4 ? '3_to_4' :
+          chapterNumber === 5 ? '4_to_5' :
+          chapterNumber === 6 ? '5_to_6' :
+          chapterNumber === 7 ? '6_to_7' : '1_to_2';
+        triggerTransition(typeKey);
+      }
       sessionManager.setChapter(chapterNumber);
       window.scrollTo(0, 0);
     }
+  };
+
+  const handleTriggerEntryTransition = () => {
+    triggerTransition('entry_to_1');
   };
 
   // Passcode verification for Presentation Team
@@ -223,6 +251,7 @@ export function App() {
               onNextChapter={handleNextChapter}
               onPrevChapter={handlePrevChapter}
               onJumpToChapter={handleJumpToChapter}
+              onTriggerEntryTransition={handleTriggerEntryTransition}
               reducedMotion={reducedMotion}
             />
           </main>
@@ -296,11 +325,11 @@ export function App() {
         </div>
       )}
 
-      {/* Spider-Man Web-Swinging Chapter Transition Animation (Rendered on top) */}
-      <SpideySwingingTransition
-        isActive={isSwinging}
-        direction={swingDirection}
-        onComplete={() => setIsSwinging(false)}
+      {/* Spider-Man Distinct Action Transition Animation (Rendered on top) */}
+      <SpiderManTransition
+        isActive={transitionState.isActive}
+        transitionType={transitionState.type}
+        onComplete={() => setTransitionState(prev => ({ ...prev, isActive: false }))}
         reducedMotion={reducedMotion}
       />
     </div>

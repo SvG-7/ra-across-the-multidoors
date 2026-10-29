@@ -32,6 +32,7 @@ interface AttendeeChapterViewProps {
   onNextChapter: () => void;
   onPrevChapter: () => void;
   onJumpToChapter: (chapterNumber: number) => void;
+  onTriggerEntryTransition?: () => void;
   reducedMotion?: boolean;
 }
 
@@ -46,6 +47,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
   onNextChapter,
   onPrevChapter,
   onJumpToChapter,
+  onTriggerEntryTransition,
   reducedMotion = false,
 }) => {
   const currentChapterNumber = chapter.number;
@@ -96,6 +98,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
           selectedCommunity={session.selectedCommunity}
           onSelectCommunity={onSelectCommunity}
           onContinue={onNextChapter}
+          onTriggerEntryTransition={onTriggerEntryTransition}
           reducedMotion={reducedMotion}
         />
       )}

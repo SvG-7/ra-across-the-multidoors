@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { DoorClosed, KeyRound, Sparkles, CheckCircle2, ChevronRight } from 'lucide-react';
+import { DoorClosed, KeyRound, Sparkles, CheckCircle2, ChevronRight, Play } from 'lucide-react';
 import { soundEngine } from '../../audio/soundEffects';
 import { CommunityType } from '../../types';
 import { getAssetUrl } from '../../utils/assets';
@@ -9,6 +9,7 @@ interface Chapter1WelcomeProps {
   selectedCommunity?: CommunityType;
   onSelectCommunity: (community: CommunityType) => void;
   onContinue: () => void;
+  onTriggerEntryTransition?: () => void;
   reducedMotion?: boolean;
 }
 
@@ -16,8 +17,22 @@ export const Chapter1Welcome: React.FC<Chapter1WelcomeProps> = ({
   selectedCommunity,
   onSelectCommunity,
   onContinue,
+  onTriggerEntryTransition,
   reducedMotion = false,
 }) => {
+  // Auto-play Entry -> Chapter 1 transition on first arrival
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !reducedMotion && onTriggerEntryTransition) {
+      const hasOpened = sessionStorage.getItem('ra_entry_opened');
+      if (!hasOpened) {
+        sessionStorage.setItem('ra_entry_opened', 'true');
+        const timer = setTimeout(() => {
+          onTriggerEntryTransition();
+        }, 120);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [onTriggerEntryTransition, reducedMotion]);
   const communities: CommunityType[] = [
     'Residence hall',
     'Apartment community',
@@ -96,6 +111,22 @@ export const Chapter1Welcome: React.FC<Chapter1WelcomeProps> = ({
           <p className="text-sm sm:text-base font-sans text-gray-200 leading-snug max-w-sm mx-auto mt-1">
             Explore two RA worlds, make a few decisions, and build a web of approaches together.
           </p>
+
+          {/* Replay Spider-Man Entrance Action Button */}
+          {onTriggerEntryTransition && (
+            <div className="mt-3">
+              <button
+                onClick={() => {
+                  soundEngine.playClick();
+                  onTriggerEntryTransition();
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#121B2C] hover:bg-[#1A2842] text-spider-cyan border border-spider-cyan/50 text-[11px] font-mono rounded-xs shadow-comic-sm cursor-pointer transition-all active:scale-95"
+              >
+                <Play className="w-3 h-3 fill-spider-cyan" />
+                <span>Watch Spider-Man Pull Entrance Doors</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

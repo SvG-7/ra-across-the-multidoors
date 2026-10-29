@@ -8,12 +8,15 @@ import {
   List, 
   Map, 
   ChevronRight, 
-  ArrowRight
+  ArrowRight,
+  Sparkles,
+  BookOpen
 } from 'lucide-react';
 import { AttendeeSession } from '../../types';
 import { CHAPTERS_DATA } from '../../data/chaptersData';
 import { soundEngine } from '../../audio/soundEffects';
 import { getAssetUrl } from '../../utils/assets';
+import { FieldGuideCard } from '../takeaway/FieldGuideCard';
 
 interface SpiderTrackerProps {
   session: AttendeeSession;
@@ -96,6 +99,7 @@ export const SpiderTracker: React.FC<SpiderTrackerProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'map' | 'list'>('map');
   const [selectedMarker, setSelectedMarker] = useState<number | null>(7);
+  const [showFieldGuide, setShowFieldGuide] = useState(false);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -204,6 +208,19 @@ export const SpiderTracker: React.FC<SpiderTrackerProps> = ({
             <span>Chapter List View</span>
           </button>
         </div>
+
+        {/* Primary Call-to-Action: View My RA Field Guide */}
+        <button
+          onClick={() => {
+            soundEngine.playClick();
+            setShowFieldGuide(true);
+          }}
+          className="w-full mt-3 py-3 px-4 bg-gradient-to-r from-spider-red via-spider-crimson to-spider-red hover:brightness-110 text-white font-comic text-xl uppercase tracking-wider border-2 border-black rounded-xs shadow-comic flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer relative z-10"
+        >
+          <Sparkles className="w-5 h-5 text-spider-yellow fill-spider-yellow" />
+          <span>View My RA Takeaway // Field Guide</span>
+          <ArrowRight className="w-5 h-5 text-spider-yellow" />
+        </button>
       </div>
 
       {/* 2. Interactive Map View */}
@@ -586,6 +603,30 @@ export const SpiderTracker: React.FC<SpiderTrackerProps> = ({
           "Take one approach from the other world into your own community."
         </p>
       </div>
+
+      {/* Prominent Footer Field Guide Button */}
+      <div className="w-full mb-6">
+        <button
+          onClick={() => {
+            soundEngine.playClick();
+            setShowFieldGuide(true);
+          }}
+          className="w-full py-4 px-5 bg-gradient-to-r from-[#FF1744] via-[#D50000] to-[#FF1744] hover:brightness-110 text-white font-comic text-2xl uppercase tracking-wider border-3 border-black rounded-sm shadow-comic flex items-center justify-center gap-3 active:scale-95 transition-all cursor-pointer"
+        >
+          <BookOpen className="w-6 h-6 text-spider-yellow" />
+          <span>Open My RA Field Guide</span>
+          <ChevronRight className="w-6 h-6 text-spider-yellow" />
+        </button>
+      </div>
+
+      {/* 5. Personalized Field Guide Modal / View */}
+      {showFieldGuide && (
+        <FieldGuideCard
+          session={session}
+          onClose={() => setShowFieldGuide(false)}
+          onJumpToChapter={onJumpToChapter}
+        />
+      )}
     </div>
   );
 };
