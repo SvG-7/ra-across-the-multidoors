@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
-  CheckCircle2, 
   ChevronRight, 
   ChevronLeft, 
   RotateCcw, 
-  BarChart3,
-  Check
+  BarChart3
 } from 'lucide-react';
 import { ChapterData, AttendeeSession, CommunityType, SharedResponses, CollectiveContribution } from '../../types';
 import { StateCueBadge } from '../ui/StateCueBadge';
@@ -16,9 +14,10 @@ import { Chapter5AlexStory } from '../story/Chapter5AlexStory';
 import { ChapterTakeaway } from '../takeaway/ChapterTakeaway';
 import { CommunicationRouteGraphic } from '../animation/CommunicationRouteGraphic';
 import { AttendeeWebProgress } from '../web/AttendeeWebProgress';
-import { CollectiveWeb } from '../web/CollectiveWeb';
 import { SpiderTracker } from '../tracker/SpiderTracker';
 import { GroupDistributionResults } from '../results/GroupDistributionResults';
+import { MultiverseComparisonHub } from '../results/MultiverseComparisonHub';
+import { sessionManager } from '../../sync/syncClient';
 import { soundEngine } from '../../audio/soundEffects';
 
 interface AttendeeChapterViewProps {
@@ -40,7 +39,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
   chapter,
   session,
   sharedResponses,
-  collectiveContributions,
+  collectiveContributions: _collectiveContributions,
   onSelectCommunity,
   onSubmitAnswer,
   onToggleStoryReveal,
@@ -108,96 +107,30 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
         <div className="w-full flex flex-col items-center text-center">
           {/* Comic Issue & Mission Header Badge (Chapters 2-6) */}
           {currentChapterNumber < 7 && (
-            <>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-spider-red text-white font-mono text-[11px] font-bold uppercase tracking-wider border-2 border-black shadow-comic-sm mb-2 -rotate-1">
-                <span>ISSUE #{currentChapterNumber}</span>
-                <span className="text-spider-yellow">&bull;</span>
-                <span>
-                  {currentChapterNumber === 2 ? 'MISSION: THE INVISIBLE RESIDENT'
-                    : currentChapterNumber === 3 ? 'MISSION: RELATIONSHIP DYNAMICS'
-                    : currentChapterNumber === 4 ? 'MISSION: TRANSMISSION SIGNALS'
-                    : currentChapterNumber === 5 ? 'DOSSIER: LIFE BEHIND THE DEADBOLT'
-                    : 'CROSSROADS: SUPERPOWER ADAPTATION'}
-                </span>
+            <div className="w-full mb-3">
+              <div className="inline-block bg-spider-red text-white px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider border-2 border-black shadow-comic -rotate-1 mb-2">
+                ISSUE #{currentChapterNumber} &bull; {currentChapterNumber === 6 ? 'CROSSROADS: SUPERPOWER ADAPTATION' : currentChapterNumber === 5 ? 'DOSSIER: LIFE BEHIND THE DEADBOLT' : currentChapterNumber === 4 ? 'MISSION: TRANSMISSION LANGUAGES' : currentChapterNumber === 3 ? 'MISSION: RELATIONSHIP DYNAMICS' : 'MISSION: THE INVISIBLE RESIDENT'}
               </div>
-
-              {/* Chapter Title */}
-              <h2 className="font-comic text-3xl sm:text-4xl text-white tracking-wide uppercase leading-tight mt-1 mb-1">
+              <h1 className="font-comic text-3xl sm:text-4xl text-white tracking-wide uppercase leading-tight drop-shadow-[2px_2px_0px_#000]">
                 {chapter.title}
-              </h2>
-
-              {/* Short Introduction connecting to presentation */}
-              <p className="text-xs sm:text-sm font-sans text-gray-300 leading-snug max-w-sm mb-3">
+              </h1>
+              <p className="text-xs sm:text-sm font-sans text-gray-300 max-w-sm mx-auto mt-1 leading-snug">
                 {chapter.introduction}
               </p>
-
-              {/* Themed Door Animation (Chapters 2-6) */}
-              <ThemedDoor
-                chapterNumber={currentChapterNumber}
-                doorTheme={chapter.doorTheme}
-                isOpen={true}
-                reducedMotion={reducedMotion}
-              />
-            </>
-          )}
-
-          {/* Situation Brief styled as a comic narration box (Chapters 2-6) */}
-          {chapter.situation && currentChapterNumber < 7 && (
-            <div className="w-full relative bg-[#0C1222] border-3 border-black p-4 rounded-sm shadow-comic my-2.5 text-left overflow-hidden">
-              <div className="absolute inset-0 bg-halftone-cyan opacity-10 pointer-events-none" />
-              <div className="flex items-center justify-between border-b border-gray-800 pb-1.5 mb-2 relative z-10">
-                <span className="text-[10px] font-mono font-bold text-spider-yellow uppercase tracking-widest bg-black/70 px-2 py-0.5 border border-spider-yellow/40 rounded-xs">
-                  NARRATION // SITUATION BRIEF
-                </span>
-                <span className="text-[10px] font-mono text-gray-400">
-                  PANEL #{currentChapterNumber}.1
-                </span>
-              </div>
-              <p className="font-sans text-base text-gray-100 leading-snug relative z-10">
-                {chapter.situation}
-              </p>
             </div>
           )}
 
-          {/* Scope Note (for Chapter 3: opening approaches vs complete policy) */}
-          {chapter.scopeNote && (
-            <div className="w-full p-2.5 bg-black/40 border border-gray-700/60 rounded-xs text-left mb-2">
-              <p className="text-xs font-mono text-gray-400 leading-relaxed">
-                <span className="text-spider-cyan font-bold">NOTE: </span>
-                {chapter.scopeNote}
-              </p>
-            </div>
+          {/* Chapter Themed Door Graphic (Chapters 2-6) */}
+          {currentChapterNumber < 7 && (
+            <ThemedDoor
+              chapterNumber={currentChapterNumber}
+              doorTheme={chapter.doorTheme}
+              isOpen={hasAnswered || currentChapterNumber === 5}
+              reducedMotion={reducedMotion}
+            />
           )}
 
-          {/* Chapter 6 Special Recall: Shows earlier Chapter 4 choice */}
-          {currentChapterNumber === 6 && (
-            <div className="w-full bg-[#160B1C] border-2 border-spider-gwenPink/60 p-3.5 rounded-sm shadow-sm my-2 text-left">
-              <span className="text-[10px] font-mono font-bold text-spider-gwenPink uppercase tracking-wider block mb-1">
-                PAST DECISION RECALLED
-              </span>
-              {ch4Details ? (
-                <div>
-                  <p className="font-sans text-base text-gray-200 leading-snug">
-                    Earlier in Chapter 4, you chose:{' '}
-                    <span className="font-bold text-white bg-black/60 px-2 py-0.5 border border-spider-gwenPink rounded-xs inline-block mt-0.5">
-                      "{ch4Details.label}"
-                    </span>
-                  </p>
-                  <p className="text-xs font-sans text-gray-300 mt-2 leading-snug">
-                    {ch4OptionId === 'opt_c4_directmsg'
-                      ? 'Your earlier choice already favored direct messaging! Alex’s reality confirms that direct check-ins work best. Now refine your approach.'
-                      : 'Alex explains why broad group channels and unexpected visits are difficult to sustain with an intense routine. How would you adapt?'}
-                  </p>
-                </div>
-              ) : (
-                <p className="font-sans text-sm text-gray-300 leading-snug">
-                  In Chapter 4, initial communication channels were explored. Now, Alex shares that short direct messages are far easier to manage.
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Chapter 5 Story Reveal (Alex's Details) */}
+          {/* Chapter 5 Story Discovery: Behind Alex's Closed Door */}
           {currentChapterNumber === 5 && chapter.storyDetails && (
             <Chapter5AlexStory
               storyDetails={chapter.storyDetails}
@@ -207,96 +140,120 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
             />
           )}
 
-          {/* Interactive Decision Section (Chapters 2, 3, 4, 6) */}
+          {/* Chapters 2, 3, 4, 6 Decision Scenarios */}
           {chapter.hasDecision && chapter.options && (
-            <div className="w-full my-3">
-              <div className="relative bg-[#090D1A] border-3 border-black p-4 rounded-sm shadow-comic text-left overflow-hidden">
-                <div className="absolute inset-0 bg-halftone-cyan opacity-10 pointer-events-none" />
-                <div className="mb-3 relative z-10">
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <span className="inline-block bg-spider-yellow text-black text-[11px] font-mono font-bold px-2 py-0.5 rounded-xs border border-black shadow-comic-sm">
-                      YOUR DECISION
+            <div className="w-full mt-3">
+              {/* Situation Brief Panel */}
+              {chapter.situation && (
+                <div className="w-full bg-[#080D1A] border-3 border-black p-3.5 sm:p-4 rounded-sm shadow-comic mb-4 text-left">
+                  <div className="flex items-center justify-between mb-1.5 border-b border-gray-800 pb-1">
+                    <span className="text-[10px] font-mono font-bold text-spider-yellow uppercase tracking-wider">
+                      NARRATION // SITUATION BRIEF
                     </span>
-                    {hasAnswered && (
-                      <span className="text-xs font-mono text-emerald-400 flex items-center gap-1 font-semibold">
-                        <Check className="w-3.5 h-3.5" />
-                        <span>Tap any option to revise</span>
-                      </span>
-                    )}
+                    <span className="text-[10px] font-mono text-gray-400">
+                      PANEL #{currentChapterNumber}.1
+                    </span>
                   </div>
-                  <h3 className="font-sans font-bold text-lg sm:text-xl text-white leading-snug">
-                    {chapter.decisionPrompt}
-                  </h3>
+                  <p className="text-sm sm:text-base font-sans text-gray-100 leading-snug font-medium">
+                    {chapter.situation}
+                  </p>
                 </div>
+              )}
 
-                {/* Option Buttons */}
-                <div className="space-y-2.5 relative z-10">
-                  {chapter.options.map((opt) => {
-                    const isSelected = userChoice === opt.id;
-                    return (
-                      <button
-                        key={opt.id}
-                        onClick={() => {
-                          soundEngine.playThwip();
-                          onSubmitAnswer(currentChapterNumber, opt.id);
-                        }}
-                        className={`w-full min-h-[52px] p-3.5 text-left rounded-sm border-2 transition-all active:scale-[0.98] shadow-sm flex items-center justify-between gap-3 cursor-pointer ${
-                          isSelected
-                            ? 'bg-spider-red text-white border-black shadow-comic font-bold ring-2 ring-spider-yellow'
-                            : 'bg-black/70 hover:bg-spider-cyan/15 border-gray-700 hover:border-spider-cyan text-gray-100 font-semibold'
-                        }`}
-                      >
-                        <span className="text-base font-sans leading-snug">{opt.label}</span>
-                        <span
-                          className={`text-xs font-mono uppercase flex-shrink-0 ${
-                            isSelected ? 'text-spider-yellow font-bold' : 'text-spider-cyan'
-                          }`}
-                        >
-                          {isSelected ? '✓ CHOSEN' : 'SELECT →'}
-                        </span>
-                      </button>
-                    );
-                  })}
+              {/* Scope Note (for Chapter 3 boundary protocols) */}
+              {chapter.scopeNote && (
+                <div className="p-2.5 bg-black/60 border border-spider-cyan/40 rounded-xs text-[11px] font-mono text-gray-300 leading-normal text-left mb-4">
+                  <span className="text-spider-cyan font-bold">NOTE: </span>
+                  {chapter.scopeNote}
                 </div>
+              )}
+
+              {/* Chapter 6: Recall and explicitly reference Chapter 4 choice */}
+              {currentChapterNumber === 6 && ch4Details && (
+                <div className="w-full p-3.5 bg-gradient-to-r from-spider-dark via-[#180A18] to-spider-dark border-2 border-spider-magenta/80 rounded-sm shadow-comic text-left mb-4">
+                  <div className="flex items-center gap-1.5 text-spider-magenta text-[10px] font-mono font-bold uppercase tracking-wider mb-1">
+                    <span>PAST DECISION RECALLED</span>
+                  </div>
+                  <p className="text-xs sm:text-sm font-sans text-gray-200 leading-snug">
+                    Earlier in Chapter 4, you chose:{' '}
+                    <span className="font-comic text-sm sm:text-base text-white px-2 py-0.5 bg-spider-magenta/30 border border-spider-magenta rounded-xs inline-block my-0.5">
+                      "{ch4Details.label}"
+                    </span>
+                  </p>
+                  <p className="text-[11px] font-sans text-gray-400 mt-1">
+                    {ch4Details.channelType === 'groupchat'
+                      ? "Alex explained that large group chats are routinely muted due to work shifts. Now choose how you adapt your outreach."
+                      : "Your earlier choice already favored direct messaging! Alex's reality confirms that direct check-ins work best. Now refine your approach."}
+                  </p>
+                </div>
+              )}
+
+              {/* Decision Prompt Banner */}
+              <div className="w-full text-left mb-2.5">
+                <span className="bg-spider-yellow text-black px-2 py-0.5 text-[11px] font-mono font-bold uppercase tracking-wide border border-black shadow-comic-sm">
+                  YOUR DECISION
+                </span>
+                <h3 className="font-sans font-bold text-lg sm:text-xl text-white mt-1">
+                  {chapter.decisionPrompt}
+                </h3>
               </div>
 
-              {/* Consideration Feedback Card (Shown immediately upon choosing) */}
-              <AnimatePresence>
-                {selectedOptionObj && selectedOptionObj.consideration && (
-                  <motion.div
-                    initial={reducedMotion ? false : { opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="w-full p-4 bg-[#0A1424] border-2 border-emerald-500/80 rounded-sm shadow-comic text-left mt-3"
-                  >
-                    <div className="flex items-center gap-2 text-emerald-400 font-comic text-base uppercase tracking-wider mb-1.5">
-                      <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                      <span>APPROACH CONSIDERATION</span>
-                    </div>
-                    <p className="text-sm font-sans text-gray-200 leading-snug">
-                      {selectedOptionObj.consideration}
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {/* 4 Interactive Option Cards */}
+              <div className="space-y-2.5 mb-4 text-left">
+                {chapter.options.map((opt) => {
+                  const isSelected = userChoice === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      onClick={() => {
+                        soundEngine.playThwip();
+                        onSubmitAnswer(currentChapterNumber, opt.id);
+                      }}
+                      className={`w-full min-h-[54px] p-3.5 sm:p-4 border-2 rounded-sm flex items-center justify-between active:scale-[0.98] transition-all cursor-pointer shadow-sm ${
+                        isSelected
+                          ? 'bg-spider-red text-white border-black shadow-comic font-bold'
+                          : 'bg-black/60 hover:bg-spider-cyan/15 border-gray-700 hover:border-spider-cyan text-gray-200 font-medium'
+                      }`}
+                    >
+                      <span className="text-sm sm:text-base font-sans pr-2 leading-snug">
+                        {opt.label}
+                      </span>
+                      <span
+                        className={`text-xs font-mono uppercase flex-shrink-0 ${
+                          isSelected ? 'text-spider-yellow font-bold' : 'text-spider-cyan'
+                        }`}
+                      >
+                        {isSelected ? '✓ CHOSEN' : 'SELECT →'}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Chapter 4 Route Graphic */}
+              {currentChapterNumber === 4 && hasAnswered && ch4Details && (
+                <div className="w-full my-3">
+                  <CommunicationRouteGraphic
+                    channelType={ch4Details.channelType}
+                    reducedMotion={reducedMotion}
+                  />
+                </div>
+              )}
+
+              {/* Dynamic Consideration Callout for Selected Option */}
+              {selectedOptionObj?.consideration && (
+                <motion.div
+                  initial={reducedMotion ? false : { opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="w-full p-3 bg-black/70 border border-spider-cyan/60 rounded-xs text-xs sm:text-sm font-sans text-gray-200 leading-snug text-left mb-3"
+                >
+                  <span className="font-bold text-spider-cyan font-mono text-xs uppercase block mb-0.5">
+                    Strategic Tradeoff to Weigh:
+                  </span>
+                  {selectedOptionObj.consideration}
+                </motion.div>
+              )}
             </div>
-          )}
-
-          {/* Chapter 4 Communication Signal Route Visualizer */}
-          {currentChapterNumber === 4 && selectedOptionObj && selectedOptionObj.channelType && (
-            <CommunicationRouteGraphic
-              channelType={selectedOptionObj.channelType}
-              reducedMotion={reducedMotion}
-            />
-          )}
-
-          {/* Chapter 6 Adapted Communication Path Visualizer */}
-          {currentChapterNumber === 6 && ch4Details && (
-            <CommunicationRouteGraphic
-              channelType={ch4Details.channelType}
-              isAdapted={true}
-              adaptedOptionId={userChoice}
-              reducedMotion={reducedMotion}
-            />
           )}
 
           {/* Shared Audience Responses (Expandable & Non-intrusive) */}
@@ -326,6 +283,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
                         `chapter${currentChapterNumber}` as 'chapter2' | 'chapter3' | 'chapter4' | 'chapter6'
                       ] || {})
                     }
+                    userChoice={userChoice}
                     reducedMotion={reducedMotion}
                   />
                 </div>
@@ -352,27 +310,27 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
             />
           )}
 
-          {/* Chapter 7: The Multiverse RA Conclusion View with Interactive Spider-Tracker */}
+          {/* Chapter 7: The Multiverse RA Conclusion View */}
           {currentChapterNumber === 7 && (
-            <div className="w-full my-3">
-              {/* Interactive Spider-Tracker Map & List View with Perched Spider-Man */}
+            <div className="w-full my-3 space-y-4">
+              {/* Interactive Illustrated Neighborhood Map with Perched Spider-Man */}
               <SpiderTracker
                 session={session}
                 onJumpToChapter={onJumpToChapter}
+                onSelectComparisonChapter={() => {
+                  const el = document.getElementById('room-comparison-hub');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
                 reducedMotion={reducedMotion}
               />
 
-              {/* Shared Collective Web Canvas */}
-              <div className="w-full bg-[#080D1A] border-3 border-black p-4 rounded-sm shadow-comic mb-4">
-                <div className="flex items-center justify-between text-xs font-mono text-gray-400 mb-2 border-b border-gray-800 pb-2">
-                  <span className="text-spider-cyan font-bold uppercase tracking-wider">
-                    SHARED MULTIVERSE WEB
-                  </span>
-                  <span>{collectiveContributions.length} CONNECTED AGENTS</span>
-                </div>
-
-                <CollectiveWeb
-                  contributions={collectiveContributions}
+              {/* Cohesive Shared Room Comparison Hub */}
+              <div id="room-comparison-hub">
+                <MultiverseComparisonHub
+                  session={session}
+                  sharedResponses={sharedResponses}
+                  onJumpToChapter={onJumpToChapter}
+                  onRetryConnection={() => sessionManager.retryConnection()}
                   reducedMotion={reducedMotion}
                 />
               </div>

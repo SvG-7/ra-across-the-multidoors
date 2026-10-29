@@ -6,7 +6,9 @@ import {
   ArrowLeft,
   X,
   Target,
-  CalendarCheck
+  CalendarCheck,
+  Zap,
+  BookOpen
 } from 'lucide-react';
 import { AttendeeSession } from '../../types';
 import { generateFieldGuide } from '../../utils/takeawayGenerator';
@@ -56,11 +58,11 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
   };
 
   return (
-    <div className={`fixed inset-0 z-50 overflow-y-auto bg-black/90 backdrop-blur-md flex flex-col items-center justify-start ${screenshotMode ? 'p-0 sm:p-4' : 'p-3 sm:p-6'}`}>
+    <div className={`fixed inset-0 z-50 overflow-y-auto bg-black/92 backdrop-blur-md flex flex-col items-center justify-start ${screenshotMode ? 'p-0 sm:p-4' : 'p-3 sm:p-6'}`}>
       
       {/* Top Floating Control Bar (Hidden when in Screenshot View) */}
       {!screenshotMode && (
-        <div className="w-full max-w-lg flex items-center justify-between mb-3 px-1 sticky top-2 z-20">
+        <div className="w-full max-w-lg flex items-center justify-between mb-3 px-1 sticky top-2 z-30">
           <button
             onClick={() => {
               soundEngine.playClick();
@@ -97,10 +99,10 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
 
       {/* Screenshot Mode Top Banner */}
       {screenshotMode && (
-        <div className="w-full max-w-lg bg-spider-yellow text-black font-mono text-[11px] font-bold py-1.5 px-3 text-center flex items-center justify-between border-b-2 border-black sticky top-0 z-20">
+        <div className="w-full max-w-lg bg-spider-yellow text-black font-mono text-[11px] font-bold py-1.5 px-3 text-center flex items-center justify-between border-b-2 border-black sticky top-0 z-30">
           <span className="flex items-center gap-1">
             <Camera className="w-3.5 h-3.5" />
-            <span>SCREENSHOT VIEW ACTIVATED &bull; READY TO CAPTURE</span>
+            <span>SCREENSHOT VIEW ACTIVATED &bull; CLEAN CAPTURE READY</span>
           </span>
           <button
             onClick={handleToggleScreenshotMode}
@@ -116,7 +118,7 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
         id="ra-field-guide-card"
         className={`w-full max-w-lg bg-[#080B14] border-3 border-black text-white rounded-sm shadow-comic overflow-hidden relative ${screenshotMode ? 'my-2 sm:my-4' : 'mb-8'}`}
       >
-        {/* Subtle Web Graphic Header Background */}
+        {/* Subtle Web Graphic Background */}
         <div className="absolute top-0 right-0 w-44 h-44 bg-spider-red/10 rounded-full blur-2xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-44 h-44 bg-spider-cyan/10 rounded-full blur-2xl pointer-events-none" />
 
@@ -134,7 +136,7 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
 
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h1 className="font-comic text-4xl sm:text-5xl text-white tracking-wide uppercase leading-none drop-shadow-[2px_2px_0px_#000]">
+              <h1 className="font-comic text-3xl sm:text-4xl text-white tracking-wide uppercase leading-none drop-shadow-[2px_2px_0px_#000]">
                 {guide.title}
               </h1>
               <p className="font-mono text-xs sm:text-sm text-spider-cyan tracking-wide uppercase mt-1 font-semibold">
@@ -142,11 +144,11 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
               </p>
             </div>
 
-            {/* Small Framing Spider-Man Artwork */}
-            <div className="w-20 sm:w-24 h-auto flex-shrink-0 -mt-1 -mr-1">
+            {/* Framing Spider-Man Artwork */}
+            <div className="w-18 sm:w-22 h-auto flex-shrink-0 -mt-1 -mr-1">
               <img
                 src={getAssetUrl('images/spiderman-perched.png')}
-                alt="Spider-Man Guide Mascot"
+                alt="Spider-Man Mascot"
                 className="w-full h-auto object-contain filter drop-shadow-[0_4px_12px_rgba(255,23,68,0.55)]"
               />
             </div>
@@ -157,9 +159,9 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
             <div className="mt-3 p-2 bg-[#2D1600] border-2 border-spider-yellow rounded-xs flex items-center justify-between gap-2">
               <div className="text-[11px] font-sans text-gray-200">
                 <span className="font-bold text-spider-yellow font-mono block">
-                  PARTIAL FIELD GUIDE ({guide.answeredCount}/4 Decisions)
+                  PARTIAL FIELD GUIDE ({guide.answeredCount}/4 Decisions Explored)
                 </span>
-                Answers for Chapters {guide.missingChapters.join(', ')} are still open.
+                Chapters {guide.missingChapters.join(', ')} are awaiting your input.
               </div>
               <button
                 onClick={() => {
@@ -175,15 +177,15 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
           )}
         </div>
 
-        {/* 2. Card Content Sections */}
+        {/* 2. CORE SCREENSHOT SUMMARY SECTIONS */}
         <div className="p-4 sm:p-5 space-y-4">
-
-          {/* Section A: Potential Strengths */}
+          
+          {/* Section A: Potential Strengths Supported by Selected Answers */}
           <div>
             <div className="flex items-center gap-1.5 mb-2">
               <span className="w-2.5 h-2.5 bg-spider-red border border-black rotate-45 inline-block" />
               <h2 className="font-comic text-xl text-spider-red uppercase tracking-wide">
-                Potential Strengths
+                Potential Strengths Observed
               </h2>
             </div>
 
@@ -197,10 +199,10 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
                     <span className="font-comic text-base text-white tracking-wide">
                       {idx + 1}. {s.title}
                     </span>
-                    <span className="text-[9px] font-mono text-gray-400 bg-black/60 px-1.5 py-0.5 rounded border border-gray-800">
-                      {s.choiceSource}
-                    </span>
                   </div>
+                  <p className="text-[10px] font-mono text-spider-cyan mb-1 font-semibold">
+                    &bull; {s.evidence}
+                  </p>
                   <p className="text-xs sm:text-sm font-sans text-gray-200 leading-snug">
                     {s.explanation}
                   </p>
@@ -209,20 +211,20 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
             </div>
           </div>
 
-          {/* Section B: A Skill to Practice Next */}
+          {/* Section B: A Skill to Practice Next (Growth Area) */}
           <div className="p-3.5 bg-[#17130A] border-2 border-spider-yellow/80 rounded-xs shadow-comic-sm">
             <div className="flex items-center gap-1.5 mb-1.5">
               <Target className="w-4 h-4 text-spider-yellow" />
               <h2 className="font-comic text-lg text-spider-yellow uppercase tracking-wide">
-                {guide.growthArea.label}
+                A Skill to Practice Next: {guide.growthArea.label}
               </h2>
             </div>
+            <p className="text-[10px] font-mono text-yellow-300 mb-1.5">
+              &bull; {guide.growthArea.evidence}
+            </p>
             <p className="text-xs sm:text-sm font-sans text-gray-200 leading-snug">
               {guide.growthArea.text}
             </p>
-            <span className="text-[9px] font-mono text-gray-400 block mt-1.5">
-              {guide.growthArea.choiceSource}
-            </span>
           </div>
 
           {/* Section C: Borrow Across Worlds */}
@@ -230,18 +232,15 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
             <div className="flex items-center gap-1.5 mb-1.5">
               <Compass className="w-4 h-4 text-spider-cyan" />
               <h2 className="font-comic text-lg text-spider-cyan uppercase tracking-wide">
-                Borrow Across Worlds
+                Strategy to Borrow Across Worlds
               </h2>
             </div>
-            <h3 className="font-sans font-bold text-xs text-white mb-1">
+            <h3 className="font-sans font-bold text-xs text-spider-cyan mb-1">
               {guide.crossWorldLesson.title}
             </h3>
             <p className="text-xs sm:text-sm font-sans text-gray-200 leading-snug">
               {guide.crossWorldLesson.text}
             </p>
-            <span className="text-[9px] font-mono text-spider-cyan/80 block mt-1.5">
-              {guide.crossWorldLesson.worldContext}
-            </span>
           </div>
 
           {/* Section D: One Action for This Week */}
@@ -249,44 +248,127 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
             <div className="flex items-center gap-1.5 mb-1.5">
               <CalendarCheck className="w-4 h-4 text-white" />
               <h2 className="font-comic text-lg text-white uppercase tracking-wide">
-                Try This Week
+                Action to Try This Week: "{guide.actionThisWeek.title}"
               </h2>
             </div>
-            <h3 className="font-comic text-base text-spider-yellow tracking-wide mb-1">
-              "{guide.actionThisWeek.title}"
-            </h3>
             <p className="text-xs sm:text-sm font-sans text-gray-100 leading-snug">
               {guide.actionThisWeek.action}
             </p>
           </div>
 
-          {/* Decision Summary Chips */}
-          {guide.scenariosSummary.length > 0 && (
-            <div className="pt-2 border-t border-gray-800">
-              <span className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-wider block mb-1.5">
-                Your Explored Pathways:
+          {/* Section E: Personalized Next Step (Replaces generic closing quote as sole ending) */}
+          <div className="p-3 bg-[#111A2E] border-2 border-spider-cyan/70 rounded-xs shadow-comic-sm">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Zap className="w-3.5 h-3.5 text-spider-cyan" />
+              <span className="font-comic text-sm text-spider-cyan uppercase tracking-wide">
+                Personalized Next Step &bull; {guide.personalizedNextStep.title}
               </span>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                {guide.scenariosSummary.map((s) => (
-                  <div 
-                    key={s.chapter}
-                    className="p-1.5 bg-black/60 border border-gray-800 rounded-xs flex items-center justify-between text-[10px] font-mono"
-                  >
-                    <span className="text-gray-400 font-bold">Ch. {s.chapter}:</span>
-                    <span className="text-gray-200 truncate ml-1 text-right">{s.chosenLabel}</span>
-                  </div>
-                ))}
-              </div>
             </div>
-          )}
+            <p className="text-xs sm:text-sm font-sans text-gray-200 leading-snug">
+              {guide.personalizedNextStep.text}
+            </p>
+          </div>
+
+          {/* Supporting Caption */}
+          <div className="text-center pt-1 pb-1">
+            <p className="font-comic text-base text-gray-300 uppercase tracking-wide">
+              "{guide.supportingQuote}"
+            </p>
+          </div>
 
           {/* Mandatory Honest Attribution Note */}
-          <div className="pt-2 text-center border-t border-gray-800/60">
-            <p className="text-[11px] font-mono text-gray-400 italic">
+          <div className="pt-2 text-center border-t border-gray-800/80">
+            <p className="text-[10px] font-mono text-gray-400 italic">
               {guide.disclaimer}
             </p>
           </div>
         </div>
+
+        {/* 3. TOPIC-BY-TOPIC REFLECTIONS (DEEP DIVE SECTION) */}
+        {guide.reflections.length > 0 && (
+          <div className="p-4 sm:p-5 pt-0 border-t-2 border-dashed border-gray-800 mt-2">
+            <div className="flex items-center gap-1.5 mb-3 pt-4">
+              <BookOpen className="w-4 h-4 text-spider-yellow" />
+              <h2 className="font-comic text-xl text-spider-yellow uppercase tracking-wide">
+                Topic-by-Topic Decision Reflections
+              </h2>
+            </div>
+            <p className="text-xs font-sans text-gray-300 mb-3">
+              Detailed breakdown of the principles, tradeoffs, and practical actions behind your specific choices:
+            </p>
+
+            <div className="space-y-3.5">
+              {guide.reflections.map((r) => (
+                <div 
+                  key={r.chapter}
+                  className="p-3.5 bg-[#0A0E1A] border-2 border-gray-800 rounded-xs space-y-2 text-left"
+                >
+                  {/* Topic & Choice Header */}
+                  <div className="flex items-center justify-between border-b border-gray-800 pb-1.5">
+                    <span className="font-mono text-[11px] text-spider-cyan font-bold uppercase">
+                      CH. {r.chapter} &bull; {r.topic}
+                    </span>
+                    <span className="bg-black/60 text-spider-yellow border border-gray-800 px-1.5 py-0.5 rounded text-[10px] font-mono">
+                      Answered
+                    </span>
+                  </div>
+
+                  {/* You Chose */}
+                  <div>
+                    <span className="text-[10px] font-mono uppercase text-gray-400 block font-bold">
+                      You chose:
+                    </span>
+                    <span className="text-xs sm:text-sm font-sans font-bold text-white">
+                      "{r.youChose}"
+                    </span>
+                  </div>
+
+                  {/* What this prioritizes */}
+                  <div>
+                    <span className="text-[10px] font-mono uppercase text-emerald-400 block font-bold">
+                      What this prioritizes:
+                    </span>
+                    <p className="text-xs font-sans text-gray-200">
+                      {r.whatThisPrioritizes}
+                    </p>
+                  </div>
+
+                  {/* What to watch for */}
+                  <div>
+                    <span className="text-[10px] font-mono uppercase text-amber-400 block font-bold">
+                      What to watch for:
+                    </span>
+                    <p className="text-xs font-sans text-gray-200">
+                      {r.whatToWatchFor}
+                    </p>
+                  </div>
+
+                  {/* Try this */}
+                  <div>
+                    <span className="text-[10px] font-mono uppercase text-spider-cyan block font-bold">
+                      Try this:
+                    </span>
+                    <p className="text-xs font-sans text-gray-100 italic bg-black/40 p-1.5 rounded border border-gray-800">
+                      {r.tryThisAction}
+                    </p>
+                  </div>
+
+                  {/* Cross-Chapter Connection Note (if present) */}
+                  {r.crossChapterNote && (
+                    <div className="mt-2 p-2 bg-[#1A0F1E] border border-fuchsia-500/50 rounded-xs">
+                      <span className="text-[10px] font-mono font-bold text-fuchsia-300 block mb-0.5 uppercase">
+                        Cross-Chapter Connection (Ch. 4 &rarr; Ch. 6):
+                      </span>
+                      <p className="text-xs font-sans text-gray-200">
+                        {r.crossChapterNote}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Card Footer Bar */}
         <div className="p-3 bg-[#05070D] border-t-2 border-black flex items-center justify-between text-[10px] font-mono text-gray-400">
@@ -297,7 +379,7 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
 
       {/* Bottom Sticky Action Bar (Hidden in Screenshot Mode) */}
       {!screenshotMode ? (
-        <div className="w-full max-w-lg flex items-center gap-2 mt-2 px-1">
+        <div className="w-full max-w-lg flex items-center gap-2 mt-2 px-1 mb-8">
           <button
             onClick={handleToggleScreenshotMode}
             className="flex-1 py-3 px-4 bg-spider-cyan hover:bg-[#00D0DF] text-black font-comic text-xl uppercase tracking-wider border-3 border-black rounded-sm shadow-comic flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-all"
@@ -316,7 +398,7 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
           </button>
         </div>
       ) : (
-        <div className="w-full max-w-lg p-3 text-center mb-6">
+        <div className="w-full max-w-lg p-3 text-center mb-8">
           <button
             onClick={handleToggleScreenshotMode}
             className="w-full py-3 px-4 bg-gray-900 hover:bg-gray-800 text-white font-mono text-xs uppercase tracking-wider border-2 border-white/40 rounded-sm shadow-comic cursor-pointer"

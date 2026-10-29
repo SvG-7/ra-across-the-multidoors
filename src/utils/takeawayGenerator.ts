@@ -1,15 +1,26 @@
 import { AttendeeSession, CommunityType } from '../types';
 
+export interface TopicReflection {
+  chapter: number;
+  topic: string;
+  optionId: string;
+  youChose: string;
+  whatThisPrioritizes: string;
+  whatToWatchFor: string;
+  tryThisAction: string;
+  crossChapterNote?: string;
+}
+
 export interface FieldGuideStrength {
   title: string;
+  evidence: string;
   explanation: string;
-  choiceSource: string;
 }
 
 export interface FieldGuideGrowthArea {
   label: string;
   text: string;
-  choiceSource: string;
+  evidence: string;
 }
 
 export interface FieldGuideCrossWorldLesson {
@@ -21,6 +32,11 @@ export interface FieldGuideCrossWorldLesson {
 export interface FieldGuideAction {
   title: string;
   action: string;
+}
+
+export interface PersonalizedNextStep {
+  title: string;
+  text: string;
 }
 
 export interface FieldGuideData {
@@ -35,14 +51,163 @@ export interface FieldGuideData {
   growthArea: FieldGuideGrowthArea;
   crossWorldLesson: FieldGuideCrossWorldLesson;
   actionThisWeek: FieldGuideAction;
-  scenariosSummary: Array<{
-    chapter: number;
-    scenarioTitle: string;
-    chosenLabel: string;
-  }>;
+  personalizedNextStep: PersonalizedNextStep;
+  supportingQuote: string;
+  reflections: TopicReflection[];
   disclaimer: string;
 }
 
+// -----------------------------------------------------------------------------
+// EXACT TOPIC-SPECIFIC LEARNING ANGLES MAPPING
+// -----------------------------------------------------------------------------
+export const TOPIC_LEARNING_ANGLES: Record<string, {
+  topic: string;
+  chapter: number;
+  label: string;
+  whatThisPrioritizes: string;
+  whatToWatchFor: string;
+  tryThisAction: string;
+}> = {
+  // CHAPTER 2: CONNECTION
+  opt_c2_checkin: {
+    topic: 'Connection',
+    chapter: 2,
+    label: 'Send a brief personal check-in',
+    whatThisPrioritizes: 'Taking initiative without pressuring the resident to respond.',
+    whatToWatchFor: 'A personal check-in creates an opening, but the resident may feel on the spot if the message sounds urgent.',
+    tryThisAction: 'Send a 1-sentence low-stakes note: "No need to reply, just wanted to say welcome to the hall!"',
+  },
+  opt_c2_invite: {
+    topic: 'Connection',
+    chapter: 2,
+    label: 'Offer a low-pressure invitation',
+    whatThisPrioritizes: 'Making participation easy while recognizing that attendance does not measure belonging.',
+    whatToWatchFor: 'Residents may skip floor programs while still feeling connected in other ways.',
+    tryThisAction: 'Invite them to a low-commitment activity (e.g. grabbing coffee to-go) with an easy out.',
+  },
+  opt_c2_ask_pref: {
+    topic: 'Connection',
+    chapter: 2,
+    label: 'Ask how they prefer to connect',
+    whatThisPrioritizes: 'Giving the resident a say in how contact happens.',
+    whatToWatchFor: 'Honoring autonomy is valuable, but requires you to follow up on their chosen medium.',
+    tryThisAction: 'Ask one concrete question: "Do you prefer quick texts, hallway hellos, or short emails?"',
+  },
+  opt_c2_natural: {
+    topic: 'Connection',
+    chapter: 2,
+    label: 'Find a natural opportunity to talk',
+    whatThisPrioritizes: 'Using comfortable encounters while noticing who those encounters leave out.',
+    whatToWatchFor: 'Spontaneous greetings feel unforced, but miss residents whose routines bypass common spaces.',
+    tryThisAction: 'Keep a mental tally of who rarely crosses the lobby, and plan deliberate alternative outreach.',
+  },
+
+  // CHAPTER 3: TRUST AND BOUNDARIES
+  opt_c3_perspective: {
+    topic: 'Trust and boundaries',
+    chapter: 3,
+    label: 'Ask for their perspective',
+    whatThisPrioritizes: 'Understanding the concern while still following through on the expectation.',
+    whatToWatchFor: 'Inviting their view builds rapport, but avoid letting empathy compromise community standards or safety.',
+    tryThisAction: 'Open with curiosity: "Help me understand what was happening earlier," then reaffirm the boundary.',
+  },
+  opt_c3_impact: {
+    topic: 'Trust and boundaries',
+    chapter: 3,
+    label: 'Explain the concern and its impact',
+    whatThisPrioritizes: 'Making the reason for a boundary understandable and relevant.',
+    whatToWatchFor: 'Framing around community impact avoids personal power struggles, but keep it brief so it doesn’t sound like lecturing.',
+    tryThisAction: 'Connect the expectation directly to neighbors: "Quiet hours protect our neighbors\' morning exam schedules."',
+  },
+  opt_c3_expectation: {
+    topic: 'Trust and boundaries',
+    chapter: 3,
+    label: 'State the expectation clearly',
+    whatThisPrioritizes: 'Providing clarity while leaving room for respectful discussion.',
+    whatToWatchFor: 'Direct boundaries eliminate ambiguity, but delivery needs warmth so residents don’t feel antagonized.',
+    tryThisAction: 'State the standard plainly: "We need the music down by 10 PM. Thanks for understanding and cooperating."',
+  },
+  opt_c3_private: {
+    topic: 'Trust and boundaries',
+    chapter: 3,
+    label: 'Suggest talking privately',
+    whatThisPrioritizes: 'Protecting dignity while addressing the concern directly.',
+    whatToWatchFor: 'Stepping aside diffuses peer audience tension, but ensure the conversation stays focused on the policy issue.',
+    tryThisAction: 'Say quietly: "Can we step outside for a quick second so we can chat 1-on-1?"',
+  },
+
+  // CHAPTER 4: COMMUNICATION
+  opt_c4_groupchat: {
+    topic: 'Communication',
+    chapter: 4,
+    label: 'Community group chat',
+    whatThisPrioritizes: 'Reaching many people while checking whether the intended resident actually uses it.',
+    whatToWatchFor: 'Broadcasts reach everyone at once, but busy or overwhelmed residents frequently mute group notifications.',
+    tryThisAction: 'Check in individually with quieter residents before assuming everyone saw the group chat blast.',
+  },
+  opt_c4_directmsg: {
+    topic: 'Communication',
+    chapter: 4,
+    label: 'Personal message',
+    whatThisPrioritizes: 'Making outreach relevant while keeping it brief and manageable.',
+    whatToWatchFor: 'Direct messages lower friction, but keep them concise so residents don’t feel overwhelmed by paragraphs.',
+    tryThisAction: 'Keep outreach to 15 words or fewer with a single yes/no or time question.',
+  },
+  opt_c4_inperson: {
+    topic: 'Communication',
+    chapter: 4,
+    label: 'In-person conversation',
+    whatThisPrioritizes: 'Gaining immediate context while respecting timing and privacy.',
+    whatToWatchFor: 'In-person check-ins offer rich emotional cues, but closed doors often mean needed rest or concentration.',
+    tryThisAction: 'If a door is shut, leave a polite sticky note or send a text rather than knocking repeatedly.',
+  },
+  opt_c4_email: {
+    topic: 'Communication',
+    chapter: 4,
+    label: 'Short email',
+    whatThisPrioritizes: 'Providing information someone can revisit while making the requested action easy to find.',
+    whatToWatchFor: 'Written emails create an archivable record, but student inboxes are often congested.',
+    tryThisAction: 'Put the action or deadline right in the subject line: "[Action Needed] Room Inspection Info by Friday".',
+  },
+
+  // CHAPTER 6: ADAPTABILITY
+  opt_c6_timing: {
+    topic: 'Adaptability',
+    chapter: 6,
+    label: 'Confirm their preferred direct channel and timing',
+    whatThisPrioritizes: 'Adjusting when and where contact happens.',
+    whatToWatchFor: 'Aligning with the resident’s schedule removes guesswork, but you must honor their preferred window.',
+    tryThisAction: 'Add their preferred contact window to your RA calendar so check-ins don’t interrupt work shifts.',
+  },
+  opt_c6_shorter: {
+    topic: 'Adaptability',
+    chapter: 6,
+    label: 'Make the invitation shorter and easier to answer',
+    whatThisPrioritizes: 'Reducing the effort required to understand and respond.',
+    whatToWatchFor: 'Lowering reading friction encourages quick replies, but ensure essential details remain clear.',
+    tryThisAction: 'Trim long event descriptions down to a single question: "Grabbing snacks at 7—want a plate saved?"',
+  },
+  opt_c6_time: {
+    topic: 'Adaptability',
+    chapter: 6,
+    label: 'Arrange a convenient time to talk',
+    whatThisPrioritizes: 'Replacing inconvenient encounters with an agreed time.',
+    whatToWatchFor: 'Scheduling respects busy routines, but keep the meeting short so it doesn’t feel like a formal chore.',
+    tryThisAction: 'Suggest a 5-minute sync: "Are you free for 5 mins between your Thursday shift and classes?"',
+  },
+  opt_c6_contact: {
+    topic: 'Adaptability',
+    chapter: 6,
+    label: 'Ask how much contact they want',
+    whatThisPrioritizes: 'Agreeing on a level of contact that respects autonomy.',
+    whatToWatchFor: 'Establishing boundary frequency avoids crowding residents, but remember you’re still their safety resource.',
+    tryThisAction: 'Clarify support: "Would a once-a-month check-in work best, or do you prefer reaching out as things arise?"',
+  },
+};
+
+// -----------------------------------------------------------------------------
+// MAIN GENERATOR
+// -----------------------------------------------------------------------------
 export function generateFieldGuide(session: AttendeeSession): FieldGuideData {
   const ch2 = session.answers[2];
   const ch3 = session.answers[3];
@@ -50,251 +215,189 @@ export function generateFieldGuide(session: AttendeeSession): FieldGuideData {
   const ch6 = session.answers[6];
   const community: CommunityType = session.selectedCommunity || 'Both';
 
-  // Count decisions
   const decisionChapters = [2, 3, 4, 6];
-  const missingChapters = decisionChapters.filter(ch => !session.answers[ch]);
+  const missingChapters = decisionChapters.filter((ch) => !session.answers[ch]);
   const answeredCount = decisionChapters.length - missingChapters.length;
   const isComplete = answeredCount === decisionChapters.length;
 
-  // Build Scenario Summaries
-  const scenariosSummary: Array<{ chapter: number; scenarioTitle: string; chosenLabel: string }> = [];
+  // Build reflections for each answered chapter
+  const reflections: TopicReflection[] = [];
 
-  if (ch2) {
-    const ch2Labels: Record<string, string> = {
-      opt_c2_checkin: 'Send a brief personal check-in',
-      opt_c2_invite: 'Offer a low-pressure invitation',
-      opt_c2_ask_pref: 'Ask how they prefer to connect',
-      opt_c2_natural: 'Find a natural opportunity to talk',
-    };
-    scenariosSummary.push({
-      chapter: 2,
-      scenarioTitle: 'The Invisible Resident',
-      chosenLabel: ch2Labels[ch2] || 'Explored approach',
-    });
-  }
+  [2, 3, 4, 6].forEach((ch) => {
+    const optId = session.answers[ch];
+    if (optId && TOPIC_LEARNING_ANGLES[optId]) {
+      const data = TOPIC_LEARNING_ANGLES[optId];
+      let crossChapterNote: string | undefined = undefined;
 
-  if (ch3) {
-    const ch3Labels: Record<string, string> = {
-      opt_c3_perspective: 'Ask for their perspective',
-      opt_c3_impact: 'Explain concern and community impact',
-      opt_c3_expectation: 'State expectation clearly upfront',
-      opt_c3_private: 'Suggest talking privately',
-    };
-    scenariosSummary.push({
-      chapter: 3,
-      scenarioTitle: 'Peer Relationships & Boundaries',
-      chosenLabel: ch3Labels[ch3] || 'Explored approach',
-    });
-  }
+      // Explicit connection between Chapter 4 and Chapter 6
+      if (ch === 6 && ch4) {
+        if (ch4 === 'opt_c4_groupchat') {
+          crossChapterNote = 'In Chapter 4, you prioritized broad community broadcasting. In Chapter 6, after uncovering Alex\'s off-campus work shifts, you shifted toward tailored individual outreach.';
+        } else if (ch4 === 'opt_c4_directmsg' || ch4 === 'opt_c4_inperson') {
+          crossChapterNote = 'You already favored direct communication in Chapter 4. In Chapter 6, you refined that approach by adjusting the specific timing and message friction rather than starting over.';
+        } else if (ch4 === 'opt_c4_email') {
+          crossChapterNote = 'You initially favored formal asynchronous email in Chapter 4. In Chapter 6, you adapted to Alex\'s fast-paced routine by making future touchpoints quicker and less bureaucratic.';
+        }
+      }
 
-  if (ch4) {
-    const ch4Labels: Record<string, string> = {
-      opt_c4_groupchat: 'Community group chat broadcast',
-      opt_c4_directmsg: 'Personal direct message',
-      opt_c4_inperson: 'In-person conversation',
-      opt_c4_email: 'Short structured email',
-    };
-    scenariosSummary.push({
-      chapter: 4,
-      scenarioTitle: 'Communication Channel',
-      chosenLabel: ch4Labels[ch4] || 'Explored channel',
-    });
-  }
+      reflections.push({
+        chapter: ch,
+        topic: data.topic,
+        optionId: optId,
+        youChose: data.label,
+        whatThisPrioritizes: data.whatThisPrioritizes,
+        whatToWatchFor: data.whatToWatchFor,
+        tryThisAction: data.tryThisAction,
+        crossChapterNote,
+      });
+    }
+  });
 
-  if (ch6) {
-    const ch6Labels: Record<string, string> = {
-      opt_c6_timing: 'Confirm preferred direct channel and timing',
-      opt_c6_shorter: 'Make invitation shorter and easier to answer',
-      opt_c6_time: 'Arrange a convenient scheduled time to talk',
-      opt_c6_contact: 'Ask how much contact they prefer',
-    };
-    scenariosSummary.push({
-      chapter: 6,
-      scenarioTitle: 'Superpower Adaptation',
-      chosenLabel: ch6Labels[ch6] || 'Explored adaptation',
-    });
-  }
-
-  // Determine Strengths
+  // 1. Two Potential Strengths Supported by Selected Answers
   const strengths: FieldGuideStrength[] = [];
 
-  // Strength 1: Derived from Connection & Boundaries (Ch 2 & Ch 3)
-  if (ch2 === 'opt_c2_ask_pref' || ch3 === 'opt_c3_perspective') {
+  if (ch2 && TOPIC_LEARNING_ANGLES[ch2]) {
+    const angle = TOPIC_LEARNING_ANGLES[ch2];
     strengths.push({
-      title: 'Listening First & Respecting Autonomy',
-      explanation: 'You prioritized learning the resident’s personal perspective and preferences before jumping to solutions, creating a collaborative climate where residents feel heard rather than managed.',
-      choiceSource: 'Reflected in your Chapter 2 / 3 choices',
-    });
-  } else if (ch2 === 'opt_c2_checkin' || ch3 === 'opt_c3_impact') {
-    strengths.push({
-      title: 'Intentional Outreach & Contextual Framing',
-      explanation: 'You favored direct, purposeful contact while framing expectations around collective community impact rather than personal authority.',
-      choiceSource: 'Reflected in your Chapter 2 / 3 choices',
-    });
-  } else if (ch3 === 'opt_c3_expectation') {
-    strengths.push({
-      title: 'Transparent Boundary Setting',
-      explanation: 'You valued clear, direct standards upfront so residents know exactly where community boundaries stand, reducing ambiguity in peer-to-peer relationships.',
-      choiceSource: 'Reflected in your Chapter 3 choice',
-    });
-  } else if (ch3 === 'opt_c3_private' || ch2 === 'opt_c2_natural') {
-    strengths.push({
-      title: 'Preserving Dignity & Psychological Safety',
-      explanation: 'You prioritized unforced, private interactions that save face and allow residents to connect comfortably on their own terms.',
-      choiceSource: 'Reflected in your Chapter 2 / 3 choices',
+      title: ch2 === 'opt_c2_ask_pref' || ch2 === 'opt_c2_invite'
+        ? 'Honoring Resident Autonomy'
+        : 'Proactive Outreach Initiative',
+      evidence: `You prioritized "${angle.label}" in Chapter 2.`,
+      explanation: `${angle.whatThisPrioritizes} This approach helps residents feel invited rather than surveilled.`,
     });
   } else {
     strengths.push({
-      title: 'Low-Pressure Inclusivity',
-      explanation: 'Your approach gives residents autonomy to engage without feeling spotlighted, keeping the door open for organic community involvement.',
-      choiceSource: 'Reflected in your connection choices',
+      title: 'Intentional Engagement',
+      evidence: 'Awaiting your Chapter 2 connection choice.',
+      explanation: 'Exploring proactive connection methods helps quiet residents feel supported.',
     });
   }
 
-  // Strength 2: Derived from Channel (Ch 4) + Adaptation (Ch 6)
-  if (ch6 === 'opt_c6_timing' || ch6 === 'opt_c6_shorter') {
+  if (ch6 && TOPIC_LEARNING_ANGLES[ch6]) {
+    const angle = TOPIC_LEARNING_ANGLES[ch6];
     strengths.push({
-      title: 'Agility & Willingness to Adapt',
-      explanation: 'When Alex revealed their demanding work shifts and study schedule, you adjusted your outreach to be lower friction and aligned with their specific routine.',
-      choiceSource: 'Reflected in your Chapter 6 adaptation',
+      title: 'Contextual Adaptation',
+      evidence: `You prioritized "${angle.label}" in Chapter 6.`,
+      explanation: `${angle.whatThisPrioritizes} This approach can help calibrate support to the resident's actual schedule.`,
     });
-  } else if (ch6 === 'opt_c6_contact' || ch2 === 'opt_c2_ask_pref') {
+  } else if (ch3 && TOPIC_LEARNING_ANGLES[ch3]) {
+    const angle = TOPIC_LEARNING_ANGLES[ch3];
     strengths.push({
-      title: 'Boundary Calibration',
-      explanation: 'You recognized that care does not mean constant contact; tailoring communication frequency prevents residents from feeling crowded while keeping support accessible.',
-      choiceSource: 'Reflected in your Chapter 6 adjustment',
-    });
-  } else if (ch6 === 'opt_c6_time') {
-    strengths.push({
-      title: 'Structured Intentionality',
-      explanation: 'You opted for mutually agreed times rather than unexpected drop-ins, providing predictability for busy residents balancing off-campus obligations.',
-      choiceSource: 'Reflected in your Chapter 6 adjustment',
+      title: 'Constructive Boundary Setting',
+      evidence: `You prioritized "${angle.label}" in Chapter 3.`,
+      explanation: `${angle.whatThisPrioritizes} This can help de-escalate tension while maintaining standards.`,
     });
   } else {
     strengths.push({
-      title: 'Direct Channel Focus',
-      explanation: 'You favored clear, direct communication lines over vague broadcasts, ensuring important messages reach individual residents reliably.',
-      choiceSource: 'Reflected in your communication choices',
+      title: 'Flexible Problem Solving',
+      evidence: 'Awaiting your Chapter 6 adaptation choice.',
+      explanation: 'Learning resident realities allows you to refine outreach as circumstances evolve.',
     });
   }
 
-  // Determine Growth Area / Skill to Practice Next
+  // 2. One Clearly Explained Growth Opportunity or Complementary Skill
   let growthArea: FieldGuideGrowthArea;
-
-  if (ch4 === 'opt_c4_groupchat' && (ch6 === 'opt_c6_timing' || ch6 === 'opt_c6_shorter')) {
+  if (ch4 === 'opt_c4_groupchat') {
     growthArea = {
-      label: 'A skill to practice next',
-      text: 'Check channel preferences earlier: Before relying on building-wide group chats for quiet or working residents, confirm individually how they prefer to receive important building updates.',
-      choiceSource: 'Tied to your initial group chat choice & subsequent adaptation',
+      label: 'Developing Micro-1-on-1 Channels',
+      evidence: 'In Chapter 4, you favored broad community group broadcasting.',
+      text: 'Broad announcements save time, but quiet or overwhelmed residents frequently mute notifications. Practicing quick 15-word personal check-ins builds trust with residents who slip through large group channels.',
     };
-  } else if (ch4 === 'opt_c4_inperson' && ch6 === 'opt_c6_time') {
+  } else if (ch4 === 'opt_c4_directmsg' || ch4 === 'opt_c4_email') {
     growthArea = {
-      label: 'A skill to practice next',
-      text: 'Lead with asynchronous confirmation: For independent residents with heavy work or lab commitments, unscheduled door knocks can add pressure. Pair in-person warmth with quick advance messages.',
-      choiceSource: 'Tied to your in-person outreach and scheduling choice',
+      label: 'Bridging 1-on-1 Rapport into Peer Connections',
+      evidence: 'In Chapter 4, you prioritized direct asynchronous messaging.',
+      text: 'Individual outreach builds solid trust. A complementary growth skill is connecting that resident with a floor neighbor who shares similar courses or hobbies, easing the pressure on you as the sole connector.',
     };
-  } else if (ch3 === 'opt_c3_expectation') {
+  } else if (ch4 === 'opt_c4_inperson') {
     growthArea = {
-      label: 'A complementary approach to explore',
-      text: 'Pair clarity with curiosity: When stating a policy expectation, ask the resident for their perspective on the situation first. Understanding their context softens peer defensiveness without compromising standards.',
-      choiceSource: 'Tied to your upfront expectation setting in Chapter 3',
-    };
-  } else if (ch2 === 'opt_c2_natural' || ch2 === 'opt_c2_invite') {
-    growthArea = {
-      label: 'A skill to practice next',
-      text: 'Incorporate scheduled intentionality: While waiting for organic interactions feels natural, residents with heavy off-campus jobs may rarely cross common areas. Practice small, deliberate 1-on-1 check-ins.',
-      choiceSource: 'Tied to your natural opportunity preference in Chapter 2',
-    };
-  } else if (ch4 === 'opt_c4_directmsg') {
-    growthArea = {
-      label: 'A complementary approach to explore',
-      text: 'Bridge 1-on-1 trust into peer connections: Direct messages build great individual trust. Look for opportunities to connect quiet residents with one neighbor who shares similar coursework or work hours.',
-      choiceSource: 'Tied to your direct messaging choice in Chapter 4',
+      label: 'Leveraging Asynchronous Touchpoints',
+      evidence: 'In Chapter 4, you selected in-person conversation.',
+      text: 'Face-to-face greetings offer immediate social cues, but residents with jobs or dense labs often keep doors shut. Practicing low-effort digital or note-based check-ins ensures residents feel remembered even when away.',
     };
   } else {
     growthArea = {
-      label: 'A skill to practice next',
-      text: 'Test different messaging lengths and time windows: Small changes in when and how concisely you send updates can dramatically shift how easily residents respond.',
-      choiceSource: 'Tied to your communication and adjustment choices',
+      label: 'Balancing Direct & Broad Outreach Channels',
+      evidence: 'Awaiting your Chapter 4 communication choice.',
+      text: 'Effective community building blends whole-group energy with discreet 1-on-1 touchpoints so neither quiet nor social residents are overlooked.',
     };
   }
 
-  // Determine Cross-World Lesson (Residence Hall vs Apartment)
+  // 3. One Practical Strategy to Borrow Across Worlds
   let crossWorldLesson: FieldGuideCrossWorldLesson;
-
-  switch (community) {
-    case 'Residence hall':
-      crossWorldLesson = {
-        title: 'Borrow from Apartment Communities',
-        text: 'Bring intentional, scheduled touchpoints behind closed doors. In residence halls, we often rely on running into residents in the hallway or lounge. Practice deliberate 1-on-1 check-ins for the residents who rarely leave their rooms.',
-        worldContext: 'Applying apartment intentionality to traditional residence halls',
-      };
-      break;
-
-    case 'Apartment community':
-      crossWorldLesson = {
-        title: 'Borrow from Traditional Residence Halls',
-        text: 'Inject spontaneous micro-moments into daily routines. In apartment living, deadbolts can make outreach feel formal. Look for casual, low-stakes greetings at mailboxes, breezeways, or stairwells so not every touchpoint feels like an official meeting.',
-        worldContext: 'Applying residence hall spontaneous warmth to apartment communities',
-      };
-      break;
-
-    case 'Both':
-      crossWorldLesson = {
-        title: 'Leverage Dual-World Fluency',
-        text: 'Recognize each building’s "door culture." Use high-density common areas for quick temperature checks, while leaning into apartment-style asynchronous scheduling when residents are overwhelmed by work or coursework.',
-        worldContext: 'Bridging high-density halls and independent apartment communities',
-      };
-      break;
-
-    case 'New to the RA role':
-    default:
-      crossWorldLesson = {
-        title: 'Build Both Superpowers Early',
-        text: 'Balance the residence hall skill of being visible and approachable in shared spaces with the apartment skill of deliberate, respectful 1-on-1 scheduling that honors student independence.',
-        worldContext: 'Foundation for building strong community across any living environment',
-      };
-      break;
+  if (community === 'Residence hall') {
+    crossWorldLesson = {
+      title: 'Borrow from Apartment Worlds: Asynchronous Boundaries',
+      worldContext: 'Residence Hall RA Perspective',
+      text: 'In high-density traditional halls, RAs often feel always "on call." Borrow apartment practices: set intentional "office hour" windows, establish asynchronous check-in norms, and avoid relying purely on spontaneous door knocks.',
+    };
+  } else if (community === 'Apartment community') {
+    crossWorldLesson = {
+      title: 'Borrow from Residence Halls: High-Visibility Touchpoints',
+      worldContext: 'Apartment Community RA Perspective',
+      text: 'Apartment deadbolts and long walkways create physical isolation. Borrow hall practices: turn routine mailroom pickups, courtyard walks, and laundry areas into warm greeting zones that build recognition before formal issues occur.',
+    };
+  } else {
+    crossWorldLesson = {
+      title: 'Multiverse Synthesis: Hybrid Connection Routes',
+      worldContext: 'Cross-Community Perspective',
+      text: 'Seamless community building pairs the physical visibility of residence halls with the autonomous, low-friction scheduling of apartment life. Meet residents where their daily energy actually flows.',
+    };
   }
 
-  // Determine Action for This Week
+  // 4. One Action to Try This Week
   let actionThisWeek: FieldGuideAction;
-
-  if (ch6 === 'opt_c6_timing' || ch2 === 'opt_c2_ask_pref') {
+  if (ch6 === 'opt_c6_shorter') {
     actionThisWeek = {
-      title: 'Ask One Preference Question',
-      action: 'Identify one resident you rarely see in your community. Send a short, low-pressure message asking: "Hey! Just checking in—what is the easiest way or time for me to share quick building updates with you this semester?"',
+      title: 'The 15-Word Message Test',
+      action: 'Draft your next community announcement in 15 words or fewer with a single actionable question before sending.',
     };
-  } else if (ch3 === 'opt_c3_perspective') {
+  } else if (ch6 === 'opt_c6_timing') {
     actionThisWeek = {
-      title: 'Practice Two-Minute Listening',
-      action: 'During your next resident interaction, spend the first two minutes solely asking about their week or major and listening actively before introducing any announcements or policy reminders.',
+      title: 'Window Mapping',
+      action: 'Ask two residents whose schedules are unpredictable what 2-hour window during the week is easiest for them to reply.',
     };
-  } else if (ch4 === 'opt_c4_groupchat') {
+  } else if (ch6 === 'opt_c6_contact') {
     actionThisWeek = {
-      title: 'Swap Broadcast for Two Direct Notes',
-      action: 'Instead of posting another general reminder in the floor chat, send two quick, direct 1-sentence check-in notes to residents who typically remain silent in group spaces.',
+      title: 'Cadence Check-In',
+      action: 'Check in with one resident who rarely attends events and ask if they prefer monthly texts or checking in as questions arise.',
     };
   } else {
     actionThisWeek = {
-      title: 'Connect Behind One Closed Door',
-      action: 'Leave a brief personalized sticky note or send a short direct message to one resident whose door is almost always shut, simply asking how their semester is progressing with no action required from them.',
+      title: 'The Lobby Observation',
+      action: 'Spend 15 minutes in your community lobby or courtyard observing foot traffic patterns to identify who you haven’t crossed paths with lately.',
+    };
+  }
+
+  // Personalized Next Step (replaces generic quote as sole ending)
+  let personalizedNextStep: PersonalizedNextStep;
+  if (ch2 && ch6) {
+    personalizedNextStep = {
+      title: 'Your Multiverse Pathway',
+      text: `Take your Chapter 2 priority (${TOPIC_LEARNING_ANGLES[ch2].label.toLowerCase()}) and apply your Chapter 6 adaptation (${TOPIC_LEARNING_ANGLES[ch6].label.toLowerCase()}) to one resident in your building this week.`,
+    };
+  } else {
+    personalizedNextStep = {
+      title: 'Your Multiverse Pathway',
+      text: 'Review the scenario reflections below and pick one specific action to practice with a quiet resident this semester.',
     };
   }
 
   return {
     title: 'MY RA FIELD GUIDE',
-    subtitle: 'What my choices suggest',
+    subtitle: 'What My Choices Suggest',
     community,
     answeredCount,
     totalDecisions: 4,
     isComplete,
     missingChapters,
-    strengths: strengths.slice(0, 2),
+    strengths,
     growthArea,
     crossWorldLesson,
     actionThisWeek,
-    scenariosSummary,
-    disclaimer: 'Based on your choices in today’s scenarios.',
+    personalizedNextStep,
+    supportingQuote: 'Same mission. Two worlds. Infinite ways to build community.',
+    reflections,
+    disclaimer: 'Based on your choices in today’s scenarios. These observations reflect prioritized approaches, not evaluations of competence.',
   };
 }

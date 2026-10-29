@@ -51,6 +51,13 @@ export interface CollectiveContribution {
   nodeColor: string;
 }
 
+export type SyncConnectionStatus =
+  | 'loading'
+  | 'connected_empty'
+  | 'only_me'
+  | 'has_contributions'
+  | 'error';
+
 export interface SharedResponses {
   worldDistribution: Record<string, number>;
   chapter2: Record<string, number>;
@@ -58,6 +65,7 @@ export interface SharedResponses {
   chapter4: Record<string, number>;
   chapter6: Record<string, number>;
   totalParticipants: number;
+  connectionStatus?: SyncConnectionStatus;
 }
 
 export interface WebPoint {

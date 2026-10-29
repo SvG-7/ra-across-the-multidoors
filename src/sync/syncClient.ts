@@ -1,6 +1,15 @@
-import { AttendeeSession, CommunityType, SharedResponses, CollectiveContribution } from '../types';
+import { 
+  AttendeeSession, 
+  CommunityType, 
+  SharedResponses, 
+  CollectiveContribution, 
+  SyncConnectionStatus 
+} from '../types';
 
 const STORAGE_KEY = 'ra_attendee_session';
+const NTFY_TOPIC = 'ra_multidoors_room_2026';
+const NTFY_HTTP = `https://ntfy.sh/${NTFY_TOPIC}`;
+const NTFY_WS = `wss://ntfy.sh/${NTFY_TOPIC}/ws`;
 
 export const INITIAL_SHARED_RESPONSES: SharedResponses = {
   worldDistribution: {},
@@ -9,7 +18,15 @@ export const INITIAL_SHARED_RESPONSES: SharedResponses = {
   chapter4: {},
   chapter6: {},
   totalParticipants: 0,
+  connectionStatus: 'loading',
 };
+
+interface AttendeeRecord {
+  attendeeId: string;
+  community?: CommunityType;
+  answers: Record<number, string>;
+  updatedAt: number;
+}
 
 type AggregateListener = (data: SharedResponses, collective: CollectiveContribution[]) => void;
 type SessionListener = (session: AttendeeSession) => void;
@@ -18,17 +35,28 @@ class SessionManager {
   private session: AttendeeSession;
   private sharedResponses: SharedResponses = { ...INITIAL_SHARED_RESPONSES };
   private collectiveContributions: CollectiveContribution[] = [];
+  private attendeeMap: Map<string, AttendeeRecord> = new Map();
   private ws: WebSocket | null = null;
   private aggregateListeners: Set<AggregateListener> = new Set();
   private sessionListeners: Set<SessionListener> = new Set();
-  private isWsConnected: boolean = false;
-  private wsRetryCount: number = 0;
+  private connectionStatus: SyncConnectionStatus = 'loading';
+  private pollInterval: any = null;
 
   constructor() {
     this.session = this.loadLocalSession();
 
+    // Seed local attendee record
+    if (this.session.attendeeId) {
+      this.attendeeMap.set(this.session.attendeeId, {
+        attendeeId: this.session.attendeeId,
+        community: this.session.selectedCommunity,
+        answers: { ...this.session.answers },
+        updatedAt: Date.now(),
+      });
+    }
+
     if (typeof window !== 'undefined') {
-      this.initWebSocket();
+      this.initSharedSync();
     }
   }
 
@@ -72,7 +100,7 @@ class SessionManager {
   }
 
   private generateAttendeeId(): string {
-    return 'att_' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36).substring(4);
+    return 'att_' + Math.random().toString(36).substring(2, 8) + Date.now().toString(36).substring(4);
   }
 
   private saveLocalSession(session: AttendeeSession) {
@@ -86,6 +114,10 @@ class SessionManager {
 
   public getSession(): AttendeeSession {
     return this.session;
+  }
+
+  public getSharedResponses(): SharedResponses {
+    return this.sharedResponses;
   }
 
   public subscribeSession(listener: SessionListener): () => void {
@@ -115,17 +147,82 @@ class SessionManager {
     this.sessionListeners.forEach((fn) => fn(sessionCopy));
   }
 
-  private notifyAggregate() {
-    const sharedCopy: SharedResponses = {
-      ...this.sharedResponses,
-      worldDistribution: { ...this.sharedResponses.worldDistribution },
-      chapter2: { ...this.sharedResponses.chapter2 },
-      chapter3: { ...this.sharedResponses.chapter3 },
-      chapter4: { ...this.sharedResponses.chapter4 },
-      chapter6: { ...this.sharedResponses.chapter6 },
+  private recalculateAggregate() {
+    const worldDist: Record<string, number> = {};
+    const ch2Dist: Record<string, number> = {};
+    const ch3Dist: Record<string, number> = {};
+    const ch4Dist: Record<string, number> = {};
+    const ch6Dist: Record<string, number> = {};
+    const collective: CollectiveContribution[] = [];
+
+    // Colors for collective multiverse network nodes
+    const colors = ['#FF1744', '#00F0FF', '#FFE600', '#A855F7', '#10B981', '#F97316'];
+
+    let countWithAnswers = 0;
+
+    this.attendeeMap.forEach((rec) => {
+      if (rec.community) {
+        worldDist[rec.community] = (worldDist[rec.community] || 0) + 1;
+      }
+
+      const hasAnsweredAny = Object.keys(rec.answers).length > 0;
+      if (hasAnsweredAny) {
+        countWithAnswers++;
+      }
+
+      if (rec.answers[2]) ch2Dist[rec.answers[2]] = (ch2Dist[rec.answers[2]] || 0) + 1;
+      if (rec.answers[3]) ch3Dist[rec.answers[3]] = (ch3Dist[rec.answers[3]] || 0) + 1;
+      if (rec.answers[4]) ch4Dist[rec.answers[4]] = (ch4Dist[rec.answers[4]] || 0) + 1;
+      if (rec.answers[6]) ch6Dist[rec.answers[6]] = (ch6Dist[rec.answers[6]] || 0) + 1;
+
+      collective.push({
+        attendeeId: rec.attendeeId,
+        world: rec.community || 'Residence hall',
+        ch2Choice: rec.answers[2],
+        ch3Choice: rec.answers[3],
+        ch4Choice: rec.answers[4],
+        ch6Choice: rec.answers[6],
+        nodeColor: colors[Math.abs(hashString(rec.attendeeId)) % colors.length],
+      });
+    });
+
+    // Determine connection status
+    let status: SyncConnectionStatus = this.connectionStatus;
+    if (status !== 'error' && status !== 'loading') {
+      if (countWithAnswers === 0) {
+        status = 'connected_empty';
+      } else if (countWithAnswers === 1 && this.attendeeMap.has(this.session.attendeeId) && Object.keys(this.session.answers).length > 0) {
+        status = 'only_me';
+      } else {
+        status = 'has_contributions';
+      }
+    }
+
+    this.connectionStatus = status;
+
+    this.sharedResponses = {
+      worldDistribution: worldDist,
+      chapter2: ch2Dist,
+      chapter3: ch3Dist,
+      chapter4: ch4Dist,
+      chapter6: ch6Dist,
+      totalParticipants: countWithAnswers,
+      connectionStatus: status,
     };
-    const collectiveCopy = [...this.collectiveContributions];
-    this.aggregateListeners.forEach((fn) => fn(sharedCopy, collectiveCopy));
+
+    this.collectiveContributions = collective;
+
+    const sharedCopy: SharedResponses = {
+      worldDistribution: { ...worldDist },
+      chapter2: { ...ch2Dist },
+      chapter3: { ...ch3Dist },
+      chapter4: { ...ch4Dist },
+      chapter6: { ...ch6Dist },
+      totalParticipants: countWithAnswers,
+      connectionStatus: status,
+    };
+
+    this.aggregateListeners.forEach((fn) => fn(sharedCopy, [...collective]));
   }
 
   public setChapter(chapter: number) {
@@ -138,32 +235,51 @@ class SessionManager {
     this.session.selectedCommunity = community;
     this.notifySession();
 
-    if (this.ws && this.isWsConnected) {
-      this.ws.send(JSON.stringify({
-        type: 'SUBMIT_COMMUNITY',
-        payload: {
-          attendeeId: this.session.attendeeId,
-          community,
-        },
-      }));
-    }
+    // Update local record
+    const existing = this.attendeeMap.get(this.session.attendeeId) || {
+      attendeeId: this.session.attendeeId,
+      answers: {},
+      updatedAt: Date.now(),
+    };
+    existing.community = community;
+    existing.updatedAt = Date.now();
+    this.attendeeMap.set(this.session.attendeeId, existing);
+    this.recalculateAggregate();
+
+    // Broadcast to room
+    this.publishEvent({
+      type: 'COMMUNITY',
+      attendeeId: this.session.attendeeId,
+      community,
+      timestamp: Date.now(),
+    });
   }
 
   public setAnswer(chapter: number, optionId: string) {
     this.session.answers[chapter] = optionId;
     this.notifySession();
 
-    if (this.ws && this.isWsConnected) {
-      this.ws.send(JSON.stringify({
-        type: 'SUBMIT_ANSWER',
-        payload: {
-          attendeeId: this.session.attendeeId,
-          chapter,
-          optionId,
-          community: this.session.selectedCommunity,
-        },
-      }));
-    }
+    // Update local record (revisions overwrite existing answer)
+    const existing = this.attendeeMap.get(this.session.attendeeId) || {
+      attendeeId: this.session.attendeeId,
+      answers: {},
+      updatedAt: Date.now(),
+    };
+    existing.community = this.session.selectedCommunity;
+    existing.answers[chapter] = optionId;
+    existing.updatedAt = Date.now();
+    this.attendeeMap.set(this.session.attendeeId, existing);
+    this.recalculateAggregate();
+
+    // Broadcast to room
+    this.publishEvent({
+      type: 'ANSWER',
+      attendeeId: this.session.attendeeId,
+      chapter,
+      optionId,
+      community: this.session.selectedCommunity,
+      timestamp: Date.now(),
+    });
   }
 
   public toggleStoryId(id: string) {
@@ -183,86 +299,144 @@ class SessionManager {
     this.notifySession();
   }
 
-  private initWebSocket() {
+  // ---------------------------------------------------------------------------
+  // PUBLIC REAL-TIME ROOM SYNCHRONIZATION
+  // ---------------------------------------------------------------------------
+  public retryConnection() {
+    this.connectionStatus = 'loading';
+    this.recalculateAggregate();
+    this.initSharedSync();
+  }
+
+  private async publishEvent(data: any) {
+    try {
+      await fetch(`${NTFY_HTTP}/publish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    } catch (e) {
+      console.warn('Could not publish event to room:', e);
+    }
+  }
+
+  private initSharedSync() {
     if (typeof window === 'undefined') return;
 
-    // In static production hosting (e.g. GitHub Pages), operate in local-first mode without WS polling
-    if (window.location.hostname.includes('github.io') || this.wsRetryCount >= 2) {
-      return;
-    }
+    this.connectionStatus = 'loading';
+    this.recalculateAggregate();
 
+    // 1. Initial Pull of historical room contributions
+    this.fetchHistoricalResponses();
+
+    // 2. Open WebSocket for instant real-time incoming pushes
     try {
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//${window.location.host}/ws-sync`;
-      this.ws = new WebSocket(wsUrl);
+      if (this.ws) {
+        this.ws.close();
+      }
+
+      this.ws = new WebSocket(NTFY_WS);
 
       this.ws.onopen = () => {
-        this.isWsConnected = true;
-        this.wsRetryCount = 0;
-        // Re-sync current choices if any exist
-        if (this.session.selectedCommunity) {
-          this.ws?.send(JSON.stringify({
-            type: 'SUBMIT_COMMUNITY',
-            payload: {
-              attendeeId: this.session.attendeeId,
-              community: this.session.selectedCommunity,
-            },
-          }));
-        }
-        Object.entries(this.session.answers).forEach(([ch, optId]) => {
-          this.ws?.send(JSON.stringify({
-            type: 'SUBMIT_ANSWER',
-            payload: {
-              attendeeId: this.session.attendeeId,
-              chapter: Number(ch),
-              optionId: optId,
-              community: this.session.selectedCommunity,
-            },
-          }));
-        });
+        this.connectionStatus = 'has_contributions';
+        this.recalculateAggregate();
       };
 
       this.ws.onmessage = (event) => {
         try {
-          const data = JSON.parse(event.data);
-          if (data.type === 'AGGREGATE_STATE' && data.payload) {
-            this.sharedResponses = {
-              worldDistribution: data.payload.communityDistribution || {},
-              chapter2: data.payload.chapter2 || {},
-              chapter3: data.payload.chapter3 || {},
-              chapter4: data.payload.chapter4 || {},
-              chapter6: data.payload.chapter6 || {},
-              totalParticipants: data.payload.totalParticipants || 0,
-            };
-            this.collectiveContributions = data.payload.collectiveContributions || [];
-            this.notifyAggregate();
+          const raw = JSON.parse(event.data);
+          if (raw && raw.message) {
+            const parsed = JSON.parse(raw.message);
+            this.handleIncomingEvent(parsed);
           }
         } catch (e) {
-          console.warn('Error parsing incoming aggregate message:', e);
-        }
-      };
-
-      this.ws.onclose = () => {
-        this.isWsConnected = false;
-        this.wsRetryCount++;
-        if (this.wsRetryCount < 2) {
-          setTimeout(() => this.initWebSocket(), 5000);
+          // Ignore non-json system pings
         }
       };
 
       this.ws.onerror = () => {
-        this.isWsConnected = false;
-        this.wsRetryCount++;
-        this.ws?.close();
+        console.warn('Real-time sync error, switching to HTTP polling fallback');
+        this.connectionStatus = 'error';
+        this.recalculateAggregate();
+      };
+
+      this.ws.onclose = () => {
+        // Fallback to periodic 10s HTTP polling if WebSocket closes
+        this.startHttpPollingFallback();
       };
     } catch (e) {
-      console.warn('WebSocket not available, operating in local-first mode:', e);
+      console.warn('WebSocket unavailable, running HTTP polling:', e);
+      this.startHttpPollingFallback();
     }
   }
 
-  public isConnected(): boolean {
-    return this.isWsConnected;
+  private async fetchHistoricalResponses() {
+    try {
+      const resp = await fetch(`${NTFY_HTTP}/json?poll=1&since=all`);
+      if (resp.ok) {
+        const text = await resp.text();
+        const lines = text.trim().split('\n');
+        lines.forEach((line) => {
+          if (!line) return;
+          try {
+            const envelope = JSON.parse(line);
+            if (envelope.message) {
+              const data = JSON.parse(envelope.message);
+              this.handleIncomingEvent(data, false);
+            }
+          } catch (e) {
+            // ignore malformed lines
+          }
+        });
+        this.recalculateAggregate();
+      }
+    } catch (err) {
+      console.warn('Failed to fetch historical room responses:', err);
+    }
   }
+
+  private handleIncomingEvent(data: any, triggerRecalc = true) {
+    if (!data || !data.attendeeId) return;
+
+    const { type, attendeeId, community, chapter, optionId } = data;
+
+    const record: AttendeeRecord = this.attendeeMap.get(attendeeId) || {
+      attendeeId,
+      community: undefined,
+      answers: {},
+      updatedAt: data.timestamp || Date.now(),
+    };
+
+    if (type === 'COMMUNITY' && community) {
+      record.community = community;
+    } else if (type === 'ANSWER' && chapter && optionId) {
+      record.answers[Number(chapter)] = optionId;
+      if (community) record.community = community;
+    }
+
+    record.updatedAt = data.timestamp || Date.now();
+    this.attendeeMap.set(attendeeId, record);
+
+    if (triggerRecalc) {
+      this.recalculateAggregate();
+    }
+  }
+
+  private startHttpPollingFallback() {
+    if (this.pollInterval) clearInterval(this.pollInterval);
+    this.pollInterval = setInterval(() => {
+      this.fetchHistoricalResponses();
+    }, 8000);
+  }
+}
+
+function hashString(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return hash;
 }
 
 export const sessionManager = new SessionManager();

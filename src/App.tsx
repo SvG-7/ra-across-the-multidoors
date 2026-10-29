@@ -102,6 +102,7 @@ export function App() {
   };
 
   const handleNextChapter = () => {
+    if (transitionState.isActive) return; // Prevent double-tap skipping
     if (session.currentChapter < 7) {
       const fromCh = session.currentChapter;
       const nextChapter = fromCh + 1;
@@ -120,6 +121,7 @@ export function App() {
   };
 
   const handlePrevChapter = () => {
+    if (transitionState.isActive) return; // Prevent double-tap skipping
     if (session.currentChapter > 1) {
       triggerTransition('backward');
       const prevChapter = session.currentChapter - 1;
@@ -129,6 +131,7 @@ export function App() {
   };
 
   const handleJumpToChapter = (chapterNumber: number) => {
+    if (transitionState.isActive) return; // Prevent double-tap skipping
     if (chapterNumber !== session.currentChapter) {
       if (chapterNumber < session.currentChapter) {
         triggerTransition('backward');
@@ -148,6 +151,7 @@ export function App() {
   };
 
   const handleTriggerEntryTransition = () => {
+    if (transitionState.isActive) return;
     triggerTransition('entry_to_1');
   };
 
@@ -255,67 +259,55 @@ export function App() {
               reducedMotion={reducedMotion}
             />
           </main>
-
-          {/* Clean attendee footer (No admin links exposed) */}
-          <footer className="mt-auto py-3 px-4 border-t border-gray-900 bg-black/80 backdrop-blur-xs text-center">
-            <div className="max-w-md mx-auto text-[11px] font-mono text-gray-400 flex items-center justify-between">
-              <span className="text-spider-cyan">RA: Across the Multi-Doors</span>
-              <span>One Mission &bull; Two Worlds</span>
-            </div>
-          </footer>
         </div>
       )}
 
-      {/* Protected Admin Passcode Modal (Only shown if presenter URL parameter was requested) */}
+      {/* Admin Passcode Gate Modal */}
       {showPasscodeModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-sm bg-[#0E1526] border-3 border-black p-5 rounded-sm shadow-comic">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="p-2 bg-spider-red rounded-xs border border-black shadow-comic-sm">
-                <Lock className="w-4 h-4 text-white" />
-              </div>
-              <h3 className="font-comic text-xl text-white uppercase tracking-wide">
-                Presenter Team Access
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#0C1222] border-3 border-black p-6 rounded-sm max-w-sm w-full shadow-comic text-white">
+            <div className="flex items-center gap-2 mb-3 text-spider-yellow">
+              <Lock className="w-5 h-5" />
+              <h3 className="font-comic text-xl uppercase tracking-wider text-white">
+                Presenter Command Passcode
               </h3>
             </div>
-
-            <p className="text-xs font-sans text-gray-300 mb-4 leading-relaxed">
-              This area is restricted to conference presenters for monitoring and display purposes.
+            <p className="text-xs font-mono text-gray-300 mb-4">
+              Restricted to conference facilitators and AV projection crew.
             </p>
 
-            <form onSubmit={handleVerifyPasscode} className="space-y-3">
+            <form onSubmit={handleVerifyPasscode} className="space-y-4">
               <div>
-                <label className="block text-[11px] font-mono text-gray-400 uppercase mb-1">
-                  Enter Passcode:
-                </label>
                 <input
                   type="password"
+                  placeholder="Enter passcode..."
                   value={passcodeInput}
-                  onChange={(e) => setPasscodeInput(e.target.value)}
-                  placeholder="Passcode..."
-                  className="w-full p-2.5 bg-black/70 border border-gray-700 focus:border-spider-cyan text-white text-sm font-mono rounded-sm outline-none"
+                  onChange={(e) => {
+                    setPasscodeInput(e.target.value);
+                    setPasscodeError(false);
+                  }}
                   autoFocus
+                  className="w-full bg-black/80 border-2 border-gray-700 focus:border-spider-cyan p-3 rounded-xs text-white font-mono text-sm outline-none"
                 />
+                {passcodeError && (
+                  <p className="text-spider-red text-xs font-mono mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    <span>Incorrect passcode</span>
+                  </p>
+                )}
               </div>
 
-              {passcodeError && (
-                <div className="text-xs font-mono text-spider-red flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  <span>Invalid passcode. Please try again.</span>
-                </div>
-              )}
-
-              <div className="flex items-center gap-2 pt-2">
+              <div className="flex items-center justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={handleDismissPasscode}
-                  className="flex-1 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-mono rounded-sm cursor-pointer"
+                  className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 font-mono text-xs rounded-xs cursor-pointer"
                 >
-                  Cancel
+                  Return to Audience View
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-spider-red hover:bg-spider-crimson text-white text-xs font-comic uppercase tracking-wider rounded-sm border border-black shadow-comic-sm cursor-pointer"
+                  className="px-4 py-1.5 bg-spider-red hover:bg-spider-crimson text-white font-comic uppercase text-sm tracking-wide rounded-xs border border-black shadow-comic-sm cursor-pointer"
                 >
                   Unlock
                 </button>
@@ -329,7 +321,7 @@ export function App() {
       <SpiderManTransition
         isActive={transitionState.isActive}
         transitionType={transitionState.type}
-        onComplete={() => setTransitionState(prev => ({ ...prev, isActive: false }))}
+        onComplete={() => setTransitionState((prev) => ({ ...prev, isActive: false }))}
         reducedMotion={reducedMotion}
       />
     </div>
