@@ -160,33 +160,33 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
         {/* Swings across on anchored web, pulling comic panel into view       */}
         {/* ------------------------------------------------------------------ */}
         {transitionType === '1_to_2' && (
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 overflow-hidden">
             {/* Parabolic Curved Web Line SVG */}
-            <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
               <motion.path
-                d="M 500 -10 Q 560 190 740 330"
+                d="M 280 0 Q 240 220 180 360"
                 stroke="#00F0FF"
-                strokeWidth="4"
-                strokeDasharray="6 3"
+                strokeWidth="5"
+                strokeDasharray="8 4"
                 fill="none"
                 initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1, opacity: [0.9, 1, 0] }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
+                animate={{ pathLength: [0, 1, 1], opacity: [0.9, 1, 0] }}
+                transition={{ duration: 0.82, ease: 'easeOut' }}
               />
             </svg>
 
             {/* Trailing Comic Panel Border pulled by his momentum */}
             <motion.div
               initial={{ x: '100%', rotate: 4 }}
-              animate={{ x: '-15%', rotate: 0 }}
-              transition={{ duration: 0.78, ease: [0.25, 1, 0.5, 1] }}
-              className="absolute top-16 right-0 bottom-16 w-3/4 bg-spider-dark/95 border-4 border-spider-red z-30 shadow-comic flex items-center justify-center p-6"
+              animate={{ x: ['100%', '0%', '-5%'], rotate: [4, -1, 0], opacity: [0.8, 1, 0] }}
+              transition={{ duration: 0.85, times: [0, 0.65, 1], ease: [0.25, 1, 0.5, 1] }}
+              className="absolute top-20 right-4 left-4 sm:left-auto sm:right-12 sm:w-80 bg-spider-dark/95 border-4 border-spider-red z-30 shadow-comic flex items-center justify-center p-5 text-center"
             >
-              <div className="text-center">
+              <div>
                 <span className="font-mono text-xs text-spider-yellow font-bold uppercase tracking-wider block mb-1">
                   PULLING INCOMING PANEL &bull; ISSUE #2
                 </span>
-                <span className="font-comic text-3xl sm:text-4xl text-white uppercase">
+                <span className="font-comic text-2xl sm:text-3xl text-white uppercase leading-tight">
                   THE INVISIBLE RESIDENT
                 </span>
               </div>
@@ -194,23 +194,24 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
 
             {/* Swinging Spider-Man */}
             <motion.div
-              initial={{ x: -160, y: 70, rotate: -24, scale: 0.85 }}
+              initial={{ left: '-20%', top: '15%', rotate: -25, scale: 0.9 }}
               animate={{
-                x: 480,
-                y: [70, 270, 110],
-                rotate: [-24, 6, 26],
-                scale: [0.85, 1.2, 0.95],
+                left: ['-20%', '25%', '105%'],
+                top: ['15%', '38%', '20%'],
+                rotate: [-25, 5, 28],
+                scale: [0.9, 1.2, 0.95],
+                opacity: [0, 1, 1, 0],
               }}
-              transition={{ duration: 0.82, ease: 'easeInOut' }}
-              className="absolute top-0 w-48 sm:w-64 h-auto z-40 filter drop-shadow-[0_12px_28px_rgba(255,23,68,0.7)]"
+              transition={{ duration: 0.85, times: [0, 0.45, 1], ease: 'easeInOut' }}
+              className="absolute w-44 sm:w-56 h-auto z-40 filter drop-shadow-[0_12px_28px_rgba(255,23,68,0.75)]"
             >
               <img
                 src={getAssetUrl('images/spiderman-swinging.png')}
                 alt="Spider-Man Web Swinging"
                 className="w-full h-auto object-contain"
               />
-              <div className="absolute top-2 -right-4 bg-spider-yellow text-black font-comic text-xl px-2.5 py-0.5 border-2 border-black shadow-comic -rotate-12">
-                SWING!
+              <div className="absolute top-2 -right-2 bg-spider-yellow text-black font-comic text-xl px-2.5 py-0.5 border-2 border-black shadow-comic -rotate-12">
+                *SWING!*
               </div>
             </motion.div>
           </div>
