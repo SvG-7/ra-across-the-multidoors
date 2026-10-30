@@ -4,6 +4,7 @@ import { DoorClosed, KeyRound, Sparkles, CheckCircle2, ChevronRight, Play } from
 import { soundEngine } from '../../audio/soundEffects';
 import { CommunityType } from '../../types';
 import { getAssetUrl } from '../../utils/assets';
+import { ThemedDoor } from '../doors/ThemedDoor';
 
 interface Chapter1WelcomeProps {
   selectedCommunity?: CommunityType;
@@ -33,6 +34,7 @@ export const Chapter1Welcome: React.FC<Chapter1WelcomeProps> = ({
       }
     }
   }, [onTriggerEntryTransition, reducedMotion]);
+
   const communities: CommunityType[] = [
     'Residence hall',
     'Apartment community',
@@ -56,7 +58,7 @@ export const Chapter1Welcome: React.FC<Chapter1WelcomeProps> = ({
   return (
     <div className="w-full flex flex-col items-center text-center font-sans">
       {/* 1. Subdued Red Comic-Art Hero Stage with Layered Composition */}
-      <div className="relative w-full overflow-hidden rounded-sm border-3 border-black bg-gradient-to-b from-[#2B060C] via-[#140810] to-[#090D18] p-4 pt-3 pb-5 mb-5 shadow-comic">
+      <div className="relative w-full overflow-hidden rounded-sm border-3 border-black bg-gradient-to-b from-[#2B060C] via-[#140810] to-[#090D18] p-4 pt-3 pb-5 mb-4 shadow-comic">
         {/* Halftone and Speedline Overlays */}
         <div className="absolute inset-0 bg-halftone opacity-40 pointer-events-none" />
         <div className="absolute top-0 right-0 w-48 h-48 bg-spider-red/20 rounded-full blur-3xl pointer-events-none" />
@@ -129,6 +131,15 @@ export const Chapter1Welcome: React.FC<Chapter1WelcomeProps> = ({
           )}
         </div>
       </div>
+
+      {/* Chapter 1 Portal Scene: Spider-Man Between Two Entrances */}
+      <ThemedDoor
+        chapterNumber={1}
+        chapterTitle="One Mission, Two Worlds"
+        doorTheme="Nexus Threshold // Parallel Dorms"
+        isOpen={true}
+        reducedMotion={reducedMotion}
+      />
 
       {/* 2. Interactive Entry Action: "Which community have you worked in?" */}
       <div className="w-full bg-[#0C1222] border-3 border-black p-4 sm:p-5 rounded-sm shadow-comic text-left mb-5">

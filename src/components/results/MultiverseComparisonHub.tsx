@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Users, 
   CheckCircle2, 
   Eye, 
-  AlertCircle,
-  RefreshCw,
-  Edit3
+  Wifi, 
+  WifiOff, 
+  RefreshCw 
 } from 'lucide-react';
 import { AttendeeSession, SharedResponses } from '../../types';
 import { CHAPTERS_DATA } from '../../data/chaptersData';
@@ -28,99 +27,89 @@ export const MultiverseComparisonHub: React.FC<MultiverseComparisonHubProps> = (
   onRetryConnection,
   reducedMotion = false,
 }) => {
+  // Tabs: 'room' (Our Room), 'my_journey' (My Choices), 'explore_alternatives' (Other Approaches)
   const [activeTab, setActiveTab] = useState<'room' | 'my_journey' | 'explore_alternatives'>('room');
   const [selectedTopicChapter, setSelectedTopicChapter] = useState<number>(2);
   const [previewOptionId, setPreviewOptionId] = useState<string | null>(null);
 
   const decisionChapters = [
-    { number: 2, title: 'Connection', prompt: 'Connecting with Alex' },
-    { number: 3, title: 'Trust & Boundaries', prompt: 'Addressing peer accountability' },
-    { number: 4, title: 'Communication Channel', prompt: 'Invitation channel for Alex' },
-    { number: 6, title: 'Adaptability', prompt: 'Refining approach after learning routine' },
+    { number: 2, title: 'Connection' },
+    { number: 3, title: 'Trust and Boundaries' },
+    { number: 4, title: 'Communication' },
+    { number: 6, title: 'Adaptability' },
   ];
 
-  const activeChapterData = CHAPTERS_DATA.find((c) => c.number === selectedTopicChapter) || CHAPTERS_DATA[1];
-  const activeOptions = activeChapterData.options || [];
+  const currentChapterData = CHAPTERS_DATA.find((c) => c.number === selectedTopicChapter);
+  const options = currentChapterData?.options || [];
+  const mySavedChoice = session.answers[selectedTopicChapter];
 
-  // Determine current room counts for the selected chapter
-  const getCountsForChapter = (ch: number): Record<string, number> => {
+  // Distribution data for active chapter
+  const getDistForChapter = (ch: number): Record<string, number> => {
     switch (ch) {
-      case 2: return sharedResponses.chapter2 || {};
-      case 3: return sharedResponses.chapter3 || {};
-      case 4: return sharedResponses.chapter4 || {};
-      case 6: return sharedResponses.chapter6 || {};
-      default: return {};
-    }
-  };
-
-  const counts = getCountsForChapter(selectedTopicChapter);
-  const totalVotesForChapter = activeOptions.reduce((sum, opt) => sum + (counts[opt.id] || 0), 0);
-  const myChoiceId = session.answers[selectedTopicChapter];
-
-  // Status message and styling
-  const status = sharedResponses.connectionStatus || 'has_contributions';
-  const getStatusBadge = () => {
-    switch (status) {
-      case 'loading':
-        return (
-          <span className="flex items-center gap-1.5 text-spider-cyan font-mono text-[11px] bg-black/60 px-2.5 py-1 rounded border border-spider-cyan/40">
-            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-            <span>Connecting to conference room...</span>
-          </span>
-        );
-      case 'connected_empty':
-        return (
-          <span className="flex items-center gap-1.5 text-gray-300 font-mono text-[11px] bg-black/60 px-2.5 py-1 rounded border border-gray-700">
-            <Users className="w-3.5 h-3.5 text-spider-yellow" />
-            <span>Connected &bull; Awaiting room contributions</span>
-          </span>
-        );
-      case 'only_me':
-        return (
-          <span className="flex items-center gap-1.5 text-spider-yellow font-mono text-[11px] bg-black/60 px-2.5 py-1 rounded border border-spider-yellow/50">
-            <CheckCircle2 className="w-3.5 h-3.5 text-spider-yellow" />
-            <span>Connected &bull; You're the first in the room to record an answer</span>
-          </span>
-        );
-      case 'error':
-        return (
-          <div className="flex items-center gap-2 text-rose-400 font-mono text-[11px] bg-rose-950/60 px-2.5 py-1 rounded border border-rose-500/50">
-            <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
-            <span>Room connection offline</span>
-            {onRetryConnection && (
-              <button
-                onClick={onRetryConnection}
-                className="underline font-bold text-white ml-1 cursor-pointer"
-              >
-                Retry
-              </button>
-            )}
-          </div>
-        );
-      case 'has_contributions':
+      case 2:
+        return sharedResponses.chapter2 || {};
+      case 3:
+        return sharedResponses.chapter3 || {};
+      case 4:
+        return sharedResponses.chapter4 || {};
+      case 6:
+        return sharedResponses.chapter6 || {};
       default:
-        return (
-          <span className="flex items-center gap-1.5 text-emerald-400 font-mono text-[11px] bg-black/60 px-2.5 py-1 rounded border border-emerald-500/40">
-            <Users className="w-3.5 h-3.5 text-emerald-400" />
-            <span>{sharedResponses.totalParticipants} Attendees who have answered</span>
-          </span>
-        );
+        return {};
     }
   };
+
+  const dist = getDistForChapter(selectedTopicChapter);
+  const totalVotes = Object.values(dist).reduce((acc, v) => acc + v, 0);
+
+  // Connection status indicator
+  const connectionStatus = sharedResponses.connectionStatus || 'connected_empty';
+  const isOffline = connectionStatus === 'error';
 
   return (
-    <div className="w-full bg-[#080D1A] border-3 border-black rounded-sm shadow-comic p-4 sm:p-5 my-4 text-left">
-      {/* 1. Header & Consolidated Participant Counter */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-800 pb-3 mb-4">
+    <div className="w-full bg-[#080B14] border-3 border-black text-white rounded-sm shadow-comic p-3 sm:p-5 select-none">
+      {/* 1. Header with Multi-Device Room Participant Count */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-gray-800 pb-3 mb-3">
         <div>
-          <span className="text-[10px] font-mono font-bold text-spider-yellow uppercase tracking-wider block mb-0.5">
-            CONFERENCE PARTICIPATION
-          </span>
-          <h2 className="font-comic text-2xl sm:text-3xl text-white uppercase tracking-wide">
-            Shared Multiverse Web
-          </h2>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-spider-cyan animate-pulse" />
+            <h2 className="font-comic text-xl sm:text-2xl text-white uppercase tracking-wide">
+              Shared Multiverse Hub
+            </h2>
+          </div>
+          <p className="font-sans text-xs text-gray-300">
+            Here are some other approaches people explored across different communities.
+          </p>
         </div>
-        <div>{getStatusBadge()}</div>
+
+        {/* Live sync pill badge */}
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-black/60 border border-gray-700 rounded-xs text-[11px] font-mono">
+            {isOffline ? (
+              <WifiOff className="w-3.5 h-3.5 text-spider-red" />
+            ) : (
+              <Wifi className="w-3.5 h-3.5 text-emerald-400" />
+            )}
+            <span className="text-gray-300">
+              {sharedResponses.totalParticipants > 0
+                ? `${sharedResponses.totalParticipants} ${sharedResponses.totalParticipants === 1 ? 'attendee' : 'attendees'} answered`
+                : '1 attendee active (you)'}
+            </span>
+          </div>
+
+          {isOffline && onRetryConnection && (
+            <button
+              onClick={() => {
+                soundEngine.playClick();
+                onRetryConnection();
+              }}
+              className="p-1 bg-spider-red hover:bg-spider-crimson text-white rounded-xs border border-black cursor-pointer"
+              title="Retry sync connection"
+            >
+              <RefreshCw className="w-3 h-3" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 2. Cohesive 3-in-1 View Switcher */}
@@ -182,6 +171,7 @@ export const MultiverseComparisonHub: React.FC<MultiverseComparisonHubProps> = (
               {decisionChapters.map((hub) => {
                 const isSelected = selectedTopicChapter === hub.number;
                 const hasMyAnswer = !!session.answers[hub.number];
+
                 return (
                   <button
                     key={hub.number}
@@ -190,19 +180,23 @@ export const MultiverseComparisonHub: React.FC<MultiverseComparisonHubProps> = (
                       setSelectedTopicChapter(hub.number);
                       setPreviewOptionId(null);
                     }}
-                    className={`p-2 border rounded-xs text-left transition-all cursor-pointer ${
+                    className={`p-2 rounded-xs border text-left transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-[#182238] border-spider-cyan text-white shadow-comic-sm'
-                        : 'bg-black/40 border-gray-800 text-gray-400 hover:text-gray-200'
+                        ? 'bg-[#141C30] border-spider-cyan shadow-comic-sm'
+                        : 'bg-black/50 border-gray-800 hover:border-gray-700'
                     }`}
                   >
-                    <div className="flex items-center justify-between text-[10px] font-mono mb-0.5">
-                      <span className="font-bold">HUB #{hub.number}</span>
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-[10px] text-gray-400 uppercase">
+                        Ch. {hub.number}
+                      </span>
                       {hasMyAnswer && (
-                        <span className="w-2 h-2 rounded-full bg-emerald-400" title="You answered" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Answered" />
                       )}
                     </div>
-                    <div className="font-comic text-xs uppercase truncate leading-tight">
+                    <div className={`font-comic text-xs uppercase tracking-wide truncate ${
+                      isSelected ? 'text-spider-cyan font-bold' : 'text-gray-200'
+                    }`}>
                       {hub.title}
                     </div>
                   </button>
@@ -211,88 +205,77 @@ export const MultiverseComparisonHub: React.FC<MultiverseComparisonHubProps> = (
             </div>
           </div>
 
-          {/* Active Topic Brief */}
-          <div className="p-3 bg-black/60 border border-gray-800 rounded-xs flex items-center justify-between gap-2">
+          {/* Active Topic Banner */}
+          <div className="p-2.5 bg-[#0C1220] border border-gray-800 rounded-xs flex items-center justify-between text-xs">
             <div>
-              <span className="text-[10px] font-mono text-spider-cyan uppercase font-bold block">
-                Chapter {activeChapterData.number} Scenario:
+              <span className="font-mono text-[10px] text-spider-yellow uppercase block font-bold">
+                Chapter {selectedTopicChapter}: {currentChapterData?.title}
               </span>
-              <p className="text-xs sm:text-sm font-sans text-white font-semibold">
-                {activeChapterData.situation || activeChapterData.introduction}
+              <p className="font-sans text-xs text-gray-300">
+                "{currentChapterData?.situation}"
               </p>
             </div>
-            {myChoiceId && (
+            {mySavedChoice ? (
+              <span className="px-2 py-0.5 bg-emerald-950/80 border border-emerald-500/50 text-emerald-400 font-mono text-[10px] uppercase rounded-xs flex-shrink-0">
+                Route Selected
+              </span>
+            ) : (
               <button
-                onClick={() => {
-                  soundEngine.playClick();
-                  onJumpToChapter(selectedTopicChapter);
-                }}
-                className="px-2 py-1 bg-gray-800 hover:bg-gray-700 text-spider-yellow font-mono text-[10px] uppercase rounded border border-gray-700 flex items-center gap-1 flex-shrink-0 cursor-pointer"
-                title="Change your answer in the scenario"
+                onClick={() => onJumpToChapter(selectedTopicChapter)}
+                className="px-2 py-0.5 bg-spider-yellow text-black font-comic text-[10px] uppercase rounded-xs border border-black shadow-comic-sm cursor-pointer"
               >
-                <Edit3 className="w-3 h-3" />
-                <span>Change Answer</span>
+                Choose Route &rarr;
               </button>
             )}
           </div>
 
-          {/* Answer Branches with Real Response Counts & Percentages */}
+          {/* Answer Options & Group Distribution */}
           <div className="space-y-2.5">
-            <span className="text-[10px] font-mono text-gray-400 uppercase tracking-wider block font-bold">
-              Room Responses &bull; Total for this question: {totalVotesForChapter}
-            </span>
-
-            {activeOptions.map((opt, idx) => {
-              const count = counts[opt.id] || 0;
-              const percentage = totalVotesForChapter > 0 ? Math.round((count / totalVotesForChapter) * 100) : 0;
-              const isMyChoice = myChoiceId === opt.id;
+            {options.map((opt) => {
+              const count = dist[opt.id] || (mySavedChoice === opt.id ? 1 : 0);
+              const effectiveTotal = Math.max(totalVotes, mySavedChoice ? 1 : 0);
+              const percentage = effectiveTotal > 0 ? Math.round((count / effectiveTotal) * 100) : 0;
+              const isMyChoice = mySavedChoice === opt.id;
               const isPreviewing = previewOptionId === opt.id;
               const learningAngle = TOPIC_LEARNING_ANGLES[opt.id];
 
-              const barColors = ['bg-spider-cyan', 'bg-spider-yellow', 'bg-spider-red', 'bg-purple-500'];
-              const barColor = barColors[idx % barColors.length];
+              const barColor = isMyChoice
+                ? 'bg-spider-cyan'
+                : 'bg-gradient-to-r from-spider-red to-spider-crimson';
 
               return (
-                <div 
+                <div
                   key={opt.id}
                   className={`p-3 rounded-xs border-2 transition-all ${
                     isMyChoice
-                      ? 'bg-[#121E33] border-spider-cyan shadow-comic-sm'
-                      : isPreviewing
-                      ? 'bg-[#1A1608] border-spider-yellow'
-                      : 'bg-black/50 border-gray-800 hover:border-gray-700'
+                      ? 'bg-[#0E1729] border-spider-cyan shadow-comic-sm'
+                      : 'bg-black/60 border-gray-800'
                   }`}
                 >
+                  {/* Option Title & My Choice Badge */}
                   <div className="flex items-start justify-between gap-2 mb-1.5">
-                    <div className="flex items-start gap-2">
-                      <span className="font-comic text-xs px-1.5 py-0.2 bg-black text-gray-300 rounded border border-gray-700 mt-0.5">
-                        {String.fromCharCode(65 + idx)}
+                    <span className="font-sans text-xs sm:text-sm font-semibold text-white leading-snug">
+                      {opt.label}
+                    </span>
+                    {isMyChoice && (
+                      <span className="px-2 py-0.5 bg-spider-cyan text-black font-mono text-[10px] font-extrabold uppercase rounded-xs border border-black flex-shrink-0">
+                        YOUR ROUTE
                       </span>
-                      <div>
-                        <span className="text-xs sm:text-sm font-sans font-bold text-white block leading-snug">
-                          {opt.label}
-                        </span>
-                        {isMyChoice && (
-                          <span className="inline-flex items-center gap-1 px-1.5 py-0.2 bg-spider-cyan text-black font-mono font-bold text-[9px] uppercase rounded-xs mt-1">
-                            <CheckCircle2 className="w-2.5 h-2.5" />
-                            <span>Your Selected Route</span>
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="text-right flex-shrink-0">
-                      <span className="font-mono text-sm font-bold text-white block">
-                        {percentage}%
-                      </span>
-                      <span className="font-mono text-[10px] text-gray-400">
-                        ({count} {count === 1 ? 'response' : 'responses'})
-                      </span>
-                    </div>
+                    )}
                   </div>
 
-                  {/* Percentage Bar Track */}
-                  <div className="w-full h-2.5 bg-black rounded-full border border-gray-800 overflow-hidden mb-2">
+                  {/* Percentage & Vote Count */}
+                  <div className="flex items-center justify-between text-xs font-mono text-gray-400 mb-1">
+                    <span className="text-[11px] font-bold text-gray-300">
+                      {percentage}% of responses
+                    </span>
+                    <span className="text-[11px]">
+                      {count} {count === 1 ? 'peer' : 'peers'}
+                    </span>
+                  </div>
+
+                  {/* Visual Distribution Progress Bar */}
+                  <div className="w-full h-2.5 bg-gray-900 rounded-full overflow-hidden border border-gray-800 mb-2">
                     <motion.div
                       initial={reducedMotion ? false : { width: 0 }}
                       animate={{ width: `${percentage}%` }}
@@ -301,10 +284,10 @@ export const MultiverseComparisonHub: React.FC<MultiverseComparisonHubProps> = (
                     />
                   </div>
 
-                  {/* Learning Angle Breakdown & Preview Toggle */}
+                  {/* What this prioritizes */}
                   <div className="pt-2 border-t border-gray-800/80 flex items-center justify-between text-[11px] font-sans">
-                    <span className="text-gray-300 text-[11px] italic">
-                      {learningAngle?.whatThisPrioritizes}
+                    <span className="text-gray-300 text-[11px]">
+                      {learningAngle?.whatYouLeanedToward}
                     </span>
 
                     <button
@@ -315,11 +298,11 @@ export const MultiverseComparisonHub: React.FC<MultiverseComparisonHubProps> = (
                       className="text-[10px] font-mono text-spider-yellow hover:underline flex items-center gap-1 ml-2 flex-shrink-0 cursor-pointer"
                     >
                       <Eye className="w-3 h-3" />
-                      <span>{isPreviewing ? 'Hide Details' : 'Preview Tradeoffs'}</span>
+                      <span>{isPreviewing ? 'Hide Details' : 'Details'}</span>
                     </button>
                   </div>
 
-                  {/* Expanded Preview Details (Does not change saved answer) */}
+                  {/* Expanded Details */}
                   {isPreviewing && learningAngle && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
@@ -327,20 +310,20 @@ export const MultiverseComparisonHub: React.FC<MultiverseComparisonHubProps> = (
                       className="mt-2.5 pt-2.5 border-t border-dashed border-gray-800 text-xs space-y-1.5 text-left"
                     >
                       <div>
-                        <span className="text-[10px] font-mono uppercase text-amber-400 font-bold block">
-                          Tradeoff / What to watch for:
+                        <span className="text-[10px] font-mono uppercase text-spider-yellow font-bold block">
+                          Another approach to explore:
                         </span>
                         <p className="text-gray-200 font-sans text-xs">
-                          {learningAngle.whatToWatchFor}
+                          {learningAngle.anotherApproachToExplore}
                         </p>
                       </div>
 
                       <div>
-                        <span className="text-[10px] font-mono uppercase text-spider-cyan font-bold block">
-                          Try this in practice:
+                        <span className="text-[10px] font-mono uppercase text-emerald-400 font-bold block">
+                          Something to try in your community:
                         </span>
-                        <p className="text-gray-200 font-sans text-xs italic bg-black/60 p-1.5 rounded border border-gray-800">
-                          {learningAngle.tryThisAction}
+                        <p className="text-gray-200 font-sans text-xs bg-black/60 p-1.5 rounded border border-gray-800">
+                          {learningAngle.somethingToTry}
                         </p>
                       </div>
 
@@ -368,7 +351,7 @@ export const MultiverseComparisonHub: React.FC<MultiverseComparisonHubProps> = (
           </div>
 
           <div className="p-2.5 bg-black/40 border border-gray-800 rounded-xs text-[10px] font-mono text-gray-400 text-center">
-            Perspectives reflect varying community cultures &bull; The most popular answer is not the single "correct" answer
+            Perspectives reflect varying community cultures &bull; Every approach offers valuable tools for different situations
           </div>
         </div>
       )}
@@ -416,10 +399,16 @@ export const MultiverseComparisonHub: React.FC<MultiverseComparisonHubProps> = (
                       "{learning.label}"
                     </div>
                     <p className="text-xs font-sans text-gray-300">
-                      <span className="text-emerald-400 font-mono text-[10px] uppercase font-bold block">
-                        What this prioritizes:
+                      <span className="text-spider-cyan font-mono text-[10px] uppercase font-bold block">
+                        What you leaned toward:
                       </span>
-                      {learning.whatThisPrioritizes}
+                      {learning.whatYouLeanedToward}
+                    </p>
+                    <p className="text-xs font-sans text-gray-300 mt-1">
+                      <span className="text-spider-yellow font-mono text-[10px] uppercase font-bold block">
+                        Another approach to explore:
+                      </span>
+                      {learning.anotherApproachToExplore}
                     </p>
                   </>
                 ) : (
@@ -434,15 +423,15 @@ export const MultiverseComparisonHub: React.FC<MultiverseComparisonHubProps> = (
       )}
 
       {/* ------------------------------------------------------------------ */}
-      {/* TAB 3: EXPLORE ALTERNATIVE APPROACHES                               */}
+      {/* TAB 3: EXPLORE OTHER APPROACHES                                    */}
       {/* ------------------------------------------------------------------ */}
       {activeTab === 'explore_alternatives' && (
         <div className="space-y-3 text-left">
           <span className="text-[10px] font-mono text-gray-400 uppercase tracking-wider block font-bold">
-            Alternatives to Explore (Complementary Muscles):
+            Here are some other approaches people explored:
           </span>
           <p className="text-xs font-sans text-gray-300 mb-2">
-            An option you did not choose is an alternative approach to consider, not a weakness. Preview their principles and tradeoffs:
+            Exploring different approaches expands your RA toolkit. Preview their principles and nuances:
           </p>
 
           <div className="space-y-3">
@@ -463,15 +452,27 @@ export const MultiverseComparisonHub: React.FC<MultiverseComparisonHubProps> = (
                       if (!angle) return null;
 
                       return (
-                        <div key={opt.id} className="p-2 bg-[#0E1524] border border-gray-700/60 rounded-xs">
-                          <span className="font-sans text-xs font-bold text-white block mb-0.5">
-                            {opt.label}
+                        <div key={opt.id} className="p-2.5 bg-[#0E1524] border border-gray-700/60 rounded-xs space-y-1">
+                          <span className="font-sans text-xs font-bold text-white block">
+                            "{opt.label}"
                           </span>
-                          <span className="text-[10px] font-mono text-gray-400 block mb-1">
-                            Useful principle: {angle.whatThisPrioritizes}
-                          </span>
-                          <p className="text-xs font-sans text-gray-300 italic">
-                            Tradeoff: {angle.whatToWatchFor}
+                          <p className="text-xs font-sans text-gray-300">
+                            <span className="text-spider-cyan font-mono text-[10px] uppercase font-bold block">
+                              What this prioritizes:
+                            </span>
+                            {angle.whatYouLeanedToward}
+                          </p>
+                          <p className="text-xs font-sans text-gray-300">
+                            <span className="text-spider-yellow font-mono text-[10px] uppercase font-bold block">
+                              Another approach to explore:
+                            </span>
+                            {angle.anotherApproachToExplore}
+                          </p>
+                          <p className="text-xs font-sans text-gray-300">
+                            <span className="text-emerald-400 font-mono text-[10px] uppercase font-bold block">
+                              Something to try:
+                            </span>
+                            {angle.somethingToTry}
                           </p>
                         </div>
                       );

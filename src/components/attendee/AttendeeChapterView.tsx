@@ -122,6 +122,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
           {currentChapterNumber < 7 && (
             <ThemedDoor
               chapterNumber={currentChapterNumber}
+              chapterTitle={chapter.title}
               doorTheme={chapter.doorTheme}
               isOpen={hasAnswered || currentChapterNumber === 5}
               reducedMotion={reducedMotion}
@@ -143,16 +144,11 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
             <div className="w-full mt-3">
               {/* Situation Brief Panel */}
               {chapter.situation && (
-                <div className="w-full bg-[#080D1A] border-3 border-black p-3.5 sm:p-4 rounded-sm shadow-comic mb-4 text-left">
-                  <div className="flex items-center justify-between mb-1.5 border-b border-gray-800 pb-1">
-                    <span className="text-[10px] font-mono font-bold text-spider-yellow uppercase tracking-wider">
-                      NARRATION // SITUATION BRIEF
-                    </span>
-                    <span className="text-[10px] font-mono text-gray-400">
-                      PANEL #{currentChapterNumber}.1
-                    </span>
+                <div className="w-full bg-[#090D18] border-2 border-black p-3.5 sm:p-4 rounded-sm shadow-comic mb-4 text-left">
+                  <div className="flex items-center gap-1.5 text-spider-yellow text-[10px] font-mono font-bold uppercase tracking-wider mb-1">
+                    <span>SCENARIO</span>
                   </div>
-                  <p className="text-sm sm:text-base font-sans text-gray-100 leading-snug font-medium">
+                  <p className="text-sm sm:text-base font-sans text-white leading-snug">
                     {chapter.situation}
                   </p>
                 </div>
@@ -170,18 +166,18 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
               {currentChapterNumber === 6 && ch4Details && (
                 <div className="w-full p-3.5 bg-gradient-to-r from-spider-dark via-[#180A18] to-spider-dark border-2 border-spider-magenta/80 rounded-sm shadow-comic text-left mb-4">
                   <div className="flex items-center gap-1.5 text-spider-magenta text-[10px] font-mono font-bold uppercase tracking-wider mb-1">
-                    <span>PAST DECISION RECALLED</span>
+                    <span>PAST APPROACH RECALLED</span>
                   </div>
                   <p className="text-xs sm:text-sm font-sans text-gray-200 leading-snug">
-                    Earlier in Chapter 4, you chose:{' '}
+                    Earlier in Chapter 4, you leaned toward:{' '}
                     <span className="font-comic text-sm sm:text-base text-white px-2 py-0.5 bg-spider-magenta/30 border border-spider-magenta rounded-xs inline-block my-0.5">
                       "{ch4Details.label}"
                     </span>
                   </p>
                   <p className="text-[11px] font-sans text-gray-400 mt-1">
                     {ch4Details.channelType === 'groupchat'
-                      ? "Alex explained that large group chats are routinely muted due to work shifts. Now choose how you adapt your outreach."
-                      : "Your earlier choice already favored direct messaging! Alex's reality confirms that direct check-ins work best. Now refine your approach."}
+                      ? "Alex explains that large group chats are routinely muted due to work shifts. Now choose an approach to explore."
+                      : "Your earlier choice leaned toward personal messaging, which helps keep reading friction low. Now choose an approach to explore."}
                   </p>
                 </div>
               )}
@@ -238,7 +234,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
                 </div>
               )}
 
-              {/* Dynamic Consideration Callout for Selected Option */}
+              {/* Supportive Reflection Callout for Selected Option */}
               {selectedOptionObj?.consideration && (
                 <motion.div
                   initial={reducedMotion ? false : { opacity: 0, y: 6 }}
@@ -246,7 +242,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
                   className="w-full p-3 bg-black/70 border border-spider-cyan/60 rounded-xs text-xs sm:text-sm font-sans text-gray-200 leading-snug text-left mb-3"
                 >
                   <span className="font-bold text-spider-cyan font-mono text-xs uppercase block mb-0.5">
-                    Strategic Tradeoff to Weigh:
+                    Another Approach to Explore:
                   </span>
                   {selectedOptionObj.consideration}
                 </motion.div>
@@ -293,6 +289,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
           {webConnectionsCount > 0 && currentChapterNumber < 7 && (
             <AttendeeWebProgress
               connectionsCount={webConnectionsCount}
+              answers={session.answers}
               ch4Choice={session.answers[4]}
               ch6Choice={session.answers[6]}
               reducedMotion={reducedMotion}

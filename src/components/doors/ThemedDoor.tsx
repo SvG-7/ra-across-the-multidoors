@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { ChapterPortalScene } from './ChapterPortalScene';
+import { soundEngine } from '../../audio/soundEffects';
 
 interface ThemedDoorProps {
   chapterNumber: number;
+  chapterTitle?: string;
   doorTheme: string;
   isOpen: boolean;
   reducedMotion?: boolean;
@@ -10,10 +13,15 @@ interface ThemedDoorProps {
 
 export const ThemedDoor: React.FC<ThemedDoorProps> = ({
   chapterNumber,
+  chapterTitle = 'Chapter Portal',
   doorTheme,
-  isOpen,
+  isOpen: initialIsOpen,
   reducedMotion = false,
 }) => {
+  // Allow user to tap and inspect the portal scene anytime
+  const [manualOpen, setManualOpen] = useState(false);
+  const isOpen = initialIsOpen || manualOpen;
+
   // Bespoke door styling per chapter
   const getDoorDetails = () => {
     switch (chapterNumber) {
@@ -23,6 +31,7 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
           accent: '#FFE600',
           numberLabel: 'DOOR 101 // TWO WORLDS',
           subLabel: 'TRADITIONAL & APARTMENT',
+          title: 'One Mission, Two Worlds',
         };
       case 2:
         return {
@@ -30,6 +39,7 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
           accent: '#00F0FF',
           numberLabel: 'ROOM 204 // ALEX',
           subLabel: 'THE QUIET CORRIDOR',
+          title: 'The Invisible Resident',
         };
       case 3:
         return {
@@ -37,6 +47,7 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
           accent: '#FF1744',
           numberLabel: 'DOOR 312 // PEER REALITY',
           subLabel: 'COMMUNAL BOUNDARIES',
+          title: 'Same Title, Different Relationships',
         };
       case 4:
         return {
@@ -44,6 +55,7 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
           accent: '#FFE600',
           numberLabel: 'PORTAL 408 // SIGNALS',
           subLabel: 'COMMUNICATION CHANNELS',
+          title: 'Two Communication Languages',
         };
       case 5:
         return {
@@ -51,6 +63,7 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
           accent: '#00FFA3',
           numberLabel: 'APT 502 // ALEX’S SUITE',
           subLabel: 'INDEPENDENCE & DEMANDS',
+          title: 'Independence Doesn’t Mean Isolation',
         };
       case 6:
         return {
@@ -58,6 +71,7 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
           accent: '#FF007F',
           numberLabel: 'WARP 601 // GLITCH',
           subLabel: 'ADAPTIVE SHIFT',
+          title: 'When Superpowers Fail',
         };
       case 7:
       default:
@@ -66,31 +80,36 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
           accent: '#00F0FF',
           numberLabel: 'NEXUS // THE MULTIVERSE',
           subLabel: 'SHARED WEB OF RAs',
+          title: 'The Multiverse RA',
         };
     }
   };
 
   const details = getDoorDetails();
+  const effectiveTitle = chapterTitle !== 'Chapter Portal' ? chapterTitle : details.title;
 
   return (
     <div className="w-full flex flex-col items-center my-3 select-none">
       {/* Door Frame Container */}
       <div
-        className="relative w-44 sm:w-52 h-44 sm:h-52 bg-black border-4 border-black rounded-sm shadow-comic overflow-hidden"
-        style={{ perspective: 900 }}
+        className="relative w-full max-w-[340px] sm:max-w-[380px] h-[210px] sm:h-[230px] bg-black border-3 sm:border-4 border-black rounded-sm shadow-comic overflow-hidden cursor-pointer"
+        style={{ perspective: 1000 }}
+        onClick={() => {
+          if (!isOpen) {
+            soundEngine.playThwip();
+            setManualOpen(true);
+          }
+        }}
+        title={isOpen ? 'Portal Open' : 'Tap to open door portal'}
       >
-        {/* Background Behind the Door (Revealed when door swings open) */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F172A] to-[#05060A] flex flex-col items-center justify-center p-3 text-center">
-          <div className="absolute inset-0 bg-halftone opacity-30" />
-          <div className="relative z-10">
-            <span className="font-comic text-xs uppercase tracking-widest text-spider-yellow">
-              CHAPTER {chapterNumber}
-            </span>
-            <div className="font-comic text-base sm:text-lg text-white leading-tight mt-1">
-              PORTAL UNLOCKED
-            </div>
-            <div className="w-8 h-1 bg-spider-cyan mx-auto mt-2 rounded-full animate-pulse" />
-          </div>
+        {/* Background Behind the Door: Distinct Illustrated Spider-Man Scene */}
+        <div className="absolute inset-0 z-0">
+          <ChapterPortalScene
+            chapterNumber={chapterNumber}
+            chapterTitle={effectiveTitle}
+            doorTheme={doorTheme}
+            reducedMotion={reducedMotion}
+          />
         </div>
 
         {/* The Swinging Door Leaf */}
@@ -98,43 +117,44 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
           initial={false}
           animate={
             reducedMotion
-              ? { opacity: isOpen ? 0.15 : 1 }
+              ? { opacity: isOpen ? 0.08 : 1, pointerEvents: isOpen ? 'none' : 'auto' }
               : {
-                  rotateY: isOpen ? -85 : 0,
+                  rotateY: isOpen ? -96 : 0,
                   transformOrigin: 'left center',
+                  pointerEvents: isOpen ? 'none' : 'auto',
                 }
           }
-          transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
-          className="absolute inset-0 border-r-4 border-black p-3 flex flex-col justify-between shadow-lg z-20 cursor-default"
+          transition={{ duration: 0.75, ease: [0.25, 1, 0.5, 1] }}
+          className="absolute inset-0 border-r-4 border-black p-3.5 flex flex-col justify-between shadow-2xl z-20"
           style={{
             backgroundColor: details.doorColor,
             backfaceVisibility: 'hidden',
           }}
         >
           {/* Halftone texture overlay */}
-          <div className="absolute inset-0 bg-halftone opacity-25 pointer-events-none" />
+          <div className="absolute inset-0 bg-halftone opacity-30 pointer-events-none" />
 
           {/* Door Dec / Room Number Plate */}
-          <div className="relative z-10 bg-black/85 border border-white/20 p-1.5 rounded-xs shadow-sm">
-            <div className="text-[10px] font-mono font-bold tracking-wider" style={{ color: details.accent }}>
+          <div className="relative z-10 bg-black/90 border border-white/20 p-2 rounded-xs shadow-md">
+            <div className="text-[11px] font-mono font-bold tracking-wider" style={{ color: details.accent }}>
               {details.numberLabel}
             </div>
-            <div className="text-[9px] font-sans text-gray-300 tracking-wide uppercase">
+            <div className="text-[9.5px] font-sans text-gray-200 tracking-wide uppercase font-medium">
               {details.subLabel}
             </div>
           </div>
 
           {/* Door Peephole and Hardware */}
-          <div className="relative z-10 flex items-center justify-end pr-2">
-            <div className="w-4 h-4 rounded-full bg-spider-yellow border-2 border-black shadow-comic-sm flex items-center justify-center">
-              <div className="w-1.5 h-1.5 rounded-full bg-black" />
+          <div className="relative z-10 flex items-center justify-end pr-3">
+            <div className="w-5 h-5 rounded-full bg-spider-yellow border-2 border-black shadow-comic-sm flex items-center justify-center">
+              <div className="w-2 h-2 rounded-full bg-black" />
             </div>
           </div>
 
           {/* Bottom Door Kickplate */}
-          <div className="relative z-10 border-t-2 border-black/80 pt-1 flex justify-between items-center text-[9px] font-mono text-white/70">
-            <span>CH. {chapterNumber}</span>
-            <span className="uppercase text-[8px] tracking-wider text-spider-yellow">
+          <div className="relative z-10 border-t-2 border-black/80 pt-1.5 flex justify-between items-center text-[10px] font-mono text-white/80">
+            <span>CH. {chapterNumber} &bull; TAP TO ENTER</span>
+            <span className="uppercase text-[9px] tracking-wider text-spider-yellow font-bold">
               {isOpen ? 'OPEN' : 'LOCKED'}
             </span>
           </div>
@@ -142,10 +162,15 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
       </div>
 
       {/* Door Subtitle Caption */}
-      <div className="mt-1.5 text-center">
+      <div className="mt-1.5 text-center flex items-center gap-1.5">
         <span className="text-[11px] font-mono text-gray-400 uppercase tracking-wider">
           {doorTheme}
         </span>
+        {!isOpen && (
+          <span className="text-[9px] font-mono text-spider-cyan underline cursor-pointer" onClick={() => setManualOpen(true)}>
+            (Open Portal)
+          </span>
+        )}
       </div>
     </div>
   );

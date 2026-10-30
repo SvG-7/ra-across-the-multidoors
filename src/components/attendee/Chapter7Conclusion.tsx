@@ -7,6 +7,8 @@ import { getAssetUrl } from '../../utils/assets';
 import { TakeawayScreenshotCard } from '../takeaway/TakeawayScreenshotCard';
 import { SpiderTracker } from '../tracker/SpiderTracker';
 import { MultiverseComparisonHub } from '../results/MultiverseComparisonHub';
+import { AttendeeWebProgress } from '../web/AttendeeWebProgress';
+import { ThemedDoor } from '../doors/ThemedDoor';
 import { sessionManager } from '../../sync/syncClient';
 
 interface Chapter7ConclusionProps {
@@ -63,7 +65,7 @@ export const Chapter7Conclusion: React.FC<Chapter7ConclusionProps> = ({
             Explore the Two Worlds
           </h2>
           <p className="font-sans text-xs sm:text-sm text-gray-300 max-w-md mx-auto mt-0.5">
-            Compare the layout of residence halls and apartment communities, and see how other RAs responded.
+            Compare the architecture of residence halls and apartment communities, and see other approaches RAs explored.
           </p>
         </div>
 
@@ -108,6 +110,23 @@ export const Chapter7Conclusion: React.FC<Chapter7ConclusionProps> = ({
   // 3. DEFAULT SIMPLIFIED TAKEAWAY VIEW
   return (
     <div className="w-full space-y-4">
+      {/* Chapter 7 Portal Door Visual Scene */}
+      <ThemedDoor
+        chapterNumber={7}
+        chapterTitle="The Multiverse RA"
+        doorTheme="The Collective Nexus // One Web"
+        isOpen={true}
+        reducedMotion={reducedMotion}
+      />
+
+      {/* COMPLETED 8-LEGGED PERSONAL SPIDER WEB (With 3-4s Reveal Animation & Interactive Legs) */}
+      <AttendeeWebProgress
+        answers={session.answers}
+        connectionsCount={4}
+        isFinale={true}
+        reducedMotion={reducedMotion}
+      />
+
       {/* Primary Takeaway Card */}
       <div className="w-full bg-[#080B14] border-3 border-black text-white rounded-sm shadow-comic p-4 sm:p-6 relative overflow-hidden">
         {/* Subtle Background Halftone Glow */}
@@ -138,12 +157,12 @@ export const Chapter7Conclusion: React.FC<Chapter7ConclusionProps> = ({
           </div>
         </div>
 
-        {/* 1. Two Potential Strengths */}
+        {/* 1. What You Leaned Toward */}
         <div className="mb-4 space-y-2.5">
           <div className="flex items-center gap-1.5">
             <div className="w-2.5 h-2.5 bg-spider-red rotate-45 flex-shrink-0" />
             <h2 className="font-comic text-base sm:text-lg text-spider-red uppercase tracking-wide">
-              Potential Strengths Observed
+              What You Leaned Toward
             </h2>
           </div>
 
@@ -170,28 +189,28 @@ export const Chapter7Conclusion: React.FC<Chapter7ConclusionProps> = ({
           </div>
         </div>
 
-        {/* 2. One Specific Skill to Practice */}
+        {/* 2. Another Approach to Explore */}
         <div className="mb-4 p-3.5 bg-[#171305] border-2 border-spider-yellow/70 rounded-xs space-y-1.5">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-spider-yellow flex-shrink-0" />
             <h2 className="font-comic text-sm sm:text-base text-spider-yellow uppercase tracking-wide">
-              Skill to Practice: {guide.growthArea.label}
+              Another Approach to Explore: {guide.anotherApproachToExplore.label}
             </h2>
           </div>
           <div className="font-mono text-[11px] text-gray-300 pl-6">
-            {guide.growthArea.evidence}
+            {guide.anotherApproachToExplore.evidence}
           </div>
           <p className="font-sans text-xs sm:text-sm text-gray-200 leading-snug pl-6">
-            {guide.growthArea.text}
+            {guide.anotherApproachToExplore.text}
           </p>
         </div>
 
-        {/* 3. One Concrete Action to Try This Week */}
+        {/* 3. Something to Try in Your Community */}
         <div className="mb-4 p-3.5 bg-gradient-to-r from-[#1E0911] via-[#120E18] to-[#0A1422] border-2 border-white/50 rounded-xs space-y-1.5">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-white flex-shrink-0" />
             <h2 className="font-comic text-sm sm:text-base text-white uppercase tracking-wide">
-              Action This Week: "{guide.actionThisWeek.title}"
+              Something to Try: "{guide.actionThisWeek.title}"
             </h2>
           </div>
           <p className="font-sans text-xs sm:text-sm text-gray-100 leading-snug pl-6">

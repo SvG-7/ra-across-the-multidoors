@@ -94,7 +94,7 @@ export const GroupDistributionResults: React.FC<GroupDistributionResultsProps> =
               {learningAngle && (
                 <div className="pt-1.5 border-t border-gray-800/80 flex items-center justify-between text-[10px] font-mono">
                   <span className="text-gray-400 truncate mr-2">
-                    Prioritizes: {learningAngle.whatThisPrioritizes}
+                    Prioritizes: {learningAngle.whatYouLeanedToward}
                   </span>
                   <button
                     onClick={() => {
@@ -104,21 +104,21 @@ export const GroupDistributionResults: React.FC<GroupDistributionResultsProps> =
                     className="text-spider-yellow hover:underline flex items-center gap-0.5 flex-shrink-0 cursor-pointer"
                   >
                     <Eye className="w-2.5 h-2.5" />
-                    <span>{isExpanded ? 'Hide' : 'Tradeoff'}</span>
+                    <span>{isExpanded ? 'Hide' : 'Details'}</span>
                   </button>
                 </div>
               )}
 
-              {/* Expanded Tradeoff Insight */}
+              {/* Expanded Insight */}
               {isExpanded && learningAngle && (
                 <div className="mt-2 p-2 bg-black/60 border border-gray-800 rounded-xs text-xs font-sans text-gray-300 space-y-1">
                   <p className="text-[11px] text-amber-300">
-                    <span className="font-mono uppercase font-bold text-[10px] block">What to watch for:</span>
-                    {learningAngle.whatToWatchFor}
+                    <span className="font-mono uppercase font-bold text-[10px] block">Another approach to explore:</span>
+                    {learningAngle.anotherApproachToExplore}
                   </p>
                   <p className="text-[11px] text-spider-cyan italic">
-                    <span className="font-mono uppercase font-bold text-[10px] block">Try this:</span>
-                    {learningAngle.tryThisAction}
+                    <span className="font-mono uppercase font-bold text-[10px] block">Something to try in your community:</span>
+                    {learningAngle.somethingToTry}
                   </p>
                 </div>
               )}
@@ -128,7 +128,7 @@ export const GroupDistributionResults: React.FC<GroupDistributionResultsProps> =
       </div>
 
       <div className="mt-3 pt-2 border-t border-gray-800 text-[10px] font-mono text-gray-400 text-center">
-        Different perspectives reflect different building architectures &bull; An unchosen option is an alternative to explore, not a weakness
+        Here are some other approaches people explored &bull; Every approach offers valuable tools for different situations
       </div>
     </div>
   );

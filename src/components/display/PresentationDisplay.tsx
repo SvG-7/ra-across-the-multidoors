@@ -22,7 +22,6 @@ export const PresentationDisplay: React.FC<PresentationDisplayProps> = ({
   const [displayChapterIndex, setDisplayChapterIndex] = useState(0);
   const currentChapter = chapters[displayChapterIndex] || chapters[0];
 
-
   return (
     <div className="min-h-screen bg-[#06080E] text-white p-6 sm:p-8 flex flex-col justify-between select-none overflow-x-hidden font-sans">
       {/* Top Conference Stage Banner */}
@@ -64,6 +63,7 @@ export const PresentationDisplay: React.FC<PresentationDisplayProps> = ({
               </div>
               <ThemedDoor
                 chapterNumber={currentChapter.number}
+                chapterTitle={currentChapter.title}
                 doorTheme={currentChapter.doorTheme}
                 isOpen={true}
                 reducedMotion={reducedMotion}
