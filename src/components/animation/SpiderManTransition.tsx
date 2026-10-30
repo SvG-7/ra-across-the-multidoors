@@ -146,14 +146,14 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
 
             {/* Stage 1 & 3: Spider-Man dual web-shooter character */}
             <motion.div
-              initial={{ scale: 0.5, y: 220, opacity: 0 }}
+              initial={{ scale: 0.5, y: 160, opacity: 0 }}
               animate={{
-                scale: [0.5, 1.1, 1.0, 1.0, 0.9],
-                y: [220, 60, 40, 40, 20],
+                scale: [0.5, 1.08, 1.0, 1.0, 0.95],
+                y: [160, 25, 15, 15, 0],
                 opacity: [0, 1, 1, 1, 0],
               }}
               transition={{ duration: 2.5, times: [0, 0.3, 0.6, 0.85, 1], ease: 'easeOut' }}
-              className="absolute z-40 w-48 sm:w-64 h-auto filter drop-shadow-[0_12px_28px_rgba(255,23,68,0.7)]"
+              className="absolute z-40 w-44 sm:w-60 max-w-[80vw] max-h-[42vh] h-auto flex items-center justify-center filter drop-shadow-[0_12px_28px_rgba(255,23,68,0.7)]"
             >
               <img
                 src={getAssetUrl('images/spiderman_PNG11.png')}
@@ -167,7 +167,7 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               initial={{ scale: 0, rotate: -15 }}
               animate={{ scale: [0, 0, 1.3, 1, 0], rotate: [-15, -15, -8, -6, 0], opacity: [0, 0, 1, 1, 0] }}
               transition={{ duration: 2.5, times: [0, 0.5, 0.65, 0.88, 1] }}
-              className="absolute top-1/4 z-50 bg-spider-yellow text-black font-comic text-2xl sm:text-3xl px-4 py-1.5 border-3 border-black shadow-comic"
+              className="absolute top-16 sm:top-20 z-50 bg-spider-yellow text-black font-comic text-xl sm:text-3xl px-4 py-1.5 border-3 border-black shadow-comic"
             >
               THWIP! TWO WORLDS UNLOCKED!
             </motion.div>
@@ -199,7 +199,7 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               initial={{ x: '100%', rotate: 4 }}
               animate={{ x: ['100%', '100%', '0%', '-5%', '-5%'], rotate: [4, 4, -1, 0, 0], opacity: [0, 0, 1, 1, 0] }}
               transition={{ duration: 2.5, times: [0, 0.45, 0.75, 0.9, 1], ease: [0.25, 1, 0.5, 1] }}
-              className="absolute top-20 right-4 left-4 sm:left-auto sm:right-12 sm:w-80 bg-spider-dark/95 border-4 border-spider-red z-30 shadow-comic flex items-center justify-center p-5 text-center"
+              className="absolute top-16 right-4 left-4 sm:left-auto sm:right-12 sm:w-80 bg-spider-dark/95 border-4 border-spider-red z-30 shadow-comic flex items-center justify-center p-4 text-center"
             >
               <div>
                 <span className="font-mono text-xs text-spider-yellow font-bold uppercase tracking-wider block mb-1">
@@ -213,16 +213,16 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
 
             {/* Swinging Spider-Man */}
             <motion.div
-              initial={{ left: '-25%', top: '15%', rotate: -25, scale: 0.85 }}
+              initial={{ left: '-30%', top: '20%', rotate: -25, scale: 0.85 }}
               animate={{
-                left: ['-25%', '15%', '50%', '110%'],
-                top: ['15%', '38%', '32%', '18%'],
+                left: ['-30%', '5%', '35%', '95%'],
+                top: ['20%', '35%', '30%', '20%'],
                 rotate: [-25, 2, 18, 30],
-                scale: [0.85, 1.25, 1.15, 0.9],
+                scale: [0.85, 1.2, 1.1, 0.9],
                 opacity: [0, 1, 1, 0],
               }}
               transition={{ duration: 2.5, times: [0, 0.35, 0.68, 1], ease: 'easeInOut' }}
-              className="absolute w-44 sm:w-56 h-auto z-40 filter drop-shadow-[0_12px_28px_rgba(255,23,68,0.75)]"
+              className="absolute w-40 sm:w-52 max-w-[75vw] max-h-[35vh] h-auto z-40 filter drop-shadow-[0_12px_28px_rgba(255,23,68,0.75)]"
             >
               <img
                 src={getAssetUrl('images/spiderman-swinging.png')}
@@ -264,9 +264,9 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
             {/* Direct Web Strand line */}
             <svg className="absolute inset-0 w-full h-full z-30" xmlns="http://www.w3.org/2000/svg">
               <motion.line
-                x1="22%"
+                x1="28%"
                 y1="68%"
-                x2="78%"
+                x2="72%"
                 y2="38%"
                 stroke="#00F0FF"
                 strokeWidth="4.5"
@@ -277,7 +277,7 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               />
               {/* Web Impact Splat */}
               <motion.circle
-                cx="78%"
+                cx="72%"
                 cy="38%"
                 r="20"
                 fill="#FF1744"
@@ -291,15 +291,15 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
 
             {/* Spider-Man Lunging Pull Pose */}
             <motion.div
-              initial={{ x: -160, y: 140, scale: 0.9 }}
+              initial={{ x: -120, y: 30, scale: 0.85, opacity: 0 }}
               animate={{
-                x: [-160, -10, -35, -70],
-                y: [140, 95, 120, 140],
-                scale: [0.9, 1.2, 1.05, 0.95],
+                x: [-120, 0, -15, -40],
+                y: [30, -5, 0, 10],
+                scale: [0.85, 1.15, 1.05, 0.95],
                 opacity: [0, 1, 1, 0],
               }}
               transition={{ duration: 2.5, times: [0, 0.35, 0.75, 1] }}
-              className="absolute left-6 bottom-12 z-40 w-44 sm:w-60 h-auto filter drop-shadow-[0_12px_24px_rgba(255,23,68,0.7)]"
+              className="absolute left-4 sm:left-10 bottom-24 sm:bottom-28 z-40 w-40 sm:w-52 max-h-[36vh] h-auto filter drop-shadow-[0_12px_24px_rgba(255,23,68,0.7)]"
             >
               <img
                 src={getAssetUrl('images/spiderman_PNG10.png')}
@@ -372,14 +372,14 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
 
             {/* Spider-Man dual-wrist firing pose */}
             <motion.div
-              initial={{ scale: 0.6, y: 160, opacity: 0 }}
+              initial={{ scale: 0.6, y: 130, opacity: 0 }}
               animate={{
-                scale: [0.6, 1.15, 1.0, 1.0, 0.9],
-                y: [160, 60, 45, 45, 30],
+                scale: [0.6, 1.1, 1.0, 1.0, 0.95],
+                y: [130, 25, 15, 15, 5],
                 opacity: [0, 1, 1, 1, 0],
               }}
               transition={{ duration: 2.5, times: [0, 0.35, 0.65, 0.85, 1] }}
-              className="absolute z-40 w-48 sm:w-64 h-auto filter drop-shadow-[0_12px_24px_rgba(0,240,255,0.6)]"
+              className="absolute z-40 w-44 sm:w-56 max-h-[38vh] h-auto flex items-center justify-center filter drop-shadow-[0_12px_24px_rgba(0,240,255,0.6)]"
             >
               <img
                 src={getAssetUrl('images/spiderman_PNG11.png')}
@@ -392,7 +392,7 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               initial={{ scale: 0 }}
               animate={{ scale: [0, 0, 1.3, 1, 0], opacity: [0, 0, 1, 1, 0] }}
               transition={{ duration: 2.5, times: [0, 0.45, 0.65, 0.88, 1] }}
-              className="absolute top-1/4 z-50 bg-spider-cyan text-black font-comic text-2xl sm:text-3xl px-3.5 py-1 border-2 border-black shadow-comic"
+              className="absolute top-16 sm:top-20 z-50 bg-spider-cyan text-black font-comic text-xl sm:text-3xl px-3.5 py-1 border-2 border-black shadow-comic"
             >
               SIGNALS LINKED!
             </motion.div>
@@ -422,14 +422,14 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
 
             {/* Spider-Man Crawling along the frame edge */}
             <motion.div
-              initial={{ x: -160, y: 70 }}
+              initial={{ x: '-110vw', y: 0, opacity: 0 }}
               animate={{
-                x: [-160, 40, 180, 380],
-                y: [70, 60, 65, 75],
+                x: ['-110vw', '-10vw', '15vw', '110vw'],
+                y: [0, -10, 0, 10],
                 opacity: [0, 1, 1, 0],
               }}
               transition={{ duration: 2.5, times: [0, 0.35, 0.75, 1], ease: 'linear' }}
-              className="absolute top-1/3 z-40 w-36 sm:w-48 h-auto filter drop-shadow-[0_8px_20px_rgba(255,23,68,0.7)]"
+              className="absolute top-[30%] sm:top-[28%] z-40 w-36 sm:w-44 max-h-[25vh] h-auto filter drop-shadow-[0_8px_20px_rgba(255,23,68,0.7)]"
             >
               <img
                 src={getAssetUrl('images/spiderman_PNG54.png')}
@@ -464,10 +464,10 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
             {/* Vertical Bungee Web Strand */}
             <svg className="absolute inset-0 w-full h-full z-30" xmlns="http://www.w3.org/2000/svg">
               <motion.line
-                x1="62%"
+                x1="68%"
                 y1="0%"
-                x2="62%"
-                y2="52%"
+                x2="68%"
+                y2="48%"
                 stroke="#00F0FF"
                 strokeWidth="4"
                 initial={{ pathLength: 0 }}
@@ -478,13 +478,13 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
 
             {/* Upside Down Hanging Spider-Man character */}
             <motion.div
-              initial={{ y: -280, opacity: 0 }}
+              initial={{ y: -320, opacity: 0 }}
               animate={{
-                y: [-280, 45, 30, -80],
+                y: [-320, 130, 120, -120],
                 opacity: [0, 1, 1, 0],
               }}
               transition={{ duration: 2.5, times: [0, 0.4, 0.75, 1] }}
-              className="absolute top-0 right-1/4 z-40 w-34 sm:w-48 h-auto filter drop-shadow-[0_12px_24px_rgba(255,23,68,0.7)]"
+              className="absolute top-0 right-[15%] sm:right-1/4 z-40 w-36 sm:w-48 max-h-[50vh] h-auto filter drop-shadow-[0_12px_24px_rgba(255,23,68,0.7)]"
             >
               <img
                 src={getAssetUrl('images/spiderman-colgado.png')}
@@ -516,7 +516,7 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
                 <g key={idx}>
                   <motion.line
                     x1="50%"
-                    y1="75%"
+                    y1="65%"
                     x2={s.x2}
                     y2={s.y2}
                     stroke={s.color}
@@ -543,14 +543,14 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
 
             {/* Heroic Landing Spider-Man */}
             <motion.div
-              initial={{ scale: 1.5, y: 20, opacity: 0 }}
+              initial={{ scale: 1.4, y: -90, opacity: 0 }}
               animate={{
-                scale: [1.5, 1.0, 1.05, 0.95],
-                y: [20, 110, 100, 80],
+                scale: [1.4, 1.0, 1.05, 0.95],
+                y: [-90, 0, -5, 0],
                 opacity: [0, 1, 1, 0],
               }}
               transition={{ duration: 3.4, times: [0, 0.3, 0.75, 1] }}
-              className="absolute bottom-6 z-40 w-48 sm:w-64 h-auto filter drop-shadow-[0_12px_28px_rgba(255,23,68,0.7)]"
+              className="absolute bottom-16 sm:bottom-24 z-40 w-44 sm:w-56 max-h-[38vh] h-auto flex items-center justify-center filter drop-shadow-[0_12px_28px_rgba(255,23,68,0.7)]"
             >
               <img
                 src={getAssetUrl('images/spiderman_PNG40.png')}
@@ -564,7 +564,7 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               initial={{ scale: 0 }}
               animate={{ scale: [0, 0, 1.3, 1, 0], opacity: [0, 0, 1, 1, 0] }}
               transition={{ duration: 3.4, times: [0, 0.45, 0.65, 0.88, 1] }}
-              className="absolute top-1/3 z-50 bg-spider-yellow text-black font-comic text-2xl sm:text-4xl px-5 py-2 border-3 border-black shadow-comic"
+              className="absolute top-16 sm:top-20 z-50 bg-spider-yellow text-black font-comic text-xl sm:text-3xl px-5 py-2 border-3 border-black shadow-comic"
             >
               MULTIVERSE WEB COMPLETE!
             </motion.div>
@@ -591,10 +591,10 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
             </svg>
 
             <motion.div
-              initial={{ x: 380, y: 140, scale: 0.8 }}
-              animate={{ x: -280, y: 180, scale: 1.15 }}
+              initial={{ x: '110vw', y: 0, scale: 0.85 }}
+              animate={{ x: '-110vw', y: 20, scale: 1.1 }}
               transition={{ duration: 0.52, ease: 'easeIn' }}
-              className="absolute top-1/4 z-40 w-40 sm:w-52 h-auto filter drop-shadow-[0_8px_20px_rgba(0,240,255,0.7)]"
+              className="absolute top-[28%] z-40 w-36 sm:w-48 max-h-[32vh] h-auto filter drop-shadow-[0_8px_20px_rgba(0,240,255,0.7)]"
             >
               <img
                 src={getAssetUrl('images/spiderman-swinging.png')}

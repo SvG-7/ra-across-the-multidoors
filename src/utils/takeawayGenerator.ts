@@ -371,7 +371,7 @@ export function generateFieldGuide(session: AttendeeSession): FieldGuideData {
 
   // Personalized Next Step (replaces generic quote as sole ending)
   let personalizedNextStep: PersonalizedNextStep;
-  if (ch2 && ch6) {
+  if (ch2 && ch6 && TOPIC_LEARNING_ANGLES[ch2] && TOPIC_LEARNING_ANGLES[ch6]) {
     personalizedNextStep = {
       title: 'Your Multiverse Pathway',
       text: `Take your Chapter 2 priority (${TOPIC_LEARNING_ANGLES[ch2].label.toLowerCase()}) and apply your Chapter 6 adaptation (${TOPIC_LEARNING_ANGLES[ch6].label.toLowerCase()}) to one resident in your building this week.`,

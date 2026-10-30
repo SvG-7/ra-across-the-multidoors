@@ -164,7 +164,7 @@ export const MultiverseComparisonHub: React.FC<MultiverseComparisonHubProps> = (
               : 'text-gray-400 hover:text-white'
           }`}
         >
-          Explore Other
+          Other Approaches
         </button>
       </div>
 

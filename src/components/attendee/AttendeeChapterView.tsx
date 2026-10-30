@@ -14,10 +14,8 @@ import { Chapter5AlexStory } from '../story/Chapter5AlexStory';
 import { ChapterTakeaway } from '../takeaway/ChapterTakeaway';
 import { CommunicationRouteGraphic } from '../animation/CommunicationRouteGraphic';
 import { AttendeeWebProgress } from '../web/AttendeeWebProgress';
-import { SpiderTracker } from '../tracker/SpiderTracker';
 import { GroupDistributionResults } from '../results/GroupDistributionResults';
-import { MultiverseComparisonHub } from '../results/MultiverseComparisonHub';
-import { sessionManager } from '../../sync/syncClient';
+import { Chapter7Conclusion } from './Chapter7Conclusion';
 import { soundEngine } from '../../audio/soundEffects';
 
 interface AttendeeChapterViewProps {
@@ -310,30 +308,15 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
             />
           )}
 
-          {/* Chapter 7: The Multiverse RA Conclusion View */}
+          {/* Chapter 7: Simplified Personal Takeaway & Exploration */}
           {currentChapterNumber === 7 && (
-            <div className="w-full my-3 space-y-4">
-              {/* Interactive Illustrated Neighborhood Map with Perched Spider-Man */}
-              <SpiderTracker
+            <div className="w-full my-3">
+              <Chapter7Conclusion
                 session={session}
+                sharedResponses={sharedResponses}
                 onJumpToChapter={onJumpToChapter}
-                onSelectComparisonChapter={() => {
-                  const el = document.getElementById('room-comparison-hub');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}
                 reducedMotion={reducedMotion}
               />
-
-              {/* Cohesive Shared Room Comparison Hub */}
-              <div id="room-comparison-hub">
-                <MultiverseComparisonHub
-                  session={session}
-                  sharedResponses={sharedResponses}
-                  onJumpToChapter={onJumpToChapter}
-                  onRetryConnection={() => sessionManager.retryConnection()}
-                  reducedMotion={reducedMotion}
-                />
-              </div>
             </div>
           )}
 
