@@ -145,11 +145,11 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
             </div>
 
             {/* Framing Spider-Man Artwork */}
-            <div className="w-18 sm:w-22 h-auto flex-shrink-0 -mt-1 -mr-1">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 -mt-2 -mr-1 flex items-center justify-center">
               <img
                 src={getAssetUrl('images/spiderman-perched.png')}
                 alt="Spider-Man Mascot"
-                className="w-full h-auto object-contain filter drop-shadow-[0_4px_12px_rgba(255,23,68,0.55)]"
+                className="w-full h-full object-contain filter drop-shadow-[0_4px_12px_rgba(255,23,68,0.55)]"
               />
             </div>
           </div>
