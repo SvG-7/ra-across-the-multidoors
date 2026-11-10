@@ -673,7 +673,7 @@ export const SpiderTracker: React.FC<SpiderTrackerProps> = ({
                       {/* Perched Spider-Man on Selected Location */}
                       {isSelected && (
                         <image
-                          href={getAssetUrl('images/spiderman-crouching.png')}
+                          href={getAssetUrl('images/spiderman-perched.png')}
                           x={loc.x - 17}
                           y={loc.y - 32}
                           width="34"

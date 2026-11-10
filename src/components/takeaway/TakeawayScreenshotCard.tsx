@@ -54,7 +54,7 @@ export const TakeawayScreenshotCard: React.FC<TakeawayScreenshotCardProps> = ({
               Your RA Takeaway
             </h1>
             <p className="font-mono text-[11px] text-spider-cyan uppercase tracking-wider mt-0.5 font-bold">
-              Community: {guide.community === 'Apartment community' ? 'Apartment Community' : 'Residence Hall'}
+              Community: {guide.community === 'Apartment community' ? 'Apartment Community' : guide.community === 'Residence hall' ? 'Residence Hall' : guide.community === 'New to the RA role' ? 'New to the RA Role' : 'Residence Hall & Apartment'}
             </p>
           </div>
 
@@ -91,12 +91,12 @@ export const TakeawayScreenshotCard: React.FC<TakeawayScreenshotCardProps> = ({
                 Personal Web Insignia
               </span>
               <span className="text-[9px] font-sans text-gray-300">
-                4 decisions woven into 8 spider legs
+                {guide.answeredCount} of {guide.totalDecisions} decisions woven into web
               </span>
             </div>
           </div>
           <span className="text-[9px] font-mono text-spider-cyan font-bold uppercase">
-            COMPLETE
+            {guide.isComplete ? 'COMPLETE' : `${guide.answeredCount}/${guide.totalDecisions}`}
           </span>
         </div>
 
@@ -135,7 +135,7 @@ export const TakeawayScreenshotCard: React.FC<TakeawayScreenshotCardProps> = ({
           <div className="flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-spider-yellow flex-shrink-0" />
             <h2 className="font-comic text-xs sm:text-sm text-spider-yellow uppercase tracking-wide">
-              Another Approach to Explore: {guide.anotherApproachToExplore.label}
+              Opportunity to Explore: {guide.anotherApproachToExplore.label}
             </h2>
           </div>
           <div className="font-mono text-[9.5px] text-gray-400 pl-5">
@@ -172,7 +172,7 @@ export const TakeawayScreenshotCard: React.FC<TakeawayScreenshotCardProps> = ({
         {/* Honest Attribution Footer */}
         <div className="relative z-10 pt-2 border-t border-gray-800 text-center">
           <p className="font-mono text-[9px] text-gray-400 italic">
-            Based on your choices in today’s scenarios. These observations reflect prioritized approaches, not evaluations of competence.
+            Derived directly from your saved scenario choices. Patterns highlight tradeoffs, not competence.
           </p>
         </div>
       </div>

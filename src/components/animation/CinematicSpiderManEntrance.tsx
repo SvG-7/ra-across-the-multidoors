@@ -108,7 +108,7 @@ export const CinematicEntranceModal: React.FC<CinematicEntranceModalProps> = ({
               className="absolute top-10 z-20 flex flex-col items-center"
             >
               <img
-                src={getAssetUrl('images/spiderman-crouching.png')}
+                src={getAssetUrl('images/spiderman-perched.png')}
                 alt="Spider-Man Perched"
                 className="w-28 sm:w-32 h-auto object-contain filter drop-shadow-[0_8px_16px_rgba(255,23,68,0.7)]"
               />
@@ -222,7 +222,7 @@ export const CinematicEntranceModal: React.FC<CinematicEntranceModalProps> = ({
               />
 
               <img
-                src={getAssetUrl('images/spiderman-hero-character.png')}
+                src={getAssetUrl('images/spiderman-hero-portrait.png')}
                 alt="Spider-Man Hero Landing Pose"
                 className="w-48 sm:w-56 h-auto object-contain filter drop-shadow-[0_16px_32px_rgba(255,23,68,0.85)]"
               />

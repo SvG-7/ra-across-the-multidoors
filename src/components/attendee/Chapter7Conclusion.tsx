@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Camera, Compass, ArrowLeft, CheckCircle2, Sparkles, Calendar } from 'lucide-react';
+import { Camera, Compass, ArrowLeft, CheckCircle2, Sparkles, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
 import { AttendeeSession, SharedResponses } from '../../types';
 import { generateFieldGuide } from '../../utils/takeawayGenerator';
 import { soundEngine } from '../../audio/soundEffects';
@@ -25,6 +25,7 @@ export const Chapter7Conclusion: React.FC<Chapter7ConclusionProps> = ({
   reducedMotion = false,
 }) => {
   const [viewMode, setViewMode] = useState<'takeaway' | 'explore' | 'screenshot'>('takeaway');
+  const [showMoreContext, setShowMoreContext] = useState(false);
   const guide = generateFieldGuide(session);
 
   // 1. SCREENSHOT VIEW
@@ -143,7 +144,7 @@ export const Chapter7Conclusion: React.FC<Chapter7ConclusionProps> = ({
               Your RA Takeaway
             </h1>
             <p className="font-mono text-xs sm:text-sm text-spider-cyan tracking-wide uppercase mt-1 font-semibold">
-              Community: {guide.community === 'Apartment community' ? 'Apartment Community' : 'Residence Hall'}
+              Community: {guide.community === 'Apartment community' ? 'Apartment Community' : guide.community === 'Residence hall' ? 'Residence Hall' : guide.community === 'New to the RA role' ? 'New to the RA Role' : 'Residence Hall & Apartment'}
             </p>
           </div>
 
@@ -189,12 +190,12 @@ export const Chapter7Conclusion: React.FC<Chapter7ConclusionProps> = ({
           </div>
         </div>
 
-        {/* 2. Another Approach to Explore */}
+        {/* 2. Opportunity to Explore */}
         <div className="mb-4 p-3.5 bg-[#171305] border-2 border-spider-yellow/70 rounded-xs space-y-1.5">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-spider-yellow flex-shrink-0" />
             <h2 className="font-comic text-sm sm:text-base text-spider-yellow uppercase tracking-wide">
-              Another Approach to Explore: {guide.anotherApproachToExplore.label}
+              Opportunity to Explore: {guide.anotherApproachToExplore.label}
             </h2>
           </div>
           <div className="font-mono text-[11px] text-gray-300 pl-6">
@@ -203,6 +204,26 @@ export const Chapter7Conclusion: React.FC<Chapter7ConclusionProps> = ({
           <p className="font-sans text-xs sm:text-sm text-gray-200 leading-snug pl-6">
             {guide.anotherApproachToExplore.text}
           </p>
+          {guide.anotherApproachToExplore.detail && (
+            <div className="pl-6 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  soundEngine.playClick();
+                  setShowMoreContext((prev) => !prev);
+                }}
+                className="inline-flex items-center gap-1 text-[11px] font-mono text-spider-cyan hover:text-white underline-offset-2 hover:underline cursor-pointer"
+              >
+                <span>{showMoreContext ? 'Hide extra context' : 'Read longer explanation'}</span>
+                {showMoreContext ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              </button>
+              {showMoreContext && (
+                <p className="mt-1.5 text-xs font-sans text-gray-300 leading-relaxed bg-black/40 border border-spider-yellow/30 rounded-xs p-2.5">
+                  {guide.anotherApproachToExplore.detail}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         {/* 3. Something to Try in Your Community */}
@@ -221,7 +242,7 @@ export const Chapter7Conclusion: React.FC<Chapter7ConclusionProps> = ({
         {/* Honest Attribution Footer Note */}
         <div className="pt-2 border-t border-gray-800 text-center">
           <p className="font-mono text-[10px] text-gray-400 italic">
-            Based on your choices in today's scenarios. These observations reflect prioritized approaches, not evaluations of competence.
+            Derived directly from your saved choices. Patterns highlight tradeoffs in these scenarios, not competence.
           </p>
         </div>
       </div>

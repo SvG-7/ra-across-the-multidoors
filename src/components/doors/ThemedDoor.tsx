@@ -175,9 +175,9 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
           {doorTheme}
         </span>
         {!isOpen && (
-          <span className="text-[9px] font-mono text-spider-cyan underline cursor-pointer" onClick={() => setManualOpen(true)}>
+          <button type="button" className="text-[9px] font-mono text-spider-cyan underline cursor-pointer bg-transparent border-0 p-0" onClick={() => setManualOpen(true)}>
             (Open Portal)
-          </span>
+          </button>
         )}
         {isOpen && (chapterNumber === 2 || chapterNumber === 3 || chapterNumber === 5 || chapterNumber === 6) && (
           <button

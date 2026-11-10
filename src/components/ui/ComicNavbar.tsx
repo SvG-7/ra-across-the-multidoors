@@ -23,7 +23,7 @@ export const ComicNavbar: React.FC<ComicNavbarProps> = ({
   const [showChapterMenu, setShowChapterMenu] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-spider-dark/95 backdrop-blur-md border-b-2 border-black shadow-comic-sm">
+    <header className="relative z-40 w-full bg-spider-dark/95 backdrop-blur-md border-b-2 border-black shadow-comic-sm">
       <div className="max-w-md mx-auto px-3 h-14 flex items-center justify-between gap-2">
         {/* Logo & Title */}
         <div className="flex items-center gap-2 min-w-0">

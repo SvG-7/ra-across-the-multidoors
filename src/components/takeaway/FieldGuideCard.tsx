@@ -8,7 +8,9 @@ import {
   Target,
   CalendarCheck,
   Zap,
-  BookOpen
+  BookOpen,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { AttendeeSession } from '../../types';
 import { generateFieldGuide } from '../../utils/takeawayGenerator';
@@ -30,6 +32,7 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
 }) => {
   const [screenshotMode, setScreenshotMode] = useState(initialScreenshotMode);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [expandOpportunity, setExpandOpportunity] = useState(false);
 
   const guide = generateFieldGuide(session);
 
@@ -211,12 +214,12 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
             </div>
           </div>
 
-          {/* Section B: A Skill to Practice Next (Growth Area) */}
+          {/* Section B: Opportunity to Explore */}
           <div className="p-3.5 bg-[#17130A] border-2 border-spider-yellow/80 rounded-xs shadow-comic-sm">
             <div className="flex items-center gap-1.5 mb-1.5">
               <Target className="w-4 h-4 text-spider-yellow" />
               <h2 className="font-comic text-lg text-spider-yellow uppercase tracking-wide">
-                A Skill to Practice Next: {guide.growthArea.label}
+                Opportunity to Explore: {guide.growthArea.label}
               </h2>
             </div>
             <p className="text-[10px] font-mono text-yellow-300 mb-1.5">
@@ -225,6 +228,26 @@ export const FieldGuideCard: React.FC<FieldGuideCardProps> = ({
             <p className="text-xs sm:text-sm font-sans text-gray-200 leading-snug">
               {guide.growthArea.text}
             </p>
+            {guide.growthArea.detail && !screenshotMode && (
+              <div className="mt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundEngine.playClick();
+                    setExpandOpportunity((prev) => !prev);
+                  }}
+                  className="inline-flex items-center gap-1 text-[11px] font-mono text-spider-cyan hover:text-white underline-offset-2 hover:underline cursor-pointer"
+                >
+                  <span>{expandOpportunity ? 'Hide extra context' : 'Read longer explanation'}</span>
+                  {expandOpportunity ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                </button>
+                {expandOpportunity && (
+                  <p className="mt-1.5 text-xs font-sans text-gray-300 leading-relaxed bg-black/40 border border-spider-yellow/30 rounded-xs p-2.5">
+                    {guide.growthArea.detail}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Section C: Borrow Across Worlds */}

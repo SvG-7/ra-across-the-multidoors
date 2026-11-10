@@ -132,7 +132,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
             />
           )}
 
-          {/* Replay Control for Chapter 4 -> 5 Psychic Transition */}
+          {/* Replay Control for Chapter 4 -> 5 Entrance */}
           {currentChapterNumber === 5 && onReplayTransition && (
             <button
               type="button"
@@ -195,7 +195,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
                   <p className="text-[11px] font-sans text-gray-400 mt-1">
                     {ch4Details.channelType === 'groupchat'
                       ? "Ned explains that large group chats are routinely muted due to work shifts. Now choose an approach to explore."
-                      : "Your earlier choice leaned toward personal messaging, which helps keep reading friction low. Now choose an approach to explore."}
+                      : ch4Details.channelType === 'inperson' ? "Ned explains that unscheduled visits can catch them away or resting between shifts. Now choose an approach to explore." : ch4Details.channelType === 'email' ? "Ned explains that crowded inboxes are easy to miss between shifts, and brief direct notes are easier to answer. Now choose an approach to explore." : "Your earlier choice already favored personal messaging. Now decide how to adjust timing, length, or contact frequency."}
                   </p>
                 </div>
               )}

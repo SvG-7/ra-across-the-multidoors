@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FastForward, Sparkles, Eye, Phone, MessageSquare, Users, Mail } from 'lucide-react';
+import { FastForward, Sparkles, Eye } from 'lucide-react';
 import { soundEngine } from '../../audio/soundEffects';
 import { getAssetUrl } from '../../utils/assets';
 
@@ -26,7 +26,7 @@ export const getTransitionDurationMs = (
   type: TransitionType,
   reducedMotion = false
 ): number => {
-  if (type === '4_to_5') return reducedMotion ? 1100 : 3000;
+  if (type === '4_to_5') return reducedMotion ? 1100 : 2800;
   if (type === 'backward') return 550;
   if (type === '6_to_7') return 3400; // 3.4 seconds for radiant trio finale
   if (type === 'entry_to_1') return 3200; // 3.2 seconds for cinematic entrance
@@ -43,17 +43,13 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
   useEffect(() => {
     if (typeof window !== 'undefined') {
       [
-        'images/spiderman-hero-character.png',
+        'images/spiderman-grounded.png',
+        'images/spiderman-reflective.png',
         'images/spiderman-hero-portrait.png',
         'images/spiderman-noir.png',
-        'images/spiderman-noir-portrait.png',
         'images/spiderman-miles.png',
-        'images/jean-grey-bnd.png',
         'images/venom-character.png',
-        'images/spiderman-powerless-wrist.png',
-        'images/spiderman-powerless-step.png',
         'images/spiderman-swinging.png',
-        'images/spiderman-crouching.png',
         'images/spiderman-perched.png'
       ].forEach((path) => {
         const img = new Image();
@@ -102,14 +98,14 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
             transitionType === '4_to_5'
               ? reducedMotion
                 ? { opacity: [0, 0.88, 0.88, 0] }
-                : { opacity: [0, 0.55, 0.95, 0.92, 0] }
+                : { opacity: [0, 0.96, 1, 1, 0] }
               : { opacity: [0, 0.75, 0.75, 0.1, 0] }
           }
           transition={{
             duration: totalDurationSec,
             times: transitionType === '4_to_5' && !reducedMotion ? [0, 0.18, 0.48, 0.8, 1] : [0, 0.2, 0.75, 0.9, 1],
           }}
-          className={`absolute inset-0 ${transitionType === '4_to_5' ? 'bg-[#08060B]' : 'bg-[#05070D]'}`}
+          className={`absolute inset-0 ${transitionType === '4_to_5' ? 'bg-[#070B14]' : 'bg-[#05070D]'}`}
         />
 
         {/* Skip Animation Control Button */}
@@ -199,7 +195,7 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               className="absolute z-40 w-44 sm:w-60 max-w-[80vw] max-h-[42vh] h-auto flex items-center justify-center filter drop-shadow-[0_12px_28px_rgba(255,23,68,0.7)]"
             >
               <img
-                src={getAssetUrl('images/spiderman-hero-character.png')}
+                src={getAssetUrl('images/spiderman-perched.png')}
                 alt="Classic Spider-Man Pulling Entrance"
                 className="w-full h-auto object-contain"
               />
@@ -313,22 +309,23 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               </h3>
             </motion.div>
 
-            {/* VENOM Coalescing in Center-Lower Stage */}
+            {/* VENOM Unwarped with Restrained Edge Lighting Separating Symbiote from Dark Stage */}
             <motion.div
-              initial={{ scale: 0.86, opacity: 0 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{
-                scale: [0.86, 1.03, 1.0, 1.0, 0.96],
-                opacity: [0, 1, 1, 1, 0],
+                opacity: [0, 1, 1, 0],
+                y: [14, 0, 0, 0],
               }}
-              transition={{ duration: 2.6, times: [0, 0.35, 0.65, 0.85, 1], ease: 'easeOut' }}
-              className="absolute bottom-10 z-40 h-[44vh] max-h-[340px] w-auto max-w-[85vw] flex flex-col items-center justify-end filter drop-shadow-[0_12px_32px_rgba(0,0,0,0.95)]"
+              transition={{ duration: 2.6, times: [0, 0.3, 0.84, 1], ease: 'easeOut' }}
+              className="relative z-40 mt-20 sm:mt-24 h-[44vh] max-h-[340px] w-auto max-w-[85vw] flex flex-col items-center justify-end"
             >
+              <div className="absolute inset-x-2 top-3 bottom-6 rounded-full bg-[radial-gradient(ellipse_at_50%_40%,rgba(148,163,184,0.34),rgba(56,189,248,0.14)_48%,transparent_74%)] pointer-events-none" />
               <img
                 src={getAssetUrl('images/venom-character.png')}
                 alt="Venom entering residence hall boundaries scene"
-                className="h-full max-h-full w-auto max-w-full object-contain"
+                className="relative z-10 h-[calc(100%-26px)] w-auto max-w-full object-contain filter drop-shadow-[0_0_8px_rgba(148,163,184,0.45)] drop-shadow-[0_10px_22px_rgba(0,0,0,0.95)]"
               />
-              <div className="mt-1 bg-black/90 text-gray-200 border border-slate-600 font-mono text-[9px] uppercase px-2.5 py-0.5 shadow-md flex-shrink-0">
+              <div className="relative z-20 mt-1 bg-black/90 text-gray-200 border border-slate-600 font-mono text-[9px] uppercase px-2.5 py-0.5 shadow-md flex-shrink-0">
                 SYMBIOTE BOUNDARIES // SHARED LIVING
               </div>
             </motion.div>
@@ -400,7 +397,7 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               className="absolute left-4 sm:left-12 bottom-20 z-40 w-40 sm:w-52 max-h-[36vh] h-auto filter drop-shadow-[0_12px_24px_rgba(255,23,68,0.7)]"
             >
               <img
-                src={getAssetUrl('images/spiderman-hero-character.png')}
+                src={getAssetUrl('images/spiderman-perched.png')}
                 alt="Classic Spider-Man Pulling Panel"
                 className="w-full h-auto object-contain"
               />
@@ -418,27 +415,26 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
         )}
 
         {/* ================================================================== */}
-        {/* TRANSITION 5: CH 4 -> CH 5 (JEAN GREY - BRAND NEW DAY PSYCHIC)     */}
-        {/* Leave Ch. 4 -> heat-haze cinnabar-amber refraction -> crisp Ch. 5  */}
-        {/* (No text shake, no Phoenix fire, no lightning, with reduced-motion) */}
+        {/* TRANSITION 5: CH 4 -> CH 5 (SLOW CAMERA MOVE PAST FOREGROUND WEB)   */}
+        {/* Environment establishes before heading settles; zero magical FX    */}
         {/* ================================================================== */}
         {transitionType === '4_to_5' && (
           <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
             {reducedMotion ? (
-              /* Calm Reduced-Motion Alternative: Crisp Static Cross-Dissolve */
+              /* Calm Reduced-Motion Alternative: Crisp Static Rooftop Crossfade */
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: [0, 1, 1, 0] }}
                 transition={{ duration: 1.1, times: [0, 0.25, 0.78, 1] }}
-                className="relative z-40 w-[88%] max-w-sm p-5 bg-[#0B0F1A] border-2 border-amber-500/60 rounded-sm shadow-comic text-center"
+                className="relative z-40 w-[88%] max-w-sm p-5 bg-[#090E18] border-2 border-amber-500/60 rounded-sm shadow-comic text-center"
               >
                 <img
-                  src={getAssetUrl('images/jean-grey-bnd.png')}
-                  alt="Jean Grey in evening transit light"
-                  className="h-36 sm:h-44 w-auto object-contain mx-auto mb-2.5"
+                  src={getAssetUrl('images/spiderman-reflective.png')}
+                  alt="Spider-Man sitting thoughtfully overlooking evening apartment windows"
+                  className="h-36 sm:h-44 w-auto object-contain mx-auto mb-2.5 filter drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)]"
                 />
                 <div className="inline-block bg-amber-950/75 text-amber-200 border border-amber-500/50 px-2.5 py-0.5 font-mono text-[9px] font-bold uppercase mb-1">
-                  SEEING BEYOND IMPRESSIONS &bull; CHAPTER 5
+                  QUIET PERSPECTIVE &bull; CHAPTER 5
                 </div>
                 <h3 className="font-comic text-2xl sm:text-3xl text-white uppercase tracking-wide">
                   INDEPENDENCE DOESN&apos;T MEAN ISOLATION
@@ -446,94 +442,72 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               </motion.div>
             ) : (
               <>
-                {/* SVG Subtle Atmospheric Heat-Haze Filter (Strictly for Ambient Layer Behind Text) */}
-                <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
-                  <defs>
-                    <filter id="bndPsychicHaze">
-                      <feTurbulence
-                        type="fractalNoise"
-                        baseFrequency="0.012 0.024"
-                        numOctaves="2"
-                        seed="7"
-                        result="noise"
-                      />
-                      <feDisplacementMap in="SourceGraphic" in2="noise" scale="16" />
-                    </filter>
-                  </defs>
-                </svg>
-
-                {/* Phase 1 (0 - 1.3s): Outgoing Chapter 4 Communication Motifs Settling */}
+                {/* Environment Layer (0 - 2.8s): Slow Camera Drift into Apartment Evening Rooftop */}
                 <motion.div
-                  initial={{ opacity: 0.7 }}
-                  animate={{ opacity: [0.7, 0.35, 0] }}
-                  transition={{ duration: 1.25, times: [0, 0.45, 1], ease: 'easeOut' }}
-                  className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
+                  initial={{ x: -24, opacity: 0 }}
+                  animate={{ x: [-24, -6, 0, 0, 0], opacity: [0.65, 1, 1, 1, 0] }}
+                  transition={{ duration: 2.8, times: [0, 0.14, 0.3, 0.85, 1], ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-b from-[#070B14] via-[#0D1422] to-[#060910]"
                 >
-                  <div className="flex items-center gap-4 opacity-50">
-                    <div className="w-8 h-8 rounded-full bg-[#0C1A2E] border border-spider-cyan/40 flex items-center justify-center">
-                      <Phone className="w-3.5 h-3.5 text-spider-cyan/70" />
-                    </div>
-                    <div className="w-8 h-8 rounded-full bg-[#181126] border border-spider-yellow/40 flex items-center justify-center">
-                      <MessageSquare className="w-3.5 h-3.5 text-spider-yellow/70" />
-                    </div>
-                    <div className="w-8 h-8 rounded-full bg-[#200A15] border border-spider-red/40 flex items-center justify-center">
-                      <Users className="w-3.5 h-3.5 text-spider-red/70" />
-                    </div>
-                    <div className="w-8 h-8 rounded-full bg-[#0D1F1C] border border-emerald-400/40 flex items-center justify-center">
-                      <Mail className="w-3.5 h-3.5 text-emerald-400/70" />
-                    </div>
+                  {/* Distant Apartment Facade Windows */}
+                  <div className="absolute right-[8%] top-[18%] w-36 sm:w-52 h-[54%] bg-[#090E19]/90 border border-slate-700/40 rounded-xs p-3 grid grid-cols-3 gap-2 opacity-75">
+                    {[0.3, 0.75, 0.2, 0.65, 0.25, 0.85, 0.4, 0.15, 0.7].map((op, i) => (
+                      <div
+                        key={i}
+                        style={{ opacity: op }}
+                        className="h-5 rounded-[1px] bg-amber-300/65 border border-amber-200/25"
+                      />
+                    ))}
+                  </div>
+                  <div className="absolute left-[10%] top-[24%] w-28 sm:w-40 h-[48%] bg-[#080C16]/85 border border-slate-800/60 rounded-xs p-2.5 grid grid-cols-2 gap-2 opacity-55">
+                    {[0.5, 0.2, 0.7, 0.35, 0.6, 0.25].map((op, i) => (
+                      <div key={i} style={{ opacity: op }} className="h-4 rounded-[1px] bg-sky-200/35" />
+                    ))}
                   </div>
                 </motion.div>
 
-                {/* Phase 2 (0.45s - 2.35s): Controlled Cinnabar-Amber Heat-Haze Refraction Field (Behind UI) */}
+                {/* Midground: Reflective Classic Spider-Man Seated on Rooftop Ledge */}
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 0.42, 0.34, 0] }}
-                  transition={{ duration: 3.0, times: [0, 0.28, 0.62, 0.86], ease: 'easeInOut' }}
-                  style={{ filter: 'url(#bndPsychicHaze)' }}
-                  className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center"
-                >
-                  <div className="w-[125vw] h-[70vh] rounded-full bg-gradient-radial from-[#C2410C]/35 via-[#D97706]/20 to-transparent blur-2xl" />
-                </motion.div>
-
-                {/* Translucent Expanding Glass-Refraction Rings (Smooth Focus Toward Jean, No Spinning Portals) */}
-                {[0, 0.25].map((delay, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ scale: 0.6, opacity: 0 }}
-                    animate={{ scale: [0.6, 1.15, 1.45], opacity: [0, 0.5, 0] }}
-                    transition={{ duration: 2.0, delay: 0.45 + delay, times: [0, 0.45, 1], ease: 'easeOut' }}
-                    className="absolute z-25 w-64 h-64 sm:w-80 sm:h-80 rounded-full border-2 border-amber-400/40 shadow-[0_0_40px_rgba(217,119,6,0.22)_inset] pointer-events-none"
-                  />
-                ))}
-
-                {/* Crisp Center-Lower Jean Grey Emergence (Face & Olive Jacket Sharp, Zero Filter Distortion) */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.96 }}
+                  initial={{ opacity: 0, x: -16 }}
                   animate={{
-                    opacity: [0, 0, 1, 1, 0],
-                    scale: [0.96, 0.96, 1, 1, 1],
+                    opacity: [0, 1, 1, 0],
+                    x: [-16, 0, 4, 4],
                   }}
-                  transition={{ duration: 3.0, times: [0, 0.22, 0.44, 0.85, 1], ease: 'easeOut' }}
-                  className="relative z-40 mt-20 sm:mt-24 h-[44vh] max-h-[345px] w-auto max-w-[82vw] flex flex-col items-center justify-end"
+                  transition={{ duration: 2.8, times: [0, 0.28, 0.84, 1], ease: [0.22, 1, 0.36, 1] }}
+                  className="relative z-20 mt-20 sm:mt-24 h-[44vh] max-h-[340px] w-auto max-w-[82vw] flex flex-col items-center justify-end"
                 >
-                  <div className="absolute inset-x-4 top-6 bottom-2 rounded-full bg-amber-500/20 blur-2xl pointer-events-none" />
+                  <div className="absolute inset-x-4 top-6 bottom-6 rounded-full bg-[radial-gradient(ellipse_at_50%_45%,rgba(251,191,36,0.18),transparent_72%)] pointer-events-none" />
                   <img
-                    src={getAssetUrl('images/jean-grey-bnd.png')}
-                    alt="Jean Grey emerging in Brand New Day psychic refraction"
-                    className="relative z-10 h-full max-h-full w-auto max-w-full object-contain filter drop-shadow-[0_12px_28px_rgba(0,0,0,0.9)]"
+                    src={getAssetUrl('images/spiderman-reflective.png')}
+                    alt="Classic Spider-Man sitting quietly on an evening rooftop ledge"
+                    className="relative z-10 h-[calc(100%-14px)] w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_0_8px_rgba(251,191,36,0.22)] drop-shadow-[0_10px_24px_rgba(0,0,0,0.92)]"
                   />
+                  <div className="relative z-20 w-56 sm:w-72 h-3 bg-gradient-to-b from-slate-600/90 to-slate-900 border-t-2 border-slate-400/50 rounded-t-2xs shadow-[0_-2px_10px_rgba(0,0,0,0.75)]" />
                 </motion.div>
 
-                {/* Sharp Non-Shaking Chapter 5 Identity Plate */}
+                {/* Foreground Parallax Camera Sweep: Building Cornice & Web Strand Passing Camera */}
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 0, 1, 1, 0] }}
-                  transition={{ duration: 3.0, times: [0, 0.36, 0.54, 0.86, 1], ease: 'easeOut' }}
-                  className="absolute top-14 sm:top-16 z-45 w-[88%] max-w-md px-4 py-3 bg-[#090D16]/95 border-2 border-amber-500/65 rounded-xs shadow-comic text-center"
+                  initial={{ x: 0, opacity: 0.95 }}
+                  animate={{ x: [0, -120, -190], opacity: [0.95, 0.85, 0] }}
+                  transition={{ duration: 1.65, times: [0, 0.7, 1], ease: 'easeInOut' }}
+                  className="absolute inset-y-0 left-0 w-24 sm:w-36 z-30 pointer-events-none"
+                >
+                  <div className="h-full w-10 sm:w-14 bg-[#030509] border-r-2 border-slate-700/70 shadow-[12px_0_30px_rgba(0,0,0,0.95)]" />
+                  <svg className="absolute top-0 left-8 sm:left-12 w-36 h-40 opacity-75" viewBox="0 0 120 120">
+                    <line x1="0" y1="0" x2="115" y2="55" stroke="#CBD5E1" strokeWidth="1.5" strokeDasharray="3 2" />
+                    <line x1="0" y1="22" x2="85" y2="90" stroke="#94A3B8" strokeWidth="1" />
+                  </svg>
+                </motion.div>
+
+                {/* Heading Settles After Environment Establishes */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: [0, 0, 1, 1, 0], y: [10, 10, 0, 0, 0] }}
+                  transition={{ duration: 2.8, times: [0, 0.36, 0.56, 0.86, 1], ease: 'easeOut' }}
+                  className="absolute top-14 sm:top-16 z-40 w-[88%] max-w-md px-4 py-3 bg-[#090D16]/95 border-2 border-amber-500/65 rounded-xs shadow-comic text-center"
                 >
                   <div className="inline-block bg-amber-950/80 text-amber-200 border border-amber-500/45 px-2 py-0.5 font-mono text-[9px] font-bold uppercase mb-1 tracking-wider">
-                    SEEING BEYOND IMPRESSIONS &bull; CHAPTER 5
+                    QUIET PERSPECTIVE &bull; CHAPTER 5
                   </div>
                   <h3 className="font-comic text-2xl sm:text-3xl text-white uppercase tracking-wide leading-tight">
                     INDEPENDENCE DOESN&apos;T MEAN ISOLATION
@@ -582,8 +556,8 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               className="absolute bottom-10 z-40 h-[40vh] max-h-[300px] w-auto max-w-[82vw] flex flex-col items-center justify-end filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.85)]"
             >
               <img
-                src={getAssetUrl('images/spiderman-powerless-wrist.png')}
-                alt="Grounded Spider-Man checking inactive wrist-shooter"
+                src={getAssetUrl('images/spiderman-grounded.png')}
+                alt="Grounded powerless classic Spider-Man standing still"
                 className="h-full max-h-full w-auto max-w-full object-contain"
               />
               <div className="mt-1 bg-[#0C121E] text-amber-200 border border-amber-500/45 font-mono text-[9px] uppercase px-2.5 py-0.5 shadow-md flex-shrink-0">
@@ -675,7 +649,7 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
                 className="w-32 sm:w-44 flex flex-col items-center -mb-2"
               >
                 <img
-                  src={getAssetUrl('images/spiderman-hero-character.png')}
+                  src={getAssetUrl('images/spiderman-grounded.png')}
                   alt="Classic Spider-Man Finale"
                   className="w-full h-auto object-contain filter drop-shadow-[0_12px_24px_rgba(255,23,68,0.8)]"
                 />
