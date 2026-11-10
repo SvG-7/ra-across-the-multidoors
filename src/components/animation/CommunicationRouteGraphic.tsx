@@ -158,7 +158,7 @@ export const CommunicationRouteGraphic: React.FC<CommunicationRouteGraphicProps>
             </>
           )}
 
-          {/* Alex / Apt 502 Node */}
+          {/* Ned / Apt 502 Node */}
           <g transform="translate(315, 40)">
             <circle
               r="22"
@@ -167,7 +167,7 @@ export const CommunicationRouteGraphic: React.FC<CommunicationRouteGraphicProps>
               strokeWidth="2.5"
             />
             <text x="0" y="3" textAnchor="middle" fill="#FFFFFF" fontSize="9" fontFamily="monospace" fontWeight="bold">
-              ALEX
+              NED
             </text>
             <text x="0" y="32" textAnchor="middle" fill="#9CA3AF" fontSize="8" fontFamily="sans-serif">
               Apt 502

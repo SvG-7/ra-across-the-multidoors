@@ -15,7 +15,7 @@ export const CHAPTERS_DATA: ChapterData[] = [
     title: 'The Invisible Resident',
     introduction: 'Connecting with residents who rarely step into the hallway or attend building programs.',
     doorTheme: 'The Quiet Threshold // Low Visibility',
-    situation: 'Alex rarely attends events, and you hardly ever see them. You don’t yet know whether they feel connected.',
+    situation: 'Ned rarely attends events, and you hardly ever see them. You don’t yet know whether they feel connected.',
     hasDecision: true,
     decisionPrompt: 'What would you try first?',
     options: [
@@ -80,9 +80,9 @@ export const CHAPTERS_DATA: ChapterData[] = [
   {
     number: 4,
     title: 'Two Communication Languages',
-    introduction: 'Returning to Alex: finding the right frequency and medium across different community styles.',
+    introduction: 'Returning to Ned: finding the right frequency and medium across different community styles.',
     doorTheme: 'The Transmission Door // Signal Routes',
-    situation: 'You want to offer Alex an easy way to connect with the community.',
+    situation: 'You want to offer Ned an easy way to connect with the community.',
     hasDecision: true,
     decisionPrompt: 'Which channel would you try first for a community invitation?',
     options: [
@@ -117,9 +117,9 @@ export const CHAPTERS_DATA: ChapterData[] = [
   {
     number: 5,
     title: 'Independence Doesn’t Mean Isolation',
-    introduction: 'No required decision here. Tap to uncover what daily life looks like behind Alex’s closed deadbolt.',
-    doorTheme: 'Alex’s Door // Life Behind the Deadbolt',
-    situation: 'Why was Alex hard to reach? Here are the daily realities and responsibilities shaping their routine:',
+    introduction: 'No required decision here. Tap to uncover what daily life looks like behind Ned’s closed deadbolt.',
+    doorTheme: 'Ned’s Door // Life Behind the Deadbolt',
+    situation: 'Why was Ned hard to reach? Here are the daily realities and responsibilities shaping their routine:',
     hasDecision: false,
     storyDetails: [
       {
@@ -155,7 +155,7 @@ export const CHAPTERS_DATA: ChapterData[] = [
     title: 'When Superpowers Fail',
     introduction: 'Learning the resident’s reality and adapting your initial outreach strategy.',
     doorTheme: 'The Glitched Reality Portal // Shifting Routes',
-    situation: 'Alex explains that group chats are muted, unexpected visits are difficult, and short direct messages are easier to answer between shifts.',
+    situation: 'Ned explains that group chats are muted, unexpected visits are difficult, and short direct messages are easier to answer between shifts.',
     hasDecision: true,
     decisionPrompt: 'What would you adjust?',
     options: [

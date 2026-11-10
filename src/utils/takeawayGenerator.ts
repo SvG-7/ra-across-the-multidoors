@@ -287,11 +287,11 @@ export function generateFieldGuide(session: AttendeeSession): FieldGuideData {
       // Supportive connection between Chapter 4 and Chapter 6
       if (ch === 6 && ch4) {
         if (ch4 === 'opt_c4_groupchat') {
-          crossChapterNote = 'In Chapter 4, you leaned toward a shared group chat. In Chapter 6, after learning about Alex’s work shifts, you explored tailored individual outreach.';
+          crossChapterNote = 'In Chapter 4, you leaned toward a shared group chat. In Chapter 6, after learning about Ned’s work shifts, you explored tailored individual outreach.';
         } else if (ch4 === 'opt_c4_directmsg' || ch4 === 'opt_c4_inperson') {
           crossChapterNote = 'You already favored direct communication in Chapter 4. In Chapter 6, you built on that approach by fine-tuning the timing and message length.';
         } else if (ch4 === 'opt_c4_email') {
-          crossChapterNote = 'You initially explored email in Chapter 4. In Chapter 6, you adjusted to Alex’s fast routine with quick, low-friction touchpoints.';
+          crossChapterNote = 'You initially explored email in Chapter 4. In Chapter 6, you adjusted to Ned’s fast routine with quick, low-friction touchpoints.';
         }
       }
 

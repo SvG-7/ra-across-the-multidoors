@@ -38,10 +38,10 @@ export const Chapter5AlexStory: React.FC<Chapter5AlexStoryProps> = ({
       <div className="relative bg-[#090E1C] border-3 border-black p-4 rounded-sm shadow-comic">
         <div className="text-center mb-3">
           <span className="bg-spider-cyan text-black px-2.5 py-0.5 text-xs font-mono font-bold tracking-wider uppercase inline-block shadow-comic-sm">
-            BEHIND APARTMENT 502 // ALEX’S SCHEDULE
+            BEHIND APARTMENT 502 // NED’S SCHEDULE
           </span>
           <p className="text-sm font-sans text-gray-200 mt-2">
-            Why was Alex hard to catch? Tap each card to uncover the daily realities behind their closed deadbolt:
+            Why was Ned hard to catch? Tap each card to uncover the daily realities behind their closed deadbolt:
           </p>
         </div>
 
@@ -112,7 +112,7 @@ export const Chapter5AlexStory: React.FC<Chapter5AlexStoryProps> = ({
             animate={{ opacity: 1, scale: 1 }}
             className="mt-4 p-3 bg-spider-cyan/10 border border-spider-cyan/40 rounded-xs text-center text-xs font-mono text-spider-cyan"
           >
-            All schedule factors uncovered: Alex’s distance was shaped by heavy commitments, not disinterest.
+            All schedule factors uncovered: Ned’s distance was shaped by heavy commitments, not disinterest.
           </motion.div>
         )}
       </div>

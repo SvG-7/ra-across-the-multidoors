@@ -37,7 +37,7 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
         return {
           doorColor: '#1E293B',
           accent: '#00F0FF',
-          numberLabel: 'ROOM 204 // ALEX',
+          numberLabel: 'ROOM 204 // NED',
           subLabel: 'THE QUIET CORRIDOR',
           title: 'The Invisible Resident',
         };
@@ -61,7 +61,7 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
         return {
           doorColor: '#111827',
           accent: '#00FFA3',
-          numberLabel: 'APT 502 // ALEX’S SUITE',
+          numberLabel: 'APT 502 // NED’S SUITE',
           subLabel: 'INDEPENDENCE & DEMANDS',
           title: 'Independence Doesn’t Mean Isolation',
         };
@@ -92,7 +92,9 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
     <div className="w-full flex flex-col items-center my-3 select-none">
       {/* Door Frame Container */}
       <div
-        className="relative w-full max-w-[340px] sm:max-w-[380px] h-[210px] sm:h-[230px] bg-black border-3 sm:border-4 border-black rounded-sm shadow-comic overflow-hidden cursor-pointer"
+        className={`relative w-full max-w-[360px] sm:max-w-[400px] ${
+          chapterNumber === 2 ? 'h-[270px] sm:h-[295px]' : 'h-[240px] sm:h-[265px]'
+        } bg-black border-3 sm:border-4 border-black rounded-sm shadow-comic overflow-hidden cursor-pointer`}
         style={{ perspective: 1000 }}
         onClick={() => {
           if (!isOpen) {

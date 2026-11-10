@@ -176,7 +176,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
                   </p>
                   <p className="text-[11px] font-sans text-gray-400 mt-1">
                     {ch4Details.channelType === 'groupchat'
-                      ? "Alex explains that large group chats are routinely muted due to work shifts. Now choose an approach to explore."
+                      ? "Ned explains that large group chats are routinely muted due to work shifts. Now choose an approach to explore."
                       : "Your earlier choice leaned toward personal messaging, which helps keep reading friction low. Now choose an approach to explore."}
                   </p>
                 </div>
