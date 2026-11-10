@@ -30,6 +30,7 @@ interface AttendeeChapterViewProps {
   onPrevChapter: () => void;
   onJumpToChapter: (chapterNumber: number) => void;
   onTriggerEntryTransition?: () => void;
+  onReplayTransition?: (type: '4_to_5' | 'entry_to_1') => void;
   reducedMotion?: boolean;
 }
 
@@ -45,6 +46,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
   onPrevChapter,
   onJumpToChapter,
   onTriggerEntryTransition,
+  onReplayTransition,
   reducedMotion = false,
 }) => {
   const currentChapterNumber = chapter.number;
@@ -121,12 +123,28 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
           {/* Chapter Themed Door Graphic (Chapters 2-6) */}
           {currentChapterNumber < 7 && (
             <ThemedDoor
+              key={currentChapterNumber}
               chapterNumber={currentChapterNumber}
               chapterTitle={chapter.title}
               doorTheme={chapter.doorTheme}
               isOpen={hasAnswered || currentChapterNumber === 5}
               reducedMotion={reducedMotion}
             />
+          )}
+
+          {/* Replay Control for Chapter 4 -> 5 Psychic Transition */}
+          {currentChapterNumber === 5 && onReplayTransition && (
+            <button
+              type="button"
+              onClick={() => {
+                soundEngine.playClick();
+                onReplayTransition('4_to_5');
+              }}
+              className="mb-3 px-3 py-1.5 bg-black/75 hover:bg-black text-amber-200 hover:text-amber-100 border border-amber-500/45 hover:border-amber-400 rounded-sm font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-comic-sm active:scale-95 transition-all cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
+              <span>Replay Ch. 4&rarr;5 Transition</span>
+            </button>
           )}
 
           {/* Chapter 5 Story Discovery: Behind Alex's Closed Door */}

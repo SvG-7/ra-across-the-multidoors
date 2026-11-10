@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { getAssetUrl } from '../../utils/assets';
 import { 
@@ -14,13 +14,15 @@ import {
   Briefcase, 
   GraduationCap,
   Eye,
-  Zap
+  ArrowRight
 } from 'lucide-react';
 
 interface ChapterPortalSceneProps {
   chapterNumber: number;
   chapterTitle: string;
   doorTheme: string;
+  isRevealed?: boolean;
+  replayKey?: number;
   reducedMotion?: boolean;
 }
 
@@ -28,8 +30,32 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
   chapterNumber,
   chapterTitle,
   doorTheme,
+  isRevealed = true,
+  replayKey = 0,
   reducedMotion = false,
 }) => {
+  const [ch6Phase, setCh6Phase] = useState<'check' | 'pause' | 'step'>(
+    reducedMotion ? 'step' : 'check'
+  );
+
+  useEffect(() => {
+    if (chapterNumber !== 6) return;
+    if (reducedMotion) {
+      setCh6Phase('step');
+      return;
+    }
+    if (!isRevealed) {
+      setCh6Phase('check');
+      return;
+    }
+    setCh6Phase('check');
+    const tPause = window.setTimeout(() => setCh6Phase('pause'), 1550);
+    const tStep = window.setTimeout(() => setCh6Phase('step'), 2650);
+    return () => {
+      window.clearTimeout(tPause);
+      window.clearTimeout(tStep);
+    };
+  }, [chapterNumber, isRevealed, replayKey, reducedMotion]);
   return (
     <div className="relative w-full h-full overflow-hidden bg-[#060810] flex flex-col justify-between p-2.5 sm:p-3 select-none">
       {/* Background Halftone & Ambient Glow */}
@@ -50,9 +76,19 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
                 NOIR INVESTIGATION
               </span>
             )}
-            {(chapterNumber === 3 || chapterNumber === 6) && (
-              <span className="text-[8px] font-mono uppercase bg-spider-red/30 text-spider-yellow px-1 rounded-2xs border border-spider-red/40 flex items-center gap-0.5">
-                <Zap className="w-2.5 h-2.5 text-spider-yellow" /> MILES MORALES
+            {chapterNumber === 3 && (
+              <span className="text-[8px] font-mono uppercase bg-slate-800/90 text-gray-200 px-1.5 rounded-2xs border border-slate-500/60">
+                SYMBIOTE BOUNDARIES
+              </span>
+            )}
+            {chapterNumber === 5 && (
+              <span className="text-[8px] font-mono uppercase bg-amber-950/75 text-amber-200 px-1.5 rounded-2xs border border-amber-500/45">
+                REAL CONVERSATION
+              </span>
+            )}
+            {chapterNumber === 6 && (
+              <span className="text-[8px] font-mono uppercase bg-slate-900/90 text-gray-200 px-1.5 rounded-2xs border border-gray-600/70">
+                GROUNDED APPROACH
               </span>
             )}
           </div>
@@ -66,7 +102,7 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
       </div>
 
       {/* Central Illustrated Scene per Chapter */}
-      <div className="relative z-10 flex-1 w-full my-1 flex items-center justify-center overflow-hidden">
+      <div className="relative z-10 flex-1 min-h-0 w-full my-1 flex items-center justify-center overflow-hidden">
         {/* ================================================================= */}
         {/* CHAPTER 1: ONE MISSION, TWO WORLDS (CLASSIC SPIDER-MAN)           */}
         {/* ================================================================= */}
@@ -202,53 +238,48 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
               </div>
 
               {/* Bottom Observation Cue: Thoughtful outreach, not surveillance */}
-              <div className="text-[7.5px] font-mono text-gray-300 flex items-center gap-1 border-t border-gray-800/80 pt-1">
+              <div className="text-[7px] font-mono text-gray-300 flex items-center gap-1 border-t border-gray-800/80 pt-1">
                 <Eye className="w-2.5 h-2.5 text-spider-cyan flex-shrink-0" />
-                <span className="truncate">Noticing Quiet Presence</span>
+                <span className="truncate">Respecting Autonomy</span>
               </div>
             </div>
 
-            {/* RIGHT / FOREGROUND: SPIDER-MAN NOIR (Prominently Positioned & Composed) */}
+            {/* RIGHT / FOREGROUND: SPIDER-MAN NOIR (Full Unclipped Head-to-Boot Framing) */}
             <motion.div
-              initial={reducedMotion ? false : { x: 25, opacity: 0 }}
+              initial={reducedMotion ? false : { x: 18, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="relative z-20 w-[49%] h-full flex flex-col items-center justify-end pb-0.5"
+              className="relative z-20 w-[49%] h-full min-h-0 flex flex-col items-center justify-end pt-2 pb-1"
             >
-              {/* Subtle Ambient Movement: Coat & Shadow Breathing Cycle */}
+              {/* Subtle Ambient Movement: Gentle Downward Settle Keeps Full Hat Clearance */}
               <motion.div
-                animate={reducedMotion ? undefined : { y: [0, -2, 0] }}
+                animate={reducedMotion ? undefined : { y: [0, 2, 0] }}
                 transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-                className="relative w-full flex flex-col items-center"
+                className="relative w-full h-full min-h-0 flex items-end justify-center"
               >
-                {/* Dramatic Cast Shadow underneath feet */}
-                <div className="absolute -bottom-1 w-24 h-4 bg-black/90 rounded-full blur-[3px] pointer-events-none" />
+                {/* Dramatic Cast Shadow underneath boots */}
+                <div className="absolute -bottom-0.5 w-24 h-3.5 bg-black/90 rounded-full blur-[3px] pointer-events-none" />
 
                 {/* Spider-Man Noir Full Character Image */}
                 <img
                   src={getAssetUrl('images/spiderman-noir.png')}
                   alt="Spider-Man Noir observing Ned's doorway"
-                  className="w-32 sm:w-40 max-h-[195px] sm:max-h-[225px] h-auto object-contain filter drop-shadow-[0_8px_18px_rgba(0,0,0,0.95)] contrast-110"
+                  className="h-[92%] max-h-full w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_6px_14px_rgba(0,0,0,0.95)] contrast-110"
                   loading="eager"
                 />
-
-                {/* Subtle Noir Detective Placard Tag */}
-                <div className="absolute bottom-2 right-0 bg-black/90 border border-gray-600 px-1.5 py-0.5 rounded-2xs text-[7px] font-mono text-gray-200 shadow-md">
-                  P.I. NOIR // RESPECTING AUTONOMY
-                </div>
               </motion.div>
             </motion.div>
           </div>
         )}
 
         {/* ================================================================= */}
-        {/* CHAPTER 3: SAME TITLE, DIFFERENT RELATIONSHIPS (MILES MORALES)    */}
-        {/* Featured Character: Miles Morales leaping in residence hall       */}
+        {/* CHAPTER 3: SAME TITLE, DIFFERENT RELATIONSHIPS (VENOM)            */}
+        {/* Symbiote boundary entrance & communal accountability dynamics      */}
         {/* ================================================================= */}
         {chapterNumber === 3 && (
-          <div className="relative w-full h-full flex items-center justify-between px-2 bg-gradient-to-b from-[#140816] via-[#100D1F] to-[#090714]">
+          <div className="relative w-full h-full flex items-center justify-between px-2 overflow-hidden bg-gradient-to-b from-[#090B12] via-[#0C101B] to-[#05070C]">
             {/* Left Corridor Door */}
-            <div className="w-[26%] h-[92%] bg-[#120B1E] border border-gray-700 rounded-xs p-1.5 flex flex-col justify-between">
+            <div className="relative z-10 w-[25%] h-[92%] bg-[#0F131F] border border-gray-700 rounded-xs p-1.5 flex flex-col justify-between">
               <span className="font-mono text-[8px] text-gray-300 font-bold">ROOM 301</span>
               <div className="w-full h-12 bg-black/50 border border-gray-800 rounded-xs flex items-center justify-center">
                 <span className="text-[7px] font-mono text-gray-400">STUDENT</span>
@@ -256,12 +287,12 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
               <span className="text-[7px] font-mono text-gray-400 text-center">PEER DOOR</span>
             </div>
 
-            {/* Center: Community Noticeboard */}
-            <div className="relative w-[36%] h-[94%] bg-[#1A1308] border-2 border-spider-yellow rounded-xs p-1.5 flex flex-col justify-between shadow-comic-sm">
+            {/* Center: Community Noticeboard (Readable & Clear of Tendrils) */}
+            <div className="relative z-10 w-[34%] h-[94%] bg-[#18140C] border-2 border-spider-yellow/90 rounded-xs p-1.5 flex flex-col justify-between shadow-comic-sm">
               <div className="text-[8px] font-mono font-bold text-spider-yellow uppercase border-b border-spider-yellow/40 pb-0.5 text-center">
                 HALL BULLETIN
               </div>
-              <div className="space-y-1 text-left px-1">
+              <div className="space-y-1 text-left px-0.5">
                 <div className="bg-spider-yellow/20 border-l border-spider-yellow p-0.5 text-[7px] font-sans text-white">
                   &bull; Quiet Hours: 10 PM
                 </div>
@@ -269,29 +300,63 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
                   &bull; Floor Standards
                 </div>
               </div>
-              <div className="text-[7px] font-mono text-gray-300 text-center">
-                COMMUNAL AREA
+              <div className="text-[6.5px] font-mono text-gray-300 text-center leading-tight">
+                SHARED ACCOUNTABILITY
               </div>
             </div>
 
-            {/* Right: MILES MORALES in Dynamic Leap with Venom Strike Accent */}
-            <motion.div
-              initial={reducedMotion ? false : { x: 30, scale: 0.85, opacity: 0 }}
-              animate={{ x: 0, scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
-              className="relative w-[38%] h-full flex flex-col items-center justify-center"
-            >
-              {/* Graffiti Halftone Backing */}
-              <div className="absolute inset-0 bg-spider-red/20 rounded-full blur-xl pointer-events-none" />
-              <img
-                src={getAssetUrl('images/spiderman-miles.png')}
-                alt="Miles Morales in Residence Hall"
-                className="w-28 sm:w-32 h-auto object-contain filter drop-shadow-[0_8px_20px_rgba(255,23,68,0.8)]"
-              />
-              <div className="absolute -bottom-1 bg-black/90 border border-spider-red px-1 py-0.2 rounded-2xs text-[6.5px] font-mono text-spider-yellow uppercase font-bold">
-                *PEER DYNAMICS*
-              </div>
-            </motion.div>
+            {/* Right: VENOM with Restrained Boundary Symbiote Entrance */}
+            <div className="relative z-20 w-[39%] h-full min-h-0 flex items-end justify-center pt-1.5 pb-0.5 overflow-hidden">
+              {/* Restrained Perimeter Tendrils Anchored Strictly to Frame Boundary */}
+              <svg
+                className="absolute inset-0 w-full h-full pointer-events-none z-10"
+                viewBox="0 0 140 220"
+                preserveAspectRatio="none"
+              >
+                <motion.path
+                  d="M 140 220 L 140 120 Q 124 148 118 188 Q 108 164 114 220 Z"
+                  fill="#05070C"
+                  stroke="#334155"
+                  strokeWidth="1.2"
+                  initial={reducedMotion || !isRevealed ? false : { opacity: 0.9, scaleY: 0.25 }}
+                  animate={{ opacity: [0.85, 0.55], scaleY: 1 }}
+                  transition={{ duration: 0.85, ease: 'easeOut' }}
+                  style={{ transformOrigin: 'bottom right' }}
+                />
+                <motion.path
+                  d="M 140 50 Q 126 75 130 110 Q 134 140 140 155 Z"
+                  fill="#070A12"
+                  stroke="#334155"
+                  strokeWidth="1"
+                  initial={reducedMotion || !isRevealed ? false : { opacity: 0.8, scaleX: 0.2 }}
+                  animate={{ opacity: [0.8, 0.45], scaleX: 1 }}
+                  transition={{ duration: 0.9, ease: 'easeOut' }}
+                  style={{ transformOrigin: 'center right' }}
+                />
+              </svg>
+
+              {/* Venom Coalescing with Subtle Resting Symbiote Breathing */}
+              <motion.div
+                initial={reducedMotion || !isRevealed ? false : { opacity: 0, scale: 0.92, x: 10 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                transition={{ duration: 0.85, ease: 'easeOut' }}
+                className="relative z-20 w-full h-full min-h-0 flex items-end justify-center"
+              >
+                <motion.div
+                  animate={reducedMotion ? undefined : { y: [0, 2, 0] }}
+                  transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+                  className="relative w-full h-full min-h-0 flex items-end justify-center"
+                >
+                  <div className="absolute -bottom-0.5 w-24 h-3.5 bg-black/90 rounded-full blur-[3px] pointer-events-none" />
+                  <img
+                    src={getAssetUrl('images/venom-character.png')}
+                    alt="Venom beside residence hall corridor bulletin board"
+                    className="h-[94%] max-h-full w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_6px_16px_rgba(0,0,0,0.95)]"
+                    loading="eager"
+                  />
+                </motion.div>
+              </motion.div>
+            </div>
           </div>
         )}
 
@@ -348,103 +413,177 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
         )}
 
         {/* ================================================================= */}
-        {/* CHAPTER 5: INDEPENDENCE DOESN'T MEAN ISOLATION (SPIDER-MAN NOIR)  */}
-        {/* Spider-Man Noir overlooking apartment courtyard & Ned's realities */}
+        {/* CHAPTER 5: INDEPENDENCE DOESN'T MEAN ISOLATION (JEAN GREY - BND)  */}
+        {/* Brand New Day evening/transit-light aesthetic & real conversation */}
         {/* ================================================================= */}
         {chapterNumber === 5 && (
-          <div className="relative w-full h-full flex items-center justify-between px-2 bg-gradient-to-b from-[#090D17] via-[#0E1522] to-[#06080F]">
-            {/* Illustrated Apartment Courtyard with Ned's Responsibility Markers */}
-            <div className="w-[60%] h-[94%] bg-[#080E1B] border-2 border-gray-700 rounded-xs p-1.5 flex flex-col justify-between shadow-comic-sm">
+          <div className="relative w-full h-full flex items-center justify-between px-2 overflow-hidden bg-gradient-to-b from-[#090D16] via-[#131422] to-[#080910]">
+            {/* Warm Evening Apartment & Street Transit Window Light */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute right-4 top-2 w-28 h-28 bg-amber-500/15 rounded-full blur-2xl" />
+              <div className="absolute right-12 bottom-3 w-20 h-20 bg-orange-600/10 rounded-full blur-xl" />
+            </div>
+
+            {/* Left: Apartment Evening Schedule & Realities */}
+            <div className="relative z-10 w-[55%] h-[94%] bg-[#090E1A]/90 border-2 border-gray-700/90 rounded-xs p-1.5 flex flex-col justify-between shadow-comic-sm">
               <div className="flex items-center justify-between border-b border-gray-700 pb-1">
-                <span className="font-mono text-[8.5px] text-spider-yellow font-bold uppercase">
-                  NED'S REALITIES // APT 502
+                <span className="font-mono text-[8px] text-amber-300 font-bold uppercase">
+                  NED&apos;S REALITIES // 502
                 </span>
-                <span className="text-[7.5px] font-mono text-gray-400">EVENING</span>
+                <span className="text-[7px] font-mono text-amber-200/80">EVENING</span>
               </div>
 
               {/* Resident Realities Grid */}
               <div className="grid grid-cols-2 gap-1 py-1">
-                <div className="p-1 bg-[#10192A] border border-gray-700 rounded-xs flex items-center gap-1">
+                <div className="p-1 bg-[#11192A] border border-gray-700 rounded-xs flex items-center gap-1">
                   <GraduationCap className="w-3 h-3 text-spider-cyan flex-shrink-0" />
                   <span className="text-[7px] font-mono text-gray-200">Classes</span>
                 </div>
-                <div className="p-1 bg-[#10192A] border border-gray-700 rounded-xs flex items-center gap-1">
+                <div className="p-1 bg-[#11192A] border border-gray-700 rounded-xs flex items-center gap-1">
                   <Briefcase className="w-3 h-3 text-spider-yellow flex-shrink-0" />
                   <span className="text-[7px] font-mono text-gray-200">Work Shift</span>
                 </div>
-                <div className="p-1 bg-[#10192A] border border-gray-700 rounded-xs flex items-center gap-1">
+                <div className="p-1 bg-[#11192A] border border-gray-700 rounded-xs flex items-center gap-1">
                   <Home className="w-3 h-3 text-spider-red flex-shrink-0" />
                   <span className="text-[7px] font-mono text-gray-200">Home Care</span>
                 </div>
-                <div className="p-1 bg-[#10192A] border border-gray-700 rounded-xs flex items-center gap-1">
+                <div className="p-1 bg-[#11192A] border border-gray-700 rounded-xs flex items-center gap-1">
                   <Clock className="w-3 h-3 text-emerald-400 flex-shrink-0" />
                   <span className="text-[7px] font-mono text-gray-200">Tight Time</span>
                 </div>
               </div>
 
-              <div className="text-[7.5px] font-mono text-gray-400 text-center border-t border-gray-800 pt-0.5">
-                Courtyard Walkways &bull; Standalone Homes
+              <div className="text-[7px] font-mono text-amber-100/85 text-center border-t border-gray-800 pt-0.5 truncate">
+                Seeing Beyond Impressions
               </div>
             </div>
 
-            {/* Spider-Man Noir Overlooking from Courtyard Ledge */}
+            {/* Right: Jean Grey (Brand New Day) Clearly Framed with Warm Evening Transit Light */}
             <motion.div
-              initial={reducedMotion ? false : { y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="w-[38%] h-full flex flex-col items-center justify-end pb-1"
+              initial={reducedMotion ? false : { opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.55, ease: 'easeOut' }}
+              className="relative z-20 w-[43%] h-full min-h-0 flex flex-col items-center justify-end pt-1.5 pb-0.5"
             >
-              <img
-                src={getAssetUrl('images/spiderman-noir-portrait.png')}
-                alt="Spider-Man Noir Overlooking Courtyard"
-                className="w-24 sm:w-28 h-auto object-contain filter drop-shadow-[0_6px_14px_rgba(0,0,0,0.9)] contrast-110"
+              <motion.div
+                animate={reducedMotion ? undefined : { opacity: [0.45, 0.75, 0.45] }}
+                transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute inset-x-3 top-4 bottom-3 rounded-full bg-amber-500/15 blur-xl pointer-events-none"
               />
-              <div className="text-[6.5px] font-mono text-gray-300 bg-black/80 px-1 rounded-2xs border border-gray-700 mt-0.5">
-                NOIR DOSSIER
-              </div>
+              <motion.div
+                animate={reducedMotion ? undefined : { y: [0, 1.5, 0] }}
+                transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
+                className="relative z-10 w-full h-full min-h-0 flex items-end justify-center"
+              >
+                <img
+                  src={getAssetUrl('images/jean-grey-bnd.png')}
+                  alt="Jean Grey in evening transit light representing seeing beyond first impressions through real conversation"
+                  className="h-[94%] max-h-full w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_6px_16px_rgba(0,0,0,0.85)]"
+                  loading="eager"
+                />
+              </motion.div>
             </motion.div>
           </div>
         )}
 
         {/* ================================================================= */}
-        {/* CHAPTER 6: WHEN SUPERPOWERS FAIL (MILES MORALES)                  */}
-        {/* Featured Character: Miles Morales Purposeful Adaptive Leap        */}
+        {/* CHAPTER 6: WHEN SUPERPOWERS FAIL (POWERLESS GROUNDED SPIDER-MAN)  */}
+        {/* Inactive wrist-shooter -> quiet pause -> ordinary step toward door */}
         {/* ================================================================= */}
         {chapterNumber === 6 && (
-          <div className="relative w-full h-full flex items-center justify-center px-2 bg-gradient-to-b from-[#1A0A18] via-[#10091C] to-[#07050E]">
-            {/* Dissolving Old Anchor (Left) vs Fast Adaptive Anchor (Right) */}
-            <div className="absolute inset-0 flex items-center justify-between px-3 pointer-events-none">
-              <div className="p-1.5 bg-[#1C0A15]/85 border border-gray-700 rounded-xs text-left">
-                <span className="text-[7.5px] font-mono text-gray-400 uppercase block font-bold">RELEASE ANCHOR</span>
-                <span className="text-[7px] font-sans text-gray-300">Previous Broadcast</span>
+          <div className="relative w-full h-full flex items-end justify-between px-2 pb-2 pt-1 overflow-hidden bg-gradient-to-b from-[#0A0E17] via-[#0F141F] to-[#07090E]">
+            {/* Grounded Corridor Floor Plane */}
+            <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-black/80 to-slate-900/40 border-t border-white/10 pointer-events-none" />
+
+            {/* Left Quiet Context Cue: Usual Superpowers Inactive (No Glow, No Sparks) */}
+            <div className="relative z-10 w-[27%] h-[88%] flex flex-col justify-between">
+              <div className="p-1.5 bg-[#101622]/90 border border-gray-700/80 rounded-xs text-left">
+                <span className="text-[7px] font-mono text-gray-400 uppercase block font-bold">
+                  HABIT PAUSED
+                </span>
+                <span className="text-[6.5px] font-sans text-gray-300 leading-tight block mt-0.5">
+                  Broadcast &amp; quick fix fail
+                </span>
               </div>
-              <div className="p-1.5 bg-[#0B1D22]/85 border border-emerald-400/80 rounded-xs text-right">
-                <span className="text-[7.5px] font-mono text-emerald-400 uppercase block font-bold">NEW ADAPTATION</span>
-                <span className="text-[7px] font-sans text-gray-200">Low-Friction Route</span>
+
+              <div className="bg-black/85 border border-gray-700 px-1.5 py-1 rounded-2xs text-left">
+                <span className="block text-[6px] font-mono uppercase text-gray-400">
+                  {ch6Phase === 'check' ? '01 // WRIST CHECK' : ch6Phase === 'pause' ? '02 // QUIET PAUSE' : '03 // NEXT STEP'}
+                </span>
+                <span className="block text-[7px] font-sans text-gray-200 font-medium leading-tight">
+                  {ch6Phase === 'check'
+                    ? 'Nothing happens'
+                    : ch6Phase === 'pause'
+                    ? 'Grounded stillness'
+                    : 'A different approach'}
+                </span>
               </div>
             </div>
 
-            {/* Web Strands: Left snapping/dissolving; Right glowing venom line */}
-            <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none" viewBox="0 0 300 120">
-              <line x1="140" y1="65" x2="45" y2="35" stroke="#475569" strokeWidth="2" strokeDasharray="3 3" />
-              <line x1="160" y1="55" x2="255" y2="35" stroke="#00FFA3" strokeWidth="3" />
-              <circle cx="255" cy="35" r="4" fill="#00FFA3" />
-            </svg>
+            {/* Center: Grounded Powerless Classic Spider-Man Sequence */}
+            <div className="relative z-20 w-[39%] h-full min-h-0 flex items-end justify-center pt-1">
+              {ch6Phase !== 'step' ? (
+                <motion.div
+                  key="wrist-pose"
+                  initial={reducedMotion ? false : { opacity: 0.9 }}
+                  animate={
+                    ch6Phase === 'check' && !reducedMotion
+                      ? { rotate: [0, -1.5, 0.8, 0], opacity: 1 }
+                      : { rotate: 0, y: reducedMotion ? 0 : [0, 1.5], opacity: 1 }
+                  }
+                  transition={{ duration: 0.9, ease: 'easeInOut' }}
+                  className="relative w-full h-full min-h-0 flex items-end justify-center"
+                >
+                  <img
+                    src={getAssetUrl('images/spiderman-powerless-wrist.png')}
+                    alt="Spider-Man standing quietly checking an inactive wrist-shooter"
+                    className="h-[92%] max-h-full w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_6px_10px_rgba(0,0,0,0.8)]"
+                    loading="eager"
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="step-pose"
+                  initial={reducedMotion ? false : { opacity: 0.35, x: -6 }}
+                  animate={{ opacity: 1, x: 2 }}
+                  transition={{ duration: 0.7, ease: 'easeOut' }}
+                  className="relative w-full h-full min-h-0 flex items-end justify-center"
+                >
+                  <img
+                    src={getAssetUrl('images/spiderman-powerless-step.png')}
+                    alt="Spider-Man taking a deliberate ordinary step toward a different approach"
+                    className="h-[92%] max-h-full w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_6px_10px_rgba(0,0,0,0.8)]"
+                    loading="eager"
+                  />
+                </motion.div>
+              )}
+            </div>
 
-            {/* Miles Morales Leaping Through Dimensional Layers */}
+            {/* Right: Illuminated Calm Route Doorway ("A DIFFERENT APPROACH") */}
             <motion.div
-              initial={reducedMotion ? false : { scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="relative z-20 flex flex-col items-center"
+              animate={{
+                borderColor: ch6Phase === 'step' ? 'rgba(251, 191, 36, 0.78)' : 'rgba(251, 191, 36, 0.38)',
+                boxShadow: ch6Phase === 'step' ? '0 0 24px rgba(251, 191, 36, 0.22)' : '0 0 8px rgba(251, 191, 36, 0.08)',
+              }}
+              transition={{ duration: 0.6 }}
+              className="relative z-10 w-[31%] h-[92%] bg-gradient-to-t from-amber-500/20 via-amber-200/10 to-[#0C121E] border-2 rounded-xs p-1.5 flex flex-col justify-between text-right"
             >
-              <img
-                src={getAssetUrl('images/spiderman-miles.png')}
-                alt="Miles Morales Shifting Anchors"
-                className="w-24 sm:w-28 h-auto object-contain filter drop-shadow-[0_8px_18px_rgba(255,0,127,0.7)]"
-              />
-              <div className="bg-black/90 border border-spider-cyan px-1.5 py-0.2 rounded-2xs text-[6.5px] font-mono text-spider-cyan uppercase font-bold mt-0.5">
-                ADAPTIVE LEAP
+              <div className="flex items-center justify-end gap-1 text-amber-300">
+                <span className="text-[7px] font-mono uppercase font-bold tracking-wider">OPEN ROUTE</span>
+                <ArrowRight className="w-2.5 h-2.5 flex-shrink-0" />
+              </div>
+
+              <div className="my-auto mx-auto w-10 h-14 bg-gradient-to-b from-amber-100/30 via-amber-200/20 to-amber-500/35 border border-amber-300/60 rounded-2xs flex items-end justify-center pb-1">
+                <div className="w-5 h-1 bg-amber-200/90 rounded-full blur-[1px]" />
+              </div>
+
+              <div>
+                <span className="block font-comic text-[11px] sm:text-xs text-amber-200 uppercase leading-none tracking-wide">
+                  A different approach
+                </span>
+                <span className="block text-[6.5px] font-sans text-gray-300 mt-0.5">
+                  Personal &amp; low-pressure
+                </span>
               </div>
             </motion.div>
           </div>

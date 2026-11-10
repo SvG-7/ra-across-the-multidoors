@@ -20,6 +20,7 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
 }) => {
   // Allow user to tap and inspect the portal scene anytime
   const [manualOpen, setManualOpen] = useState(false);
+  const [replayTick, setReplayTick] = useState(0);
   const isOpen = initialIsOpen || manualOpen;
 
   // Bespoke door styling per chapter
@@ -93,7 +94,9 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
       {/* Door Frame Container */}
       <div
         className={`relative w-full max-w-[360px] sm:max-w-[400px] ${
-          chapterNumber === 2 ? 'h-[270px] sm:h-[295px]' : 'h-[240px] sm:h-[265px]'
+          chapterNumber === 2 || chapterNumber === 3 || chapterNumber === 5 || chapterNumber === 6
+            ? 'h-[315px] sm:h-[345px]'
+            : 'h-[250px] sm:h-[275px]'
         } bg-black border-3 sm:border-4 border-black rounded-sm shadow-comic overflow-hidden cursor-pointer`}
         style={{ perspective: 1000 }}
         onClick={() => {
@@ -107,6 +110,9 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
         {/* Background Behind the Door: Distinct Illustrated Spider-Man Scene */}
         <div className="absolute inset-0 z-0">
           <ChapterPortalScene
+            key={`${chapterNumber}-${replayTick}`}
+            isRevealed={isOpen}
+            replayKey={replayTick}
             chapterNumber={chapterNumber}
             chapterTitle={effectiveTitle}
             doorTheme={doorTheme}
@@ -164,7 +170,7 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
       </div>
 
       {/* Door Subtitle Caption */}
-      <div className="mt-1.5 text-center flex items-center gap-1.5">
+      <div className="mt-1.5 text-center flex flex-wrap items-center justify-center gap-2">
         <span className="text-[11px] font-mono text-gray-400 uppercase tracking-wider">
           {doorTheme}
         </span>
@@ -172,6 +178,19 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
           <span className="text-[9px] font-mono text-spider-cyan underline cursor-pointer" onClick={() => setManualOpen(true)}>
             (Open Portal)
           </span>
+        )}
+        {isOpen && (chapterNumber === 2 || chapterNumber === 3 || chapterNumber === 5 || chapterNumber === 6) && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setReplayTick((t) => t + 1);
+            }}
+            className="text-[10px] font-mono text-gray-300 hover:text-spider-cyan bg-black/70 border border-gray-700 hover:border-spider-cyan/60 px-1.5 py-0.5 rounded-2xs cursor-pointer transition-colors"
+            title="Replay portal animation"
+          >
+            Replay Scene
+          </button>
         )}
       </div>
     </div>

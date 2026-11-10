@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { AttendeeSession, CommunityType, SharedResponses, CollectiveContribution } from './types';
 import { CHAPTERS_DATA } from './data/chaptersData';
 import { sessionManager, INITIAL_SHARED_RESPONSES } from './sync/syncClient';
@@ -95,10 +95,56 @@ export function App() {
     sessionManager.toggleStoryId(id);
   };
 
-  const triggerTransition = (type: TransitionType) => {
-    if (!reducedMotion) {
-      setTransitionState({ isActive: true, type });
+  const pendingChapterRef = useRef<number | null>(null);
+  const midpointTimerRef = useRef<number | null>(null);
+
+  const commitPendingChapter = useCallback(() => {
+    if (midpointTimerRef.current !== null) {
+      window.clearTimeout(midpointTimerRef.current);
+      midpointTimerRef.current = null;
     }
+    if (pendingChapterRef.current !== null) {
+      const target = pendingChapterRef.current;
+      pendingChapterRef.current = null;
+      sessionManager.setChapter(target);
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
+  const handleTransitionComplete = useCallback(() => {
+    commitPendingChapter();
+    setTransitionState((prev) => ({ ...prev, isActive: false }));
+  }, [commitPendingChapter]);
+
+  useEffect(() => {
+    return () => {
+      if (midpointTimerRef.current !== null) {
+        window.clearTimeout(midpointTimerRef.current);
+      }
+    };
+  }, []);
+
+  const triggerTransition = (type: TransitionType, deferredTargetChapter?: number) => {
+    if (midpointTimerRef.current !== null) {
+      window.clearTimeout(midpointTimerRef.current);
+      midpointTimerRef.current = null;
+    }
+    if (reducedMotion && type !== '4_to_5') {
+      if (deferredTargetChapter !== undefined) {
+        sessionManager.setChapter(deferredTargetChapter);
+        window.scrollTo(0, 0);
+      }
+      return;
+    }
+    if (deferredTargetChapter !== undefined) {
+      pendingChapterRef.current = deferredTargetChapter;
+      window.scrollTo(0, 0);
+      const switchAtMs = reducedMotion ? 500 : 1400;
+      midpointTimerRef.current = window.setTimeout(() => {
+        commitPendingChapter();
+      }, switchAtMs);
+    }
+    setTransitionState({ isActive: true, type });
   };
 
   const handleNextChapter = () => {
@@ -113,6 +159,11 @@ export function App() {
         fromCh === 4 ? '4_to_5' :
         fromCh === 5 ? '5_to_6' :
         fromCh === 6 ? '6_to_7' : '1_to_2';
+
+      if (fromCh === 4 && nextChapter === 5) {
+        triggerTransition('4_to_5', 5);
+        return;
+      }
 
       triggerTransition(typeKey);
       sessionManager.setChapter(nextChapter);
@@ -136,6 +187,10 @@ export function App() {
       if (chapterNumber < session.currentChapter) {
         triggerTransition('backward');
       } else {
+        if (chapterNumber === 5 && session.currentChapter === 4) {
+          triggerTransition('4_to_5', 5);
+          return;
+        }
         const typeKey: TransitionType = 
           chapterNumber === 2 ? '1_to_2' :
           chapterNumber === 3 ? '2_to_3' :
@@ -153,6 +208,11 @@ export function App() {
   const handleTriggerEntryTransition = () => {
     if (transitionState.isActive) return;
     triggerTransition('entry_to_1');
+  };
+
+  const handleReplayTransition = (type: '4_to_5' | 'entry_to_1') => {
+    if (transitionState.isActive) return;
+    triggerTransition(type);
   };
 
   // Passcode verification for Presentation Team
@@ -256,6 +316,7 @@ export function App() {
               onPrevChapter={handlePrevChapter}
               onJumpToChapter={handleJumpToChapter}
               onTriggerEntryTransition={handleTriggerEntryTransition}
+              onReplayTransition={handleReplayTransition}
               reducedMotion={reducedMotion}
             />
           </main>
@@ -321,7 +382,7 @@ export function App() {
       <SpiderManTransition
         isActive={transitionState.isActive}
         transitionType={transitionState.type}
-        onComplete={() => setTransitionState((prev) => ({ ...prev, isActive: false }))}
+        onComplete={handleTransitionComplete}
         reducedMotion={reducedMotion}
       />
     </div>
