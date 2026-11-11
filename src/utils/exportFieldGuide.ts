@@ -174,72 +174,118 @@ export function downloadFullFieldGuidePng(guide: FieldGuideData): void {
         cy + 128
       );
 
-      // Draw settled 8-legged Personal Web emblem in header right corner
+      // Draw solid black Spider-Man chest emblem on textured red suit badge
       const answeredChs = new Set(guide.reflections.map((r) => r.chapter));
-      const sx = pad + innerWidth - 96;
-      const sy = cy + 78;
+      const bw = 132;
+      const bhBox = 112;
+      const bx = pad + innerWidth - bw - 18;
+      const by = cy + 22;
       ctx.save();
-      // Subtle quiet radial capture threads
-      ctx.strokeStyle = '#1E293B';
-      ctx.lineWidth = 1;
-      for (let a = 0; a < 8; a++) {
-        const ang = (a * Math.PI) / 4;
+      ctx.beginPath();
+      ctx.rect(bx, by, bw, bhBox);
+      ctx.clip();
+
+      // Rich crimson suit fill + dark blue waist corners
+      const grad = ctx.createRadialGradient(bx + bw * 0.5, by + bhBox * 0.4, 8, bx + bw * 0.5, by + bhBox * 0.5, bw * 0.7);
+      grad.addColorStop(0, '#E11D2F');
+      grad.addColorStop(1, '#8B0B17');
+      ctx.fillStyle = grad;
+      ctx.fillRect(bx, by, bw, bhBox);
+
+      // Subtle black suit webbing
+      ctx.strokeStyle = 'rgba(17, 19, 24, 0.78)';
+      ctx.lineWidth = 1.1;
+      const cx0 = bx + bw * 0.5;
+      const cy0 = by + 28;
+      const spokes = [
+        [cx0, by], [cx0, by + bhBox],
+        [bx + 42, by], [bx + 90, by],
+        [bx, by + 18], [bx + bw, by + 18],
+        [bx, by + 48], [bx + bw, by + 48],
+        [bx + 18, by + bhBox], [bx + bw - 18, by + bhBox],
+      ];
+      for (const [tx, ty] of spokes) {
         ctx.beginPath();
-        ctx.moveTo(sx, sy);
-        ctx.lineTo(sx + Math.cos(ang) * 52, sy + Math.sin(ang) * 44);
+        ctx.moveTo(cx0, cy0);
+        ctx.lineTo(tx, ty);
         ctx.stroke();
       }
       ctx.beginPath();
-      ctx.ellipse(sx, sy, 42, 34, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx0, cy0 + 18, 44, 30, 0, 0, Math.PI * 2);
       ctx.stroke();
       ctx.beginPath();
-      ctx.ellipse(sx, sy, 25, 20, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx0, cy0 + 22, 64, 46, 0, 0, Math.PI * 2);
       ctx.stroke();
 
-      const drawPair = (
-        ch: number,
-        color: string,
-        ax: number,
-        ay: number,
-        jx: number,
-        jy: number,
-        tx: number,
-        ty: number
-      ) => {
-        const active = answeredChs.has(ch);
-        ctx.strokeStyle = active ? color : '#334155';
-        ctx.lineWidth = active ? 2.4 : 1;
-        if (!active) ctx.setLineDash([3, 3]);
-        else ctx.setLineDash([]);
-        for (const dir of [-1, 1]) {
+      // Dark blue lower-side waist framing
+      ctx.fillStyle = '#143161';
+      ctx.beginPath();
+      ctx.moveTo(bx, by + 56);
+      ctx.lineTo(bx + 20, by + bhBox);
+      ctx.lineTo(bx, by + bhBox);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(bx + bw, by + 56);
+      ctx.lineTo(bx + bw - 20, by + bhBox);
+      ctx.lineTo(bx + bw, by + bhBox);
+      ctx.closePath();
+      ctx.fill();
+
+      // Solid black Spider-Man chest emblem legs (mapped to Ch 2, 3, 4, 6)
+      const scaleX = bw / 132;
+      const drawLegPoly = (pts: [number, number][], active: boolean) => {
+        for (const mirror of [false, true]) {
           ctx.beginPath();
-          ctx.moveTo(sx + dir * ax, sy + ay);
-          ctx.lineTo(sx + dir * jx, sy + jy);
-          ctx.lineTo(sx + dir * tx, sy + ty);
-          ctx.stroke();
+          pts.forEach(([px, py], i) => {
+            const rx = mirror ? bx + bw - px * scaleX : bx + px * scaleX;
+            const ry = by + py;
+            if (i === 0) ctx.moveTo(rx, ry);
+            else ctx.lineTo(rx, ry);
+          });
+          ctx.closePath();
+          if (active) {
+            ctx.fillStyle = '#0B0B0F';
+            ctx.fill();
+          } else {
+            ctx.strokeStyle = 'rgba(40, 5, 10, 0.45)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([2, 2]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
         }
-        ctx.setLineDash([]);
       };
-      drawPair(2, '#38BDF8', 7, -14, 24, -30, 42, -36);
-      drawPair(3, '#F59E0B', 9, -8, 30, -18, 46, -10);
-      drawPair(4, '#F43F5E', 9, -2, 30, 10, 45, 24);
-      drawPair(6, '#A78BFA', 7, 4, 22, 26, 36, 44);
 
-      // Settled spider abdomen & cephalothorax
-      ctx.fillStyle = '#0D1424';
-      ctx.strokeStyle = '#94A3B8';
-      ctx.lineWidth = 1.6;
-      ctx.beginPath();
-      ctx.ellipse(sx, sy + 14, 11, 15, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = '#7F1D1D';
-      ctx.strokeStyle = '#E2E8F0';
-      ctx.beginPath();
-      ctx.ellipse(sx, sy - 8, 8, 9, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
+      drawLegPoly([[61, 41], [47, 33], [51, 14], [41, 36], [60, 42]], answeredChs.has(2));
+      drawLegPoly([[60, 42], [37, 35], [44, 9], [31, 34], [59, 44]], answeredChs.has(3));
+      drawLegPoly([[59, 45], [39, 47], [52, 84], [45, 50], [59, 46]], answeredChs.has(4));
+      drawLegPoly([[59, 47], [30, 47], [46, 101], [35, 50], [59, 48]], answeredChs.has(6));
+
+      // Solid black central spider head + faceted abdomen
+      if (answeredChs.size > 0) {
+        ctx.fillStyle = '#0B0B0F';
+        ctx.beginPath();
+        ctx.moveTo(cx0 - 5, by + 35);
+        ctx.lineTo(cx0 + 5, by + 35);
+        ctx.lineTo(cx0 + 6, by + 40);
+        ctx.lineTo(cx0 - 6, by + 40);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(cx0 - 5, by + 43);
+        ctx.lineTo(cx0 + 5, by + 43);
+        ctx.lineTo(cx0 + 7, by + 48);
+        ctx.lineTo(cx0, by + 66);
+        ctx.lineTo(cx0 - 7, by + 48);
+        ctx.closePath();
+        ctx.fill();
+      }
       ctx.restore();
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(bx, by, bw, bhBox);
 
       cy += bh + 24;
     } else if (b.kind === 'section') {

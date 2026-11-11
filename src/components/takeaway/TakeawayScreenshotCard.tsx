@@ -93,23 +93,52 @@ export const TakeawayScreenshotCard: React.FC<TakeawayScreenshotCardProps> = ({
           />
         </div>
 
-        {/* Compact Personal Spider Web Row */}
+        {/* Compact Suit Chest Emblem Row */}
         <div className="p-3 bg-[#070B14] border border-gray-800 rounded-xs flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <svg viewBox="0 0 100 74" className="w-14 h-10 flex-shrink-0" fill="none">
-              <path d="M 50 18 C 55 18 57 22 56 26 C 55.5 29 52.5 31 50 31.5 C 47.5 31 44.5 29 44 26 C 43 22 45 18 50 18 Z" fill="#7F1D1D" stroke="#CBD5E1" strokeWidth="1" />
-              <path d="M 50 33 C 58 34 61 42 59 50 C 57 57 53 62 50 64 C 47 62 43 57 41 50 C 39 42 42 34 50 33 Z" fill="#0D1424" stroke="#94A3B8" strokeWidth="1" />
+            <svg viewBox="0 0 100 84" className="w-14 h-12 flex-shrink-0 rounded-xs border border-black overflow-hidden" fill="none">
+              <defs>
+                <radialGradient id="miniRed" cx="50%" cy="38%" r="65%">
+                  <stop offset="0%" stopColor="#E11D2F" />
+                  <stop offset="100%" stopColor="#8B0B17" />
+                </radialGradient>
+              </defs>
+              <rect x="0" y="0" width="100" height="84" fill="url(#miniRed)" />
+              <g stroke="#141519" strokeWidth="0.7" opacity="0.75">
+                <line x1="50" y1="0" x2="50" y2="84" />
+                <line x1="50" y1="22" x2="10" y2="0" />
+                <line x1="50" y1="22" x2="90" y2="0" />
+                <line x1="50" y1="24" x2="0" y2="28" />
+                <line x1="50" y1="24" x2="100" y2="28" />
+                <line x1="50" y1="44" x2="12" y2="84" />
+                <line x1="50" y1="44" x2="88" y2="84" />
+                <path d="M 8 24 Q 28 30 50 24 Q 72 30 92 24" />
+                <path d="M 10 48 Q 30 52 50 48 Q 70 52 90 48" />
+              </g>
+              <path d="M 0 38 Q 10 54 14 84 L 0 84 Z" fill="#163567" />
+              <path d="M 100 38 Q 90 54 86 84 L 100 84 Z" fill="#163567" />
+              {guide.answeredCount > 0 && (
+                <>
+                  <path d="M 46 27 L 54 27 L 55 31 L 45 31 Z" fill="#0B0B0F" />
+                  <path d="M 46 32 L 54 32 L 56 37 L 50 49 L 44 37 Z" fill="#0B0B0F" />
+                </>
+              )}
               {[
-                { ch: 2, l: 'M 44 22 L 30 11 L 19 8', r: 'M 56 22 L 70 11 L 81 8', c: '#38BDF8' },
-                { ch: 3, l: 'M 43 26 L 26 20 L 14 27', r: 'M 57 26 L 74 20 L 86 27', c: '#F59E0B' },
-                { ch: 4, l: 'M 43 30 L 26 39 L 15 51', r: 'M 57 30 L 74 39 L 85 51', c: '#F43F5E' },
-                { ch: 6, l: 'M 45 35 L 33 54 L 24 67', r: 'M 55 35 L 67 54 L 76 67', c: '#A78BFA' },
+                { ch: 2, l: 'M 46 30 L 35 25 Q 35 16 39 11 Q 32 18 31 27 L 45 31 Z', r: 'M 54 30 L 65 25 Q 65 16 61 11 Q 68 18 69 27 L 55 31 Z' },
+                { ch: 3, l: 'M 45 31 L 28 26 Q 28 14 33 7 Q 25 16 23 26 L 44 33 Z', r: 'M 55 31 L 72 26 Q 72 14 67 7 Q 75 16 77 26 L 56 33 Z' },
+                { ch: 4, l: 'M 44 33 L 30 35 Q 32 49 40 62 Q 35 48 34 37 L 44 34 Z', r: 'M 56 33 L 70 35 Q 68 49 60 62 Q 65 48 66 37 L 56 34 Z' },
+                { ch: 6, l: 'M 44 34 L 24 35 Q 23 53 35 74 Q 27 52 27 37 L 44 36 Z', r: 'M 56 34 L 76 35 Q 77 53 65 74 Q 73 52 73 37 L 56 36 Z' },
               ].map((pair) => {
                 const active = !!session.answers[pair.ch];
-                return (
-                  <g key={pair.ch} stroke={active ? pair.c : '#334155'} strokeWidth={active ? 1.5 : 0.9} strokeDasharray={active ? undefined : '2 2'} opacity={active ? 1 : 0.55}>
-                    <path d={pair.l} strokeLinecap="round" />
-                    <path d={pair.r} strokeLinecap="round" />
+                return active ? (
+                  <g key={pair.ch} fill="#0B0B0F">
+                    <path d={pair.l} />
+                    <path d={pair.r} />
+                  </g>
+                ) : (
+                  <g key={pair.ch} stroke="#3B070C" strokeWidth="0.6" strokeDasharray="1.5 1.5">
+                    <path d={pair.l} />
+                    <path d={pair.r} />
                   </g>
                 );
               })}

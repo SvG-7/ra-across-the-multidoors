@@ -13,94 +13,54 @@ interface AttendeeWebProgressProps {
   isFinale?: boolean;
 }
 
-interface LegPairConfig {
+interface EmblemLegPairConfig {
   ch: number;
-  legsTag: string;
-  topicTag: string;
-  btnLabel: string;
-  accent: string;
+  controlTitle: string;
+  controlSub: string;
   leftPath: string;
-  leftSilk: string;
   rightPath: string;
-  rightSilk: string;
-  leftJoint: [number, number];
-  rightJoint: [number, number];
-  leftTip: [number, number];
-  rightTip: [number, number];
-  labelBox: { x: number; y: number; w: number; h: number };
-  drawDuration: number;
+  leftHit: string;
+  rightHit: string;
 }
 
-// Bilateral coordinates centered on (190, 128) in 380x280 viewBox.
-// Outer label margins (x: 8..90 and x: 290..372) stay clear of all leg strands.
-const LEG_PAIRS: LegPairConfig[] = [
+// Solid angular chest-emblem leg blades mirrored symmetrically across x = 190 in 380x310 viewBox.
+// Matches the Spider-Man suit chest emblem silhouette: two swept-up upper pairs + two diagonally angled lower pairs.
+const EMBLEM_LEG_PAIRS: EmblemLegPairConfig[] = [
   {
     ch: 2,
-    legsTag: 'CH.2 · 1–2',
-    topicTag: 'OUTREACH',
-    btnLabel: 'Legs 1-2 (Ch 2)',
-    accent: '#38BDF8',
-    leftPath: 'M 177 102 L 140 58 Q 124 47 108 42',
-    leftSilk: 'M 176 105 Q 154 78 139 60 Q 124 49 109 44',
-    rightPath: 'M 203 102 L 240 58 Q 256 47 272 42',
-    rightSilk: 'M 204 105 Q 226 78 241 60 Q 256 49 271 44',
-    leftJoint: [140, 58],
-    rightJoint: [240, 58],
-    leftTip: [108, 42],
-    rightTip: [272, 42],
-    labelBox: { x: 8, y: 28, w: 82, h: 26 },
-    drawDuration: 0.95,
+    controlTitle: 'Legs 1-2 (Ch 2)',
+    controlSub: 'Connection',
+    leftPath: 'M 176 112 L 136 91 Q 134 66 147 41 Q 124 70 119 98 L 174 116 Z',
+    rightPath: 'M 204 112 L 244 91 Q 246 66 233 41 Q 256 70 261 98 L 206 116 Z',
+    leftHit: 'M 142 93 L 134 68 L 147 41',
+    rightHit: 'M 238 93 L 246 68 L 233 41',
   },
   {
     ch: 3,
-    legsTag: 'CH.3 · 3–4',
-    topicTag: 'BOUNDARIES',
-    btnLabel: 'Legs 3-4 (Ch 3)',
-    accent: '#F59E0B',
-    leftPath: 'M 174 112 L 126 86 Q 110 92 98 104',
-    leftSilk: 'M 174 115 Q 146 98 126 88 Q 112 95 99 106',
-    rightPath: 'M 206 112 L 254 86 Q 270 92 282 104',
-    rightSilk: 'M 206 115 Q 234 98 254 88 Q 268 95 281 106',
-    leftJoint: [126, 86],
-    rightJoint: [254, 86],
-    leftTip: [98, 104],
-    rightTip: [282, 104],
-    labelBox: { x: 8, y: 91, w: 82, h: 26 },
-    drawDuration: 1.05,
+    controlTitle: 'Legs 3-4 (Ch 3)',
+    controlSub: 'Boundaries',
+    leftPath: 'M 173 117 L 106 96 Q 106 59 126 25 Q 96 60 88 94 L 171 121 Z',
+    rightPath: 'M 207 117 L 274 96 Q 274 59 254 25 Q 284 60 292 94 L 209 121 Z',
+    leftHit: 'M 110 96 L 94 92 Q 100 58 124 26',
+    rightHit: 'M 270 96 L 286 92 Q 280 58 256 26',
   },
   {
     ch: 4,
-    legsTag: 'CH.4 · 5–6',
-    topicTag: 'CHANNELS',
-    btnLabel: 'Legs 5-6 (Ch 4)',
-    accent: '#F43F5E',
-    leftPath: 'M 174 122 L 128 150 Q 112 167 98 186',
-    leftSilk: 'M 175 125 Q 148 142 129 152 Q 114 169 100 187',
-    rightPath: 'M 206 122 L 252 150 Q 268 167 282 186',
-    rightSilk: 'M 205 125 Q 232 142 251 152 Q 266 169 280 187',
-    leftJoint: [128, 150],
-    rightJoint: [252, 150],
-    leftTip: [98, 186],
-    rightTip: [282, 186],
-    labelBox: { x: 290, y: 173, w: 82, h: 26 },
-    drawDuration: 1.15,
+    controlTitle: 'Legs 5-6 (Ch 4)',
+    controlSub: 'Communication',
+    leftPath: 'M 172 122 L 116 141 Q 125 190 153 236 Q 136 188 131 147 L 171 126 Z',
+    rightPath: 'M 208 122 L 264 141 Q 255 190 227 236 Q 244 188 249 147 L 209 126 Z',
+    leftHit: 'M 129 147 Q 137 190 153 236',
+    rightHit: 'M 251 147 Q 243 190 227 236',
   },
   {
     ch: 6,
-    legsTag: 'CH.6 · 7–8',
-    topicTag: 'PLAN B',
-    btnLabel: 'Legs 7-8 (Ch 6)',
-    accent: '#A78BFA',
-    leftPath: 'M 178 132 L 144 198 Q 130 225 116 246',
-    leftSilk: 'M 180 134 Q 158 176 146 200 Q 132 226 118 247',
-    rightPath: 'M 202 132 L 236 198 Q 250 225 264 246',
-    rightSilk: 'M 200 134 Q 222 176 234 200 Q 248 226 262 247',
-    leftJoint: [144, 198],
-    rightJoint: [236, 198],
-    leftTip: [116, 246],
-    rightTip: [264, 246],
-    labelBox: { x: 290, y: 233, w: 82, h: 26 },
-    drawDuration: 1.25,
+    controlTitle: 'Legs 7-8 (Ch 6)',
+    controlSub: 'Adaptability',
+    leftPath: 'M 171 127 L 94 147 Q 95 206 135 280 Q 107 204 108 153 L 171 131 Z',
+    rightPath: 'M 209 127 L 286 147 Q 285 206 245 280 Q 273 204 272 153 L 209 131 Z',
+    leftHit: 'M 99 152 Q 102 206 135 280',
+    rightHit: 'M 281 152 Q 278 206 245 280',
   },
 ];
 
@@ -128,16 +88,10 @@ export const AttendeeWebProgress: React.FC<AttendeeWebProgressProps> = ({
   const isComplete = count >= 4;
 
   const [selectedLegPair, setSelectedLegPair] = useState<number | null>(null);
-  const [rippleTick, setRippleTick] = useState(0);
 
   const handleToggleLegPair = (ch: number) => {
     soundEngine.playClick();
-    if (selectedLegPair === ch) {
-      setSelectedLegPair(null);
-    } else {
-      setSelectedLegPair(ch);
-      setRippleTick((t) => t + 1);
-    }
+    setSelectedLegPair((prev) => (prev === ch ? null : ch));
   };
 
   const getLegDetails = (ch: number) => {
@@ -171,14 +125,11 @@ export const AttendeeWebProgress: React.FC<AttendeeWebProgressProps> = ({
 
   return (
     <div className="w-full bg-[#080D1A] border-3 border-black rounded-sm p-3.5 sm:p-4 my-3 shadow-comic select-none">
-      {/* Header Banner (Static spider indicator — zero continuous pulse) */}
+      {/* Header Banner */}
       <div className="flex items-center justify-between gap-2 border-b border-gray-800 pb-2 mb-2">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-xs bg-spider-cyan/90 rotate-45 flex-shrink-0" />
-          <span className="font-comic text-base sm:text-lg text-white uppercase tracking-wide">
-            Your Personal Web
-          </span>
-        </div>
+        <span className="font-comic text-base sm:text-lg text-white uppercase tracking-wide">
+          Your Personal Web
+        </span>
         <span
           className={`text-[10px] sm:text-[11px] font-mono uppercase px-2 py-0.5 rounded-xs border font-bold ${
             isComplete
@@ -196,43 +147,121 @@ export const AttendeeWebProgress: React.FC<AttendeeWebProgressProps> = ({
           : 'Your web is taking shape. Each decision you explore adds a matching pair of legs and anchors the central spider body.'}
       </p>
 
-      {/* Delicate Silk Spider Canvas (380 x 280) */}
-      <div className="relative w-full h-60 sm:h-68 bg-[#070B14] border-2 border-slate-800 rounded-xs overflow-hidden flex items-center justify-center p-1">
+      {/* Large Suit Chest Emblem Canvas (Unclipped across phones and wide desktop panels) */}
+      <div
+        className="relative w-full h-[270px] sm:h-[310px] border-2 border-black rounded-xs overflow-hidden flex items-center justify-center shadow-inner"
+        style={{ background: 'radial-gradient(circle at 50% 40%, #C81424 0%, #8B0B17 75%)' }}
+      >
         <svg
-          viewBox="0 0 380 280"
-          className="w-full h-full max-h-full"
+          viewBox="0 0 380 310"
+          preserveAspectRatio="xMidYMid meet"
+          className="w-full h-full overflow-visible"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           role="img"
-          aria-label="Personal eight-legged spider web diagram reflecting your chapter choices"
+          aria-label="Spider-Man suit chest emblem representing your four chapter decisions"
         >
-          {/* Quiet Archival Silk Background Threads (Low-contrast radial spokes & delicate scalloped silk rings) */}
-          <g stroke="#1E293B" strokeWidth="0.65" opacity="0.52">
-            {/* Radial silk threads */}
-            <line x1="190" y1="128" x2="105" y2="18" />
-            <line x1="190" y1="128" x2="275" y2="18" />
-            <line x1="190" y1="128" x2="36" y2="90" />
-            <line x1="190" y1="128" x2="344" y2="90" />
-            <line x1="190" y1="128" x2="48" y2="215" />
-            <line x1="190" y1="128" x2="332" y2="215" />
-            <line x1="190" y1="128" x2="190" y2="12" />
-            <line x1="190" y1="128" x2="190" y2="268" />
+          <defs>
+            {/* Rich suit crimson shading across chest */}
+            <radialGradient id="suitRedGrad" cx="50%" cy="38%" r="65%">
+              <stop offset="0%" stopColor="#E11D2F" />
+              <stop offset="55%" stopColor="#C81424" />
+              <stop offset="100%" stopColor="#8B0B17" />
+            </radialGradient>
 
-            {/* Subtle scalloped cobweb capture rings (inner, mid, outer) */}
-            <path d="M 190 74 Q 168 78 152 79 Q 134 100 120 112 Q 122 140 126 164 Q 158 182 190 184 Q 222 182 254 164 Q 258 140 260 112 Q 246 100 228 79 Q 212 78 190 74 Z" />
-            <path d="M 190 42 Q 152 48 128 48 Q 98 78 78 100 Q 82 150 86 192 Q 138 220 190 224 Q 242 220 294 192 Q 298 150 302 100 Q 282 78 252 48 Q 228 48 190 42 Z" />
+            {/* Dark sapphire-blue side suit panel shading */}
+            <linearGradient id="suitBlueLeft" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#0E2346" />
+              <stop offset="100%" stopColor="#1D447B" />
+            </linearGradient>
+            <linearGradient id="suitBlueRight" x1="100%" y1="0%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="#0E2346" />
+              <stop offset="100%" stopColor="#1D447B" />
+            </linearGradient>
+
+            {/* Subtle honeycomb / micro-brick suit fabric texture on red chest */}
+            <pattern id="redFabricWeave" width="8" height="6" patternUnits="userSpaceOnUse">
+              <path d="M 0 3 L 4 0 L 8 3 L 4 6 Z" fill="none" stroke="#6B0510" strokeWidth="0.65" opacity="0.34" />
+              <path d="M 0 0 L 8 0 M 0 3 L 8 3" stroke="#991B1B" strokeWidth="0.35" opacity="0.22" />
+            </pattern>
+
+            {/* Micro-mesh texture on blue suit sides */}
+            <pattern id="blueFabricMesh" width="7" height="7" patternUnits="userSpaceOnUse">
+              <circle cx="3.5" cy="3.5" r="1.4" fill="#071327" opacity="0.45" />
+            </pattern>
+
+            {/* Soft vignette for sculptural suit contour */}
+            <linearGradient id="chestContour" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.08" />
+              <stop offset="48%" stopColor="#000000" stopOpacity="0" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0.28" />
+            </linearGradient>
+          </defs>
+
+          {/* 1. Crimson Suit Chest Base + Micro-Texture (Extended horizontally for wide desktop panels) */}
+          <rect x="-240" y="-20" width="860" height="350" fill="url(#suitRedGrad)" />
+          <rect x="-240" y="-20" width="860" height="350" fill="url(#redFabricWeave)" />
+
+          {/* Subtle Pec / Pectoral Depth Shadow */}
+          <ellipse cx="122" cy="112" rx="68" ry="44" fill="#FF4D5E" opacity="0.09" />
+          <ellipse cx="258" cy="112" rx="68" ry="44" fill="#FF4D5E" opacity="0.09" />
+          <rect x="-240" y="-20" width="860" height="350" fill="url(#chestContour)" />
+
+          {/* 2. Black Raised Suit Webbing Across the Red Chest */}
+          <g stroke="#121318" strokeLinecap="round" fill="none">
+            {/* Radial spokes anchored at upper center chest (190, 74) */}
+            <g strokeWidth="1.7" opacity="0.88">
+              <path d="M 190 0 L 190 310" />
+              <path d="M 190 74 Q 158 36 126 -10" />
+              <path d="M 190 74 Q 222 36 254 -10" />
+              <path d="M 190 78 Q 112 46 36 -10" />
+              <path d="M 190 78 Q 268 46 344 -10" />
+              <path d="M 190 86 Q 74 72 -140 32" />
+              <path d="M 190 86 Q 306 72 520 32" />
+              <path d="M 190 118 Q 80 116 -140 116" />
+              <path d="M 190 118 Q 300 116 520 116" />
+              <path d="M 190 144 Q 90 166 -120 228" />
+              <path d="M 190 144 Q 290 166 500 228" />
+              <path d="M 190 176 Q 130 224 60 320" />
+              <path d="M 190 176 Q 250 224 320 320" />
+            </g>
+
+            {/* Concave suit-style concentric scalloped cross-webs */}
+            <g strokeWidth="1.55" opacity="0.84">
+              {/* Row 1 (Upper shoulder ring) */}
+              <path d="M -80 6 Q 14 34 105 32 Q 148 36 190 22 Q 232 36 275 32 Q 366 34 460 6" />
+              {/* Row 2 (Mid pecs) */}
+              <path d="M -110 54 Q 24 84 96 76 Q 144 86 190 72 Q 236 86 284 76 Q 356 84 490 54" />
+              {/* Row 3 (Mid ribcage) */}
+              <path d="M -110 132 Q 44 146 116 134 Q 154 146 190 138 Q 226 146 264 134 Q 336 146 490 132" />
+              {/* Row 4 (Lower chest / waist) */}
+              <path d="M -60 226 Q 72 220 134 202 Q 162 212 190 202 Q 218 212 246 202 Q 308 220 440 226" />
+              {/* Row 5 (Lower torso) */}
+              <path d="M 60 288 Q 118 288 154 274 Q 172 280 190 272 Q 208 280 226 274 Q 262 288 320 288" />
+            </g>
           </g>
 
-          {/* Subtle Blueprint Outline for Unwoven Legs */}
+          {/* 3. Dark Blue Suit Waist Framing Edges */}
+          <g>
+            <path d="M -100 112 Q 28 176 52 320 L -240 320 L -240 112 Z" fill="url(#suitBlueLeft)" />
+            <path d="M -100 112 Q 28 176 52 320 L -240 320 L -240 112 Z" fill="url(#blueFabricMesh)" />
+            <path d="M -20 128 Q 30 184 52 320" stroke="#0B111C" strokeWidth="2.2" fill="none" />
+
+            <path d="M 480 112 Q 352 176 328 320 L 620 320 L 620 112 Z" fill="url(#suitBlueRight)" />
+            <path d="M 480 112 Q 352 176 328 320 L 620 320 L 620 112 Z" fill="url(#blueFabricMesh)" />
+            <path d="M 400 128 Q 350 184 328 320" stroke="#0B111C" strokeWidth="2.2" fill="none" />
+          </g>
+
+          {/* 4. Faint Recessed Suit Blueprint Outline ONLY for Unanswered Leg Pairs */}
           {!isComplete && (
-            <g stroke="#293548" strokeWidth="1" strokeDasharray="3 3" opacity="0.55">
+            <g fill="none" stroke="#2D0409" strokeWidth="1.15" strokeDasharray="3 3" opacity="0.55">
               {count === 0 && (
                 <>
-                  <path d="M 190 94 C 202 94 207 104 206 114 C 205 123 197 129 190 130 C 183 129 175 123 174 114 C 173 104 178 94 190 94 Z" />
-                  <path d="M 190 133 C 208 135 215 154 211 174 C 207 192 197 204 190 208 C 183 204 173 192 169 174 C 165 154 172 135 190 133 Z" />
+                  <path d="M 176 98 L 185 96 L 190 99 L 195 96 L 204 98 L 206 108 L 201 113 L 179 113 L 174 108 Z" />
+                  <path d="M 176 118 L 190 116 L 204 118 L 210 131 L 202 158 L 190 182 L 178 158 L 170 131 Z" />
                 </>
               )}
-              {LEG_PAIRS.filter((pair) => !answeredMap[pair.ch]).map((pair) => (
+              {EMBLEM_LEG_PAIRS.filter((pair) => !answeredMap[pair.ch]).map((pair) => (
                 <g key={`ghost-${pair.ch}`}>
                   <path d={pair.leftPath} />
                   <path d={pair.rightPath} />
@@ -241,235 +270,119 @@ export const AttendeeWebProgress: React.FC<AttendeeWebProgressProps> = ({
             </g>
           )}
 
-          {/* Sculpted Central Spider Silhouette (Grows when decisions are woven) */}
+          {/* 5. Solid Black Central Spider-Man Emblem Body (Reveals when >=1 decision answered) */}
           {count > 0 && (
-            <g
-              opacity={selectedLegPair !== null ? 0.92 : 1}
-              className="transition-opacity duration-200"
+            <motion.g
+              initial={reducedMotion ? false : { opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.35, ease: 'easeOut' }}
+              style={{ transformOrigin: '190px 135px' }}
             >
-              {/* Front pedipalps */}
-              <path d="M 184 95 Q 178 86 183 80" stroke="#94A3B8" strokeWidth="1.25" strokeLinecap="round" />
-              <path d="M 196 95 Q 202 86 197 80" stroke="#94A3B8" strokeWidth="1.25" strokeLinecap="round" />
-
-              {/* Abdomen (Teardrop obsidian body with subtle crimson dorsal hourglass) */}
-              <motion.path
-                d="M 190 132 C 209 135 215 154 211 174 C 207 192 197 205 190 209 C 183 205 173 192 169 174 C 165 154 171 135 190 132 Z"
-                initial={reducedMotion ? false : { scale: 0.75, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.7, ease: 'easeOut' }}
-                fill="#0D1424"
-                stroke={isComplete ? '#94A3B8' : '#475569'}
-                strokeWidth="1.4"
-              />
-              {/* Delicate dorsal spine & crimson Spider mark inside abdomen */}
-              <path d="M 190 137 L 190 203" stroke="#334155" strokeWidth="0.9" />
+              {/* Cephalothorax (Angular flat-top chest emblem head block) */}
               <path
-                d="M 185 152 L 195 152 L 191.5 162 L 195 172 L 185 172 L 188.5 162 Z"
-                fill="#BE123C"
-                opacity="0.88"
+                d="M 176 98 L 185 96 L 190 99 L 195 96 L 204 98 L 206 108 L 201 113 L 179 113 L 174 108 Z"
+                fill="#0B0B0F"
+                stroke="#27272A"
+                strokeWidth="0.7"
               />
-              <path d="M 176 152 Q 190 160 204 152" stroke="#334155" strokeWidth="0.75" fill="none" />
-              <path d="M 175 173 Q 190 181 205 173" stroke="#334155" strokeWidth="0.75" fill="none" />
-
-              {/* Waist pedicel */}
-              <rect x="187" y="128.5" width="6" height="5" rx="1.5" fill="#1E293B" stroke="#64748B" strokeWidth="0.9" />
-
-              {/* Cephalothorax (Sculpted Head & Carapace) */}
-              <motion.path
-                d="M 190 94 C 201 94 207 104 205.5 114 C 204.5 123 197 129 190 130 C 183 129 175.5 123 174.5 114 C 173 104 179 94 190 94 Z"
-                initial={reducedMotion ? false : { scale: 0.65, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.55, ease: 'easeOut' }}
-                fill="#7F1D1D"
-                stroke={isComplete ? '#E2E8F0' : '#94A3B8'}
-                strokeWidth="1.35"
+              {/* Faceted Angular Spider-Man Emblem Abdomen */}
+              <path
+                d="M 176 118 L 190 116 L 204 118 L 210 131 L 202 158 L 190 182 L 178 158 L 170 131 Z"
+                fill="#0B0B0F"
+                stroke="#27272A"
+                strokeWidth="0.7"
               />
-              {/* Angular Stylized Spider-Man Mask Eyes */}
-              <path d="M 180 101 Q 186 100 187.5 107 Q 181.5 108.5 180 101 Z" fill="#F8FAFC" />
-              <path d="M 200 101 Q 194 100 192.5 107 Q 198.5 108.5 200 101 Z" fill="#F8FAFC" />
-              <text x="190" y="122" textAnchor="middle" fill="#E2E8F0" fontSize="6" fontFamily="monospace" fontWeight="bold">
-                RA
-              </text>
-            </g>
+            </motion.g>
           )}
 
-          {/* Render Woven Leg Pairs with Restrained Silk Styling, Clear Labels & Interactive Ripple */}
-          {LEG_PAIRS.map((pair) => {
+          {/* 6. Selectable Solid Black Leg Pairs (Non-overlapping generous blade hit cushions + clean selection outline above) */}
+          {EMBLEM_LEG_PAIRS.map((pair) => {
             const isAnswered = answeredMap[pair.ch];
+            if (!isAnswered) return null;
             const isSelected = selectedLegPair === pair.ch;
-            const isDimmed = selectedLegPair !== null && !isSelected;
-
-            const opacityValue = !isAnswered ? 0 : isDimmed ? 0.28 : isSelected ? 1 : 0.86;
 
             return (
-              <g
+              <motion.g
                 key={pair.ch}
-                onClick={() => isAnswered && handleToggleLegPair(pair.ch)}
-                style={{ opacity: opacityValue, transition: 'opacity 220ms ease' }}
-                className={isAnswered ? 'cursor-pointer' : 'pointer-events-none'}
+                data-leg-pair={pair.ch}
+                onClick={() => handleToggleLegPair(pair.ch)}
+                initial={reducedMotion ? false : { opacity: 0, scale: 0.94 }}
+                animate={{
+                  opacity: 1,
+                  scale: isSelected && !reducedMotion ? [1, 1.025, 1] : 1,
+                }}
+                transition={{ duration: isSelected ? 0.25 : 0.38, ease: 'easeOut' }}
+                style={{ transformOrigin: '190px 124px', pointerEvents: 'all' }}
+                className="cursor-pointer"
               >
-                {isAnswered && (
-                  <>
-                    {/* Generous Invisible Mobile Touch Targets along both legs */}
-                    <path d={pair.leftPath} stroke="transparent" strokeWidth="30" fill="none" />
-                    <path d={pair.rightPath} stroke="transparent" strokeWidth="30" fill="none" />
+                {/* Solid Black Spider-Man Emblem Leg Pair */}
+                <path
+                  d={pair.leftPath}
+                  fill="#0B0B0F"
+                  stroke="#26272B"
+                  strokeWidth={0.6}
+                  strokeLinejoin="round"
+                />
+                <path
+                  d={pair.rightPath}
+                  fill="#0B0B0F"
+                  stroke="#26272B"
+                  strokeWidth={0.6}
+                  strokeLinejoin="round"
+                />
 
-                    {/* Soft Selected Halo (Strictly when selected, no constant idle glow) */}
-                    {isSelected && (
-                      <>
-                        <path
-                          d={pair.leftPath}
-                          stroke={pair.accent}
-                          strokeWidth="6"
-                          strokeOpacity="0.24"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          fill="none"
-                        />
-                        <path
-                          d={pair.rightPath}
-                          stroke={pair.accent}
-                          strokeWidth="6"
-                          strokeOpacity="0.24"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          fill="none"
-                        />
-                      </>
-                    )}
-
-                    {/* One-Shot Silk Tension Ripple on Selection (settles completely) */}
-                    {isSelected && !reducedMotion && (
-                      <g key={`ripple-${pair.ch}-${rippleTick}`}>
-                        <motion.path
-                          d={pair.leftPath}
-                          stroke="#F8FAFC"
-                          fill="none"
-                          strokeLinecap="round"
-                          initial={{ strokeWidth: 5.5, strokeOpacity: 0.9 }}
-                          animate={{ strokeWidth: 1.5, strokeOpacity: 0 }}
-                          transition={{ duration: 0.55, ease: 'easeOut' }}
-                        />
-                        <motion.path
-                          d={pair.rightPath}
-                          stroke="#F8FAFC"
-                          fill="none"
-                          strokeLinecap="round"
-                          initial={{ strokeWidth: 5.5, strokeOpacity: 0.9 }}
-                          animate={{ strokeWidth: 1.5, strokeOpacity: 0 }}
-                          transition={{ duration: 0.55, ease: 'easeOut' }}
-                        />
-                      </g>
-                    )}
-
-                    {/* Primary Articulated Leg Strands */}
-                    <motion.path
-                      d={pair.leftPath}
-                      initial={reducedMotion ? false : { pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: pair.drawDuration, ease: [0.22, 1, 0.36, 1] }}
-                      stroke={pair.accent}
-                      strokeWidth={isSelected ? 3.1 : 2.1}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      fill="none"
-                    />
-                    <motion.path
-                      d={pair.rightPath}
-                      initial={reducedMotion ? false : { pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: pair.drawDuration, ease: [0.22, 1, 0.36, 1] }}
-                      stroke={pair.accent}
-                      strokeWidth={isSelected ? 3.1 : 2.1}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      fill="none"
-                    />
-
-                    {/* Fine Secondary Hairline Silk Strand for organic depth */}
-                    <path
-                      d={pair.leftSilk}
-                      stroke="#E2E8F0"
-                      strokeWidth={isSelected ? 0.9 : 0.65}
-                      strokeOpacity={isSelected ? 0.6 : 0.32}
-                      strokeLinecap="round"
-                      fill="none"
-                    />
-                    <path
-                      d={pair.rightSilk}
-                      stroke="#E2E8F0"
-                      strokeWidth={isSelected ? 0.9 : 0.65}
-                      strokeOpacity={isSelected ? 0.6 : 0.32}
-                      strokeLinecap="round"
-                      fill="none"
-                    />
-
-                    {/* Refined Subtle Joint & Tarsus Tip Anchors (no oversized neon dots) */}
-                    <circle
-                      cx={pair.leftJoint[0]}
-                      cy={pair.leftJoint[1]}
-                      r={isSelected ? 3.2 : 2.1}
-                      fill="#0B1120"
-                      stroke={pair.accent}
-                      strokeWidth="1.4"
-                    />
-                    <circle
-                      cx={pair.rightJoint[0]}
-                      cy={pair.rightJoint[1]}
-                      r={isSelected ? 3.2 : 2.1}
-                      fill="#0B1120"
-                      stroke={pair.accent}
-                      strokeWidth="1.4"
-                    />
-                    <circle cx={pair.leftTip[0]} cy={pair.leftTip[1]} r={isSelected ? 2.6 : 1.7} fill={pair.accent} />
-                    <circle cx={pair.rightTip[0]} cy={pair.rightTip[1]} r={isSelected ? 2.6 : 1.7} fill={pair.accent} />
-
-                    {/* Outer Margin Chapter Label Badge (Clear of all strands + state distinct) */}
-                    <g>
-                      <rect
-                        x={pair.labelBox.x}
-                        y={pair.labelBox.y}
-                        width={pair.labelBox.w}
-                        height={pair.labelBox.h}
-                        rx="3"
-                        fill={isSelected ? '#FFE600' : '#0B1221'}
-                        stroke={isSelected ? '#FFFFFF' : pair.accent}
-                        strokeWidth={isSelected ? 1.6 : 1}
-                      />
-                      <text
-                        x={pair.labelBox.x + pair.labelBox.w / 2}
-                        y={pair.labelBox.y + 10.5}
-                        textAnchor="middle"
-                        fill={isSelected ? '#000000' : '#F8FAFC'}
-                        fontSize="7"
-                        fontFamily="monospace"
-                        fontWeight="bold"
-                      >
-                        {isSelected ? `▶ ${pair.legsTag}` : pair.legsTag}
-                      </text>
-                      <text
-                        x={pair.labelBox.x + pair.labelBox.w / 2}
-                        y={pair.labelBox.y + 20.5}
-                        textAnchor="middle"
-                        fill={isSelected ? '#111827' : pair.accent}
-                        fontSize="6.5"
-                        fontFamily="sans-serif"
-                        fontWeight="700"
-                      >
-                        {pair.topicTag}
-                      </text>
-                    </g>
-                  </>
-                )}
-              </g>
+                {/* Generous Transparent Touch Cushion Centered Along Distinct Blade & Tip */}
+                <path
+                  d={pair.leftHit}
+                  stroke="transparent"
+                  strokeWidth="22"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                  style={{ pointerEvents: 'stroke' }}
+                />
+                <path
+                  d={pair.rightHit}
+                  stroke="transparent"
+                  strokeWidth="22"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                  style={{ pointerEvents: 'stroke' }}
+                />
+              </motion.g>
             );
           })}
+
+          {/* Crisp Contrasting Highlight Overlay Rendered On Top For Selected Pair */}
+          {selectedLegPair !== null && (() => {
+            const selPair = EMBLEM_LEG_PAIRS.find((p) => p.ch === selectedLegPair);
+            if (!selPair || !answeredMap[selPair.ch]) return null;
+            return (
+              <g style={{ pointerEvents: 'none' }} className="filter drop-shadow-[0_0_6px_rgba(255,255,255,0.75)]">
+                <path
+                  d={selPair.leftPath}
+                  fill="#0B0B0F"
+                  stroke="#FFFFFF"
+                  strokeWidth={2.5}
+                  strokeLinejoin="round"
+                />
+                <path
+                  d={selPair.rightPath}
+                  fill="#0B0B0F"
+                  stroke="#FFFFFF"
+                  strokeWidth={2.5}
+                  strokeLinejoin="round"
+                />
+              </g>
+            );
+          })()}
         </svg>
       </div>
 
-      {/* Interactive Leg Pair Selector Buttons (Equally Usable Touch Controls) */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2.5">
-        {LEG_PAIRS.map((pair) => {
+      {/* Four Compact Chapter Controls Beneath the Suit Emblem */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
+        {EMBLEM_LEG_PAIRS.map((pair) => {
           const answered = answeredMap[pair.ch];
           const isSelected = selectedLegPair === pair.ch;
           return (
@@ -479,24 +392,28 @@ export const AttendeeWebProgress: React.FC<AttendeeWebProgressProps> = ({
               onClick={() => handleToggleLegPair(pair.ch)}
               disabled={!answered}
               aria-pressed={isSelected}
-              className={`py-2 px-1.5 rounded-xs border text-[10px] sm:text-[11px] font-mono font-bold transition-all flex flex-col items-center justify-center cursor-pointer ${
+              className={`py-2 px-2 rounded-xs border text-[11px] font-mono font-bold transition-all flex flex-col items-center justify-center cursor-pointer ${
                 isSelected
                   ? 'bg-spider-yellow text-black border-white shadow-comic-sm font-extrabold'
                   : answered
-                    ? 'bg-black/65 hover:bg-black text-gray-200 border-slate-700 hover:border-slate-500'
+                    ? 'bg-[#0C1324] hover:bg-black text-white border-slate-700 hover:border-slate-400'
                     : 'opacity-40 bg-gray-900 border-gray-800 text-gray-500 cursor-not-allowed'
               }`}
             >
-              <span className="truncate">{pair.btnLabel}</span>
-              <span className="text-[8.5px] font-normal uppercase mt-0.5">
-                {isSelected ? 'Selected • Close' : answered ? 'Inspect' : 'Unwoven'}
+              <span className="truncate">{pair.controlTitle}</span>
+              <span
+                className={`text-[9px] font-sans font-semibold mt-0.5 ${
+                  isSelected ? 'text-black/80' : answered ? 'text-gray-400' : 'text-gray-600'
+                }`}
+              >
+                {answered ? pair.controlSub : 'Unwoven'}
               </span>
             </button>
           );
         })}
       </div>
 
-      {/* Readable Detail Area Below Controls (Never Covers Spider SVG) */}
+      {/* Selected Response Details Below the Chapter Controls */}
       <AnimatePresence mode="wait">
         {activeDetail && activeDetail.answered && (
           <motion.div
@@ -533,7 +450,6 @@ export const AttendeeWebProgress: React.FC<AttendeeWebProgressProps> = ({
               </span>
             </div>
 
-            {/* Saved Choice + Existing Explanation */}
             <div>
               <span className="text-[10px] font-mono text-spider-cyan uppercase font-bold block mb-0.5">
                 What you leaned toward:
