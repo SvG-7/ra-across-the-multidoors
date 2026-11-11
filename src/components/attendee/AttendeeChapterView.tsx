@@ -197,11 +197,11 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
               <div className="space-y-3.5">
                 {/* Chapter 6: Show the 3 Important New Facts clearly before asking "What would you change?" */}
                 {currentChapterNumber === 6 && (
-                  <div className="p-3 bg-[#0C1220] border border-amber-400/50 rounded-xs space-y-1.5">
-                    <span className="font-mono text-[11px] uppercase font-bold text-amber-300 block">
+                  <div className="p-3.5 bg-[#0B1528] border border-amber-400/35 border-l-4 border-l-amber-400 rounded-r-xs space-y-2">
+                    <span className="font-mono text-[11px] uppercase font-bold text-amber-300 tracking-wider block">
                       What you just learned about Ned
                     </span>
-                    <ul className="text-sm font-sans text-gray-200 space-y-0.5 list-disc list-inside">
+                    <ul className="text-[19px] sm:text-[20px] font-sans font-semibold text-[#F8FAFC] leading-[1.35] space-y-1.5 list-disc list-inside">
                       <li>Ned mutes group chats.</li>
                       <li>Unexpected visits are difficult.</li>
                       <li>Short direct messages are easier to answer.</li>
@@ -209,21 +209,18 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
                   </div>
                 )}
 
-                {/* Essential Context (for Chapters 2, 3, 4) + Question */}
-                <div className="space-y-1">
+                {/* Essential Context (Chapters 2, 3, 4) + Question */}
+                <div className="space-y-2.5">
                   {chapter.situation && currentChapterNumber !== 6 && (
-                    <p className="text-sm sm:text-base font-sans text-gray-300 leading-snug">
-                      {chapter.situation}
-                    </p>
+                    <div className="bg-[#0B1528] border-l-4 border-spider-cyan px-3.5 py-2.5 rounded-r-xs">
+                      <p className="font-sans font-semibold text-[20px] sm:text-[21px] text-[#F8FAFC] leading-[1.35]">
+                        {chapter.situation}
+                      </p>
+                    </div>
                   )}
-                  <h2 className="font-sans font-bold text-xl sm:text-2xl text-white leading-tight pt-0.5">
+                  <h2 className="font-sans font-extrabold text-[22px] sm:text-[26px] text-white leading-tight">
                     {chapter.decisionPrompt}
                   </h2>
-                  {chapter.scopeNote && (
-                    <p className="text-xs font-mono text-gray-400 pt-0.5">
-                      {chapter.scopeNote}
-                    </p>
-                  )}
                 </div>
 
                 {/* Large Kahoot-Style Answer Tiles */}
@@ -263,6 +260,12 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
                     );
                   })}
                 </div>
+
+                {chapter.scopeNote && (
+                  <p className="text-xs font-mono text-gray-400">
+                    {chapter.scopeNote}
+                  </p>
+                )}
 
                 {/* Brief Immediate Feedback Line */}
                 {selectedOptionObj?.consideration && (

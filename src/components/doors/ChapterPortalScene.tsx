@@ -8,7 +8,6 @@ import {
   DoorClosed,
   Lock,
   ArrowRight,
-  Clock,
 } from 'lucide-react';
 
 interface ChapterPortalSceneProps {
@@ -164,32 +163,113 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
         )}
 
         {/* ================================================================= */}
-        {/* CHAPTER 3: PEER TENSION (REALISTIC VENOM LARGE & WELL-SEPARATED)   */}
+        {/* CHAPTER 3: THREE SPIDER-MEN POINTING (4 SEPARATE LAYERED ASSETS)  */}
         {/* ================================================================= */}
-        {chapterNumber === 3 && (
+        {chapterNumber === 3 && (() => {
+          const playSeparateArrival = !reducedMotion && replayKey > 0;
+          return (
+            <div className="relative w-full h-full flex items-center justify-center bg-[#090D18] overflow-hidden">
+              <div
+                className="relative h-full max-h-full w-auto max-w-full border-x border-slate-700/60 overflow-hidden shadow-comic"
+                style={{ aspectRatio: '466 / 429' }}
+              >
+                {/* Layer 0: Clean Empty Environment Plate (Zero character copies) */}
+                <img
+                  src={getAssetUrl('images/spiderman-point-bg.png')}
+                  alt="Street alleyway scene background without characters"
+                  className="w-full h-full object-contain select-none"
+                  loading="eager"
+                />
+
+                {/* Layer 1 (Rear/Center): Center Spider-Man pointing both ways */}
+                <motion.img
+                  src={getAssetUrl('images/spiderman-point-center.png')}
+                  alt="Rear center Spider-Man pointing left and right"
+                  initial={playSeparateArrival ? { y: '-22%', scale: 0.72, opacity: 0 } : false}
+                  animate={{ y: '0%', scale: 1, opacity: 1 }}
+                  transition={
+                    playSeparateArrival
+                      ? { duration: 0.85, delay: 0.5, ease: [0.22, 1, 0.36, 1] }
+                      : { duration: 0.25 }
+                  }
+                  style={{ left: '31.97%', top: '11.89%', width: '40.77%' }}
+                  className="absolute z-10 h-auto pointer-events-none select-none"
+                  loading="eager"
+                />
+
+                {/* Layer 2 (Left): Classic Webbed Spider-Man pointing right */}
+                <motion.img
+                  src={getAssetUrl('images/spiderman-point-left.png')}
+                  alt="Left Spider-Man pointing across the scene"
+                  initial={playSeparateArrival ? { x: '-55%', opacity: 0 } : false}
+                  animate={{ x: '0%', opacity: 1 }}
+                  transition={
+                    playSeparateArrival
+                      ? { duration: 0.85, delay: 0.08, ease: [0.22, 1, 0.36, 1] }
+                      : { duration: 0.25 }
+                  }
+                  style={{ left: '3.43%', top: '20.75%', width: '37.77%' }}
+                  className="absolute z-20 h-auto pointer-events-none select-none"
+                  loading="eager"
+                />
+
+                {/* Layer 3 (Right): Forefront Spider-Man pointing left */}
+                <motion.img
+                  src={getAssetUrl('images/spiderman-point-right.png')}
+                  alt="Right Spider-Man pointing back toward the others"
+                  initial={playSeparateArrival ? { x: '55%', opacity: 0 } : false}
+                  animate={{ x: '0%', opacity: 1 }}
+                  transition={
+                    playSeparateArrival
+                      ? { duration: 0.85, delay: 0.95, ease: [0.22, 1, 0.36, 1] }
+                      : { duration: 0.25 }
+                  }
+                  style={{ left: '53.22%', top: '23.54%', width: '38.84%' }}
+                  className="absolute z-30 h-auto pointer-events-none select-none"
+                  loading="eager"
+                />
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* ================================================================= */}
+        {/* CHAPTER 4: TWO COMMUNICATION LANGUAGES (MOVED VENOM PRESENTATION) */}
+        {/* ================================================================= */}
+        {chapterNumber === 4 && (
           <div className="relative w-full h-full flex items-end justify-between px-3 sm:px-5 pt-2 pb-1 overflow-hidden bg-gradient-to-b from-[#090B12] via-[#101828] to-[#05070C]">
-            {/* Left: Minimal Wall Policy Notice */}
-            <div className="relative z-10 w-[34%] h-[82%] mb-3 bg-[#17130A] border-2 border-spider-yellow/85 rounded-xs p-2.5 sm:p-3.5 flex flex-col justify-between shadow-comic-sm">
-              <div className="flex items-center gap-1.5 text-spider-yellow border-b border-spider-yellow/35 pb-1.5">
-                <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+            {/* Left: Communication Channels Card (Ch. 4 content only) */}
+            <div className="relative z-10 w-[36%] h-[82%] mb-3 bg-[#091322] border-2 border-spider-cyan/75 rounded-xs p-2.5 sm:p-3 flex flex-col justify-between shadow-comic-sm">
+              <div className="flex items-center gap-1.5 text-spider-cyan border-b border-spider-cyan/30 pb-1.5">
+                <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                 <span className="font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wide">
-                  Peer Issue
+                  Outreach
                 </span>
               </div>
 
               <div className="space-y-1.5 my-auto">
-                <div className="bg-spider-yellow/20 border-l-2 border-spider-yellow px-2 py-1 text-[11px] sm:text-xs font-sans font-semibold text-white">
-                  Shared Agreement
+                <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-sans text-spider-yellow">
+                  <Users className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="truncate">Group chat</span>
                 </div>
-                <div className="bg-white/5 border-l-2 border-slate-500 px-2 py-1 text-[10px] sm:text-xs font-sans text-gray-300">
-                  Room &amp; Hall Boundaries
+                <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-sans text-spider-cyan">
+                  <MessageSquare className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="truncate">Personal</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-sans text-spider-red">
+                  <DoorClosed className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="truncate">In person</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-sans text-purple-300">
+                  <Mail className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="truncate">Short email</span>
                 </div>
               </div>
 
-              <span className="text-[10px] font-mono text-gray-400">Same-age peer</span>
+              <span className="text-[10px] font-mono text-gray-400">Same intent, mixed signal</span>
             </div>
 
-            {/* Right: Large Realistic Venom with Restrained Rim Light */}
+            {/* Right: Exact Approved Venom Artwork & Symbiote Presentation */}
             <div className="relative z-20 w-[62%] h-full min-h-0 flex items-end justify-center pt-1 overflow-hidden">
               <motion.div
                 animate={reducedMotion ? undefined : { opacity: [0.6, 0.9, 0.6] }}
@@ -231,73 +311,12 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
               >
                 <img
                   src={getAssetUrl('images/venom-character.png')}
-                  alt="Venom facing peer accountability scenario"
+                  alt="Venom representing communication disconnect when messages fail to land"
                   className="h-auto max-h-[95%] w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_0_6px_rgba(148,163,184,0.48)] drop-shadow-[0_8px_16px_rgba(0,0,0,0.95)]"
                   loading="eager"
                 />
               </motion.div>
             </div>
-          </div>
-        )}
-
-        {/* ================================================================= */}
-        {/* CHAPTER 4: HOW WOULD YOU REACH THEM? (COMMUNICATION CHANNELS)      */}
-        {/* ================================================================= */}
-        {chapterNumber === 4 && (
-          <div className="relative w-full h-full flex items-center justify-center px-4 bg-gradient-to-b from-[#070E1A] to-[#050811]">
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 360 220">
-              <line x1="180" y1="110" x2="54" y2="55" stroke="#FFE600" strokeWidth="2.5" strokeDasharray="4 3" />
-              <line x1="180" y1="110" x2="54" y2="165" stroke="#00F0FF" strokeWidth="2.5" strokeDasharray="4 3" />
-              <line x1="180" y1="110" x2="306" y2="55" stroke="#FF1744" strokeWidth="2.5" strokeDasharray="4 3" />
-              <line x1="180" y1="110" x2="306" y2="165" stroke="#C084FC" strokeWidth="2.5" strokeDasharray="4 3" />
-            </svg>
-
-            {/* Left Nodes */}
-            <div className="absolute inset-y-0 left-3 sm:left-6 flex flex-col justify-around py-5 pointer-events-none z-10">
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-[#191506] border-2 border-spider-yellow flex items-center justify-center shadow-comic-sm">
-                  <Users className="w-5 h-5 text-spider-yellow" />
-                </div>
-                <span className="font-mono text-[10px] text-spider-yellow font-bold">Group chat</span>
-              </div>
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-[#081A28] border-2 border-spider-cyan flex items-center justify-center shadow-comic-sm">
-                  <MessageSquare className="w-5 h-5 text-spider-cyan" />
-                </div>
-                <span className="font-mono text-[10px] text-spider-cyan font-bold">Personal</span>
-              </div>
-            </div>
-
-            {/* Right Nodes */}
-            <div className="absolute inset-y-0 right-3 sm:right-6 flex flex-col justify-around py-5 pointer-events-none z-10">
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-[#220912] border-2 border-spider-red flex items-center justify-center shadow-comic-sm">
-                  <DoorClosed className="w-5 h-5 text-spider-red" />
-                </div>
-                <span className="font-mono text-[10px] text-spider-red font-bold">In person</span>
-              </div>
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-[#170E29] border-2 border-purple-400 flex items-center justify-center shadow-comic-sm">
-                  <Mail className="w-5 h-5 text-purple-400" />
-                </div>
-                <span className="font-mono text-[10px] text-purple-300 font-bold">Short email</span>
-              </div>
-            </div>
-
-            {/* Center: Large Spider-Man */}
-            <motion.div
-              initial={reducedMotion ? false : { scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.45 }}
-              className="relative z-20 h-full flex items-center justify-center py-3"
-            >
-              <img
-                src={getAssetUrl('images/spiderman-hero-portrait.png')}
-                alt="Spider-Man choosing between communication channels"
-                className="h-auto max-h-[82%] w-auto max-w-[165px] sm:max-w-[200px] lg:max-w-[250px] object-contain filter drop-shadow-[0_10px_22px_rgba(0,240,255,0.45)]"
-                loading="eager"
-              />
-            </motion.div>
           </div>
         )}
 

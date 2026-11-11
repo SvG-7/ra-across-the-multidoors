@@ -182,11 +182,13 @@ export const Chapter1Welcome: React.FC<Chapter1WelcomeProps> = ({
 
           {/* 2. Separate Spoken-Discussion Observation Question About the Video */}
           <div className="space-y-3 pt-1">
-            <div className="space-y-1">
-              <p className="text-sm font-sans text-gray-300 leading-snug">
-                Think about the morning video before we share out loud.
-              </p>
-              <h2 className="font-sans font-bold text-xl sm:text-2xl text-white leading-tight">
+            <div className="space-y-2.5">
+              <div className="bg-[#0B1528] border-l-4 border-spider-cyan px-3.5 py-2.5 rounded-r-xs">
+                <p className="text-[20px] sm:text-[21px] font-sans font-semibold text-[#F8FAFC] leading-[1.35]">
+                  Think about the morning video before we share out loud.
+                </p>
+              </div>
+              <h2 className="font-sans font-extrabold text-[22px] sm:text-2xl text-white leading-tight">
                 Which community looked more connected?
               </h2>
             </div>

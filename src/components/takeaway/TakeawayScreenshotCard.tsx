@@ -94,19 +94,25 @@ export const TakeawayScreenshotCard: React.FC<TakeawayScreenshotCardProps> = ({
         </div>
 
         {/* Compact Personal Spider Web Row */}
-        <div className="p-3 bg-[#050811] border border-gray-800 rounded-xs flex items-center justify-between gap-3">
+        <div className="p-3 bg-[#070B14] border border-gray-800 rounded-xs flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <svg viewBox="0 0 100 70" className="w-14 h-10 flex-shrink-0" fill="none">
-              <ellipse cx="50" cy="30" rx="6" ry="5" fill="#FF1744" stroke="#00F0FF" strokeWidth="1.2" />
-              <ellipse cx="50" cy="46" rx="9" ry="12" fill="#0A0E1A" stroke="#FF1744" strokeWidth="1.2" />
-              <path d="M 45 28 Q 30 14 18 16" stroke="#00F0FF" strokeWidth="1.8" strokeLinecap="round" />
-              <path d="M 55 28 Q 70 14 82 16" stroke="#00F0FF" strokeWidth="1.8" strokeLinecap="round" />
-              <path d="M 44 32 Q 25 26 12 34" stroke="#FFE600" strokeWidth="1.8" strokeLinecap="round" />
-              <path d="M 56 32 Q 75 26 88 34" stroke="#FFE600" strokeWidth="1.8" strokeLinecap="round" />
-              <path d="M 43 42 Q 22 52 14 62" stroke="#00FFA3" strokeWidth="1.8" strokeLinecap="round" />
-              <path d="M 57 42 Q 78 52 86 62" stroke="#00FFA3" strokeWidth="1.8" strokeLinecap="round" />
-              <path d="M 46 50 Q 32 64 24 70" stroke="#FF007F" strokeWidth="1.8" strokeLinecap="round" />
-              <path d="M 54 50 Q 68 64 76 70" stroke="#FF007F" strokeWidth="1.8" strokeLinecap="round" />
+            <svg viewBox="0 0 100 74" className="w-14 h-10 flex-shrink-0" fill="none">
+              <path d="M 50 18 C 55 18 57 22 56 26 C 55.5 29 52.5 31 50 31.5 C 47.5 31 44.5 29 44 26 C 43 22 45 18 50 18 Z" fill="#7F1D1D" stroke="#CBD5E1" strokeWidth="1" />
+              <path d="M 50 33 C 58 34 61 42 59 50 C 57 57 53 62 50 64 C 47 62 43 57 41 50 C 39 42 42 34 50 33 Z" fill="#0D1424" stroke="#94A3B8" strokeWidth="1" />
+              {[
+                { ch: 2, l: 'M 44 22 L 30 11 L 19 8', r: 'M 56 22 L 70 11 L 81 8', c: '#38BDF8' },
+                { ch: 3, l: 'M 43 26 L 26 20 L 14 27', r: 'M 57 26 L 74 20 L 86 27', c: '#F59E0B' },
+                { ch: 4, l: 'M 43 30 L 26 39 L 15 51', r: 'M 57 30 L 74 39 L 85 51', c: '#F43F5E' },
+                { ch: 6, l: 'M 45 35 L 33 54 L 24 67', r: 'M 55 35 L 67 54 L 76 67', c: '#A78BFA' },
+              ].map((pair) => {
+                const active = !!session.answers[pair.ch];
+                return (
+                  <g key={pair.ch} stroke={active ? pair.c : '#334155'} strokeWidth={active ? 1.5 : 0.9} strokeDasharray={active ? undefined : '2 2'} opacity={active ? 1 : 0.55}>
+                    <path d={pair.l} strokeLinecap="round" />
+                    <path d={pair.r} strokeLinecap="round" />
+                  </g>
+                );
+              })}
             </svg>
             <div>
               <span className="font-mono text-xs text-spider-yellow uppercase font-bold block">

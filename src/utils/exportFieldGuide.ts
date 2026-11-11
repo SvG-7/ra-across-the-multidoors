@@ -173,6 +173,74 @@ export function downloadFullFieldGuidePng(guide: FieldGuideData): void {
         pad + 26,
         cy + 128
       );
+
+      // Draw settled 8-legged Personal Web emblem in header right corner
+      const answeredChs = new Set(guide.reflections.map((r) => r.chapter));
+      const sx = pad + innerWidth - 96;
+      const sy = cy + 78;
+      ctx.save();
+      // Subtle quiet radial capture threads
+      ctx.strokeStyle = '#1E293B';
+      ctx.lineWidth = 1;
+      for (let a = 0; a < 8; a++) {
+        const ang = (a * Math.PI) / 4;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(sx + Math.cos(ang) * 52, sy + Math.sin(ang) * 44);
+        ctx.stroke();
+      }
+      ctx.beginPath();
+      ctx.ellipse(sx, sy, 42, 34, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.ellipse(sx, sy, 25, 20, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      const drawPair = (
+        ch: number,
+        color: string,
+        ax: number,
+        ay: number,
+        jx: number,
+        jy: number,
+        tx: number,
+        ty: number
+      ) => {
+        const active = answeredChs.has(ch);
+        ctx.strokeStyle = active ? color : '#334155';
+        ctx.lineWidth = active ? 2.4 : 1;
+        if (!active) ctx.setLineDash([3, 3]);
+        else ctx.setLineDash([]);
+        for (const dir of [-1, 1]) {
+          ctx.beginPath();
+          ctx.moveTo(sx + dir * ax, sy + ay);
+          ctx.lineTo(sx + dir * jx, sy + jy);
+          ctx.lineTo(sx + dir * tx, sy + ty);
+          ctx.stroke();
+        }
+        ctx.setLineDash([]);
+      };
+      drawPair(2, '#38BDF8', 7, -14, 24, -30, 42, -36);
+      drawPair(3, '#F59E0B', 9, -8, 30, -18, 46, -10);
+      drawPair(4, '#F43F5E', 9, -2, 30, 10, 45, 24);
+      drawPair(6, '#A78BFA', 7, 4, 22, 26, 36, 44);
+
+      // Settled spider abdomen & cephalothorax
+      ctx.fillStyle = '#0D1424';
+      ctx.strokeStyle = '#94A3B8';
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.ellipse(sx, sy + 14, 11, 15, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#7F1D1D';
+      ctx.strokeStyle = '#E2E8F0';
+      ctx.beginPath();
+      ctx.ellipse(sx, sy - 8, 8, 9, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+
       cy += bh + 24;
     } else if (b.kind === 'section') {
       ctx.fillStyle = b.color;

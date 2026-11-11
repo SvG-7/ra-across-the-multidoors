@@ -139,7 +139,8 @@ export function App() {
     if (deferredTargetChapter !== undefined) {
       pendingChapterRef.current = deferredTargetChapter;
       window.scrollTo(0, 0);
-      const switchAtMs = reducedMotion ? 500 : 1400;
+      const switchAtMs =
+        reducedMotion ? 500 : type === '2_to_3' ? 2350 : 1400;
       midpointTimerRef.current = window.setTimeout(() => {
         commitPendingChapter();
       }, switchAtMs);
@@ -159,6 +160,11 @@ export function App() {
         fromCh === 4 ? '4_to_5' :
         fromCh === 5 ? '5_to_6' :
         fromCh === 6 ? '6_to_7' : '1_to_2';
+
+      if (fromCh === 2 && nextChapter === 3) {
+        triggerTransition('2_to_3', 3);
+        return;
+      }
 
       if (fromCh === 4 && nextChapter === 5) {
         triggerTransition('4_to_5', 5);
@@ -187,6 +193,10 @@ export function App() {
       if (chapterNumber < session.currentChapter) {
         triggerTransition('backward');
       } else {
+        if (chapterNumber === 3 && session.currentChapter === 2) {
+          triggerTransition('2_to_3', 3);
+          return;
+        }
         if (chapterNumber === 5 && session.currentChapter === 4) {
           triggerTransition('4_to_5', 5);
           return;

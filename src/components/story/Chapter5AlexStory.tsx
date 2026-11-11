@@ -27,10 +27,12 @@ export const Chapter5AlexStory: React.FC<Chapter5AlexStoryProps> = ({
   };
 
   return (
-    <div className="w-full space-y-3 text-left">
-      <p className="font-sans font-bold text-lg sm:text-xl text-white leading-snug">
-        What might you be missing about Ned’s day?
-      </p>
+    <div className="w-full space-y-3.5 text-left">
+      <div className="bg-[#0B1528] border-l-4 border-amber-400 px-3.5 py-2.5 rounded-r-xs">
+        <p className="font-sans font-bold text-[20px] sm:text-[22px] text-[#F8FAFC] leading-[1.35]">
+          What might you be missing about Ned’s day?
+        </p>
+      </div>
 
       {/* Everyday Schedule Context (No communication preferences revealed yet) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -54,7 +56,7 @@ export const Chapter5AlexStory: React.FC<Chapter5AlexStoryProps> = ({
         ))}
       </div>
 
-      <p className="text-base sm:text-lg font-sans font-semibold text-amber-200 pt-1">
+      <p className="text-[19px] sm:text-[20px] font-sans font-semibold text-amber-200 leading-[1.35] pt-1">
         Being independent does not mean Ned needs zero connection.
       </p>
     </div>

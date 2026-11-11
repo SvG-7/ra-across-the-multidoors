@@ -27,10 +27,11 @@ export const getTransitionDurationMs = (
   reducedMotion = false
 ): number => {
   if (type === '4_to_5') return reducedMotion ? 1100 : 2800;
+  if (type === '2_to_3') return 2900; // ~2.9s for staggered 3-Spider-Man arrival + brief hold
   if (type === 'backward') return 550;
   if (type === '6_to_7') return 3400; // 3.4 seconds for radiant trio finale
   if (type === 'entry_to_1') return 3200; // 3.2 seconds for cinematic entrance
-  return 2600; // 2.6 seconds for normal forward transitions
+  return 2600; // 2.6 seconds for normal forward transitions (incl. Venom 3_to_4)
 };
 
 export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
@@ -50,7 +51,11 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
         'images/spiderman-miles.png',
         'images/venom-character.png',
         'images/spiderman-swinging.png',
-        'images/spiderman-perched.png'
+        'images/spiderman-perched.png',
+        'images/spiderman-point-bg.png',
+        'images/spiderman-point-left.png',
+        'images/spiderman-point-center.png',
+        'images/spiderman-point-right.png'
       ].forEach((path) => {
         const img = new Image();
         img.src = getAssetUrl(path);
@@ -99,13 +104,26 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               ? reducedMotion
                 ? { opacity: [0, 0.88, 0.88, 0] }
                 : { opacity: [0, 0.96, 1, 1, 0] }
-              : { opacity: [0, 0.75, 0.75, 0.1, 0] }
+              : transitionType === '2_to_3'
+                ? { opacity: [0, 0.96, 1, 1, 0] }
+                : { opacity: [0, 0.75, 0.75, 0.1, 0] }
           }
           transition={{
             duration: totalDurationSec,
-            times: transitionType === '4_to_5' && !reducedMotion ? [0, 0.18, 0.48, 0.8, 1] : [0, 0.2, 0.75, 0.9, 1],
+            times:
+              transitionType === '4_to_5' && !reducedMotion
+                ? [0, 0.18, 0.48, 0.8, 1]
+                : transitionType === '2_to_3'
+                  ? [0, 0.14, 0.5, 0.86, 1]
+                  : [0, 0.2, 0.75, 0.9, 1],
           }}
-          className={`absolute inset-0 ${transitionType === '4_to_5' ? 'bg-[#070B14]' : 'bg-[#05070D]'}`}
+          className={`absolute inset-0 ${
+            transitionType === '4_to_5'
+              ? 'bg-[#070B14]'
+              : transitionType === '2_to_3'
+                ? 'bg-[#060912]'
+                : 'bg-[#05070D]'
+          }`}
         />
 
         {/* Skip Animation Control Button */}
@@ -275,10 +293,92 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
         )}
 
         {/* ================================================================== */}
-        {/* TRANSITION 3: CH 2 -> CH 3 (VENOM SYMBIOTE)                        */}
-        {/* Restrained boundary tendrils coalescing into Venom silhouette      */}
+        {/* TRANSITION 3: CH 2 -> CH 3 (THREE SPIDER-MEN SEPARATE ARRIVAL)     */}
+        {/* Each Spider-Man enters individually from left, top/back, and right */}
+        {/* into the pointing formation on a separate clean alley background   */}
         {/* ================================================================== */}
         {transitionType === '2_to_3' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 1, 0] }}
+            transition={{ duration: 2.9, times: [0, 0.1, 0.88, 1], ease: 'easeOut' }}
+            className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 px-4 overflow-hidden bg-[#060912]"
+          >
+            {/* Title Banner Clear Above the Pointing Scene */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: [0, 1, 1], y: [12, 0, 0] }}
+              transition={{ duration: 2.9, times: [0, 0.14, 1], ease: 'easeOut' }}
+              className="relative z-30 w-full max-w-md bg-[#0B0F1A] border-2 border-slate-500/80 px-4 py-2 rounded-xs shadow-comic text-center flex-shrink-0"
+            >
+              <span className="font-mono text-[9px] text-spider-cyan uppercase font-bold block tracking-wider">
+                SAME TITLE, DIFFERENT ANGLES &bull; ISSUE #3
+              </span>
+              <h3 className="font-comic text-xl sm:text-2xl text-white uppercase tracking-wide mt-0.5">
+                SAME TITLE, DIFFERENT RELATIONSHIPS
+              </h3>
+            </motion.div>
+
+            {/* Layered Comic Stage Frame (aspect 466/429 keeps heads, hands & feet unclipped) */}
+            <div
+              className="relative z-40 h-[44vh] sm:h-[50vh] max-h-[380px] w-auto max-w-[92vw] border-3 border-black rounded-sm shadow-comic overflow-hidden bg-[#090D18]"
+              style={{ aspectRatio: '466 / 429' }}
+            >
+              {/* Layer 0: Clean Environment Plate */}
+              <img
+                src={getAssetUrl('images/spiderman-point-bg.png')}
+                alt="Street alleyway scene background"
+                className="w-full h-full object-contain"
+              />
+
+              {/* Layer 2 (Left — #1): Arrives smoothly from the left (0s -> 0.93s) */}
+              <motion.img
+                src={getAssetUrl('images/spiderman-point-left.png')}
+                alt="Left Spider-Man arriving"
+                initial={{ x: '-58%', opacity: 0 }}
+                animate={{ x: ['-58%', '0%', '0%'], opacity: [0, 1, 1] }}
+                transition={{ duration: 2.9, times: [0, 0.32, 1], ease: [0.22, 1, 0.36, 1] }}
+                style={{ left: '3.43%', top: '20.75%', width: '37.77%' }}
+                className="absolute z-20 h-auto pointer-events-none"
+              />
+
+              {/* Layer 1 (Rear/Center — #2): Arrives from farther back & above (0.52s -> 1.45s) */}
+              <motion.img
+                src={getAssetUrl('images/spiderman-point-center.png')}
+                alt="Rear center Spider-Man arriving"
+                initial={{ y: '-22%', scale: 0.72, opacity: 0 }}
+                animate={{
+                  y: ['-22%', '-22%', '0%', '0%'],
+                  scale: [0.72, 0.72, 1, 1],
+                  opacity: [0, 0, 1, 1],
+                }}
+                transition={{ duration: 2.9, times: [0, 0.18, 0.5, 1], ease: [0.22, 1, 0.36, 1] }}
+                style={{ left: '31.97%', top: '11.89%', width: '40.77%' }}
+                className="absolute z-10 h-auto pointer-events-none"
+              />
+
+              {/* Layer 3 (Right — #3): Arrives smoothly from the right (1.02s -> 1.88s), holds assembled until 2.55s */}
+              <motion.img
+                src={getAssetUrl('images/spiderman-point-right.png')}
+                alt="Right Spider-Man arriving"
+                initial={{ x: '58%', opacity: 0 }}
+                animate={{
+                  x: ['58%', '58%', '0%', '0%'],
+                  opacity: [0, 0, 1, 1],
+                }}
+                transition={{ duration: 2.9, times: [0, 0.35, 0.65, 1], ease: [0.22, 1, 0.36, 1] }}
+                style={{ left: '53.22%', top: '23.54%', width: '38.84%' }}
+                className="absolute z-30 h-auto pointer-events-none"
+              />
+            </div>
+          </motion.div>
+        )}
+
+        {/* ================================================================== */}
+        {/* TRANSITION 4: CH 3 -> CH 4 (APPROVED VENOM SYMBIOTE PRESENTATION)  */}
+        {/* Moved intact from Ch 2->3: exact Venom asset, tendrils, rim & time */}
+        {/* ================================================================== */}
+        {transitionType === '3_to_4' && (
           <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[#07090F]">
             {/* Restrained Symbiote Tendrils Framing Screen Edges Strictly */}
             <motion.div
@@ -294,7 +394,7 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               className="absolute inset-y-0 right-0 w-10 sm:w-16 bg-gradient-to-l from-black via-[#0B0F17] to-transparent border-l border-slate-700/60 z-10 pointer-events-none"
             />
 
-            {/* Readable Editorial Comic Panel */}
+            {/* Readable Editorial Comic Panel (Chapter 4 Content) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: [0, 1, 1, 0], y: [20, 0, 0, -10] }}
@@ -302,10 +402,10 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               className="absolute top-16 sm:top-20 z-30 w-[86%] max-w-md bg-[#0B0F1A] border-2 border-slate-500/80 px-4 py-2.5 rounded-xs shadow-comic text-center"
             >
               <span className="font-mono text-[9px] text-spider-cyan uppercase font-bold block tracking-wider">
-                RELATIONSHIP DYNAMICS &bull; ISSUE #3
+                COMMUNICATION MATRIX &bull; ISSUE #4
               </span>
               <h3 className="font-comic text-2xl sm:text-3xl text-white uppercase tracking-wide mt-0.5">
-                SAME TITLE, DIFFERENT RELATIONSHIPS
+                TWO COMMUNICATION LANGUAGES
               </h3>
             </motion.div>
 
@@ -322,94 +422,12 @@ export const SpiderManTransition: React.FC<SpiderManTransitionProps> = ({
               <div className="absolute inset-x-2 top-3 bottom-6 rounded-full bg-[radial-gradient(ellipse_at_50%_40%,rgba(148,163,184,0.34),rgba(56,189,248,0.14)_48%,transparent_74%)] pointer-events-none" />
               <img
                 src={getAssetUrl('images/venom-character.png')}
-                alt="Venom entering residence hall boundaries scene"
+                alt="Venom entering communication disconnect scene"
                 className="relative z-10 h-[calc(100%-26px)] w-auto max-w-full object-contain filter drop-shadow-[0_0_8px_rgba(148,163,184,0.45)] drop-shadow-[0_10px_22px_rgba(0,0,0,0.95)]"
               />
               <div className="relative z-20 mt-1 bg-black/90 text-gray-200 border border-slate-600 font-mono text-[9px] uppercase px-2.5 py-0.5 shadow-md flex-shrink-0">
-                SYMBIOTE BOUNDARIES // SHARED LIVING
+                OUTREACH SIGNAL // DID IT REACH NED?
               </div>
-            </motion.div>
-          </div>
-        )}
-
-        {/* ================================================================== */}
-        {/* TRANSITION 4: CH 3 -> CH 4 (CLASSIC SPIDER-MAN)                    */}
-        {/* Web attachment that pulls the next panel into place                */}
-        {/* ================================================================== */}
-        {transitionType === '3_to_4' && (
-          <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-            {/* Incoming Target Communication Panel */}
-            <motion.div
-              initial={{ scale: 0.7, opacity: 0, y: 70 }}
-              animate={{
-                scale: [0.7, 0.7, 1.08, 1.0, 1.0],
-                opacity: [0, 0.3, 1.0, 1.0, 0],
-                y: [70, 70, -8, 0, 0],
-              }}
-              transition={{ duration: 2.6, times: [0, 0.35, 0.65, 0.85, 1], ease: 'easeOut' }}
-              className="absolute z-20 w-[88%] max-w-md p-5 bg-gradient-to-b from-[#0A1828] to-[#060D17] border-3 border-spider-cyan shadow-comic text-center"
-            >
-              <span className="font-mono text-xs text-spider-yellow uppercase font-bold tracking-wider block mb-1">
-                COMMUNICATION MATRIX &bull; ISSUE #4
-              </span>
-              <h3 className="font-comic text-2xl sm:text-3xl text-white uppercase tracking-wide">
-                TWO COMMUNICATION LANGUAGES
-              </h3>
-            </motion.div>
-
-            {/* Web Strand Attaching and Pulling Panel */}
-            <svg className="absolute inset-0 w-full h-full z-30" xmlns="http://www.w3.org/2000/svg">
-              <motion.line
-                x1="25%"
-                y1="75%"
-                x2="72%"
-                y2="42%"
-                stroke="#00F0FF"
-                strokeWidth="4.5"
-                strokeDasharray="6 3"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: [0, 0, 1, 1, 0], opacity: [0, 0, 1, 0.9, 0] }}
-                transition={{ duration: 2.6, times: [0, 0.2, 0.45, 0.85, 1] }}
-              />
-              <motion.circle
-                cx="72%"
-                cy="42%"
-                r="16"
-                fill="#FF1744"
-                stroke="#000"
-                strokeWidth="2"
-                initial={{ scale: 0 }}
-                animate={{ scale: [0, 0, 1.5, 1.1, 0] }}
-                transition={{ duration: 2.6, times: [0, 0.42, 0.55, 0.85, 1] }}
-              />
-            </svg>
-
-            {/* Classic Spider-Man Lunging Pull Pose */}
-            <motion.div
-              initial={{ x: -100, y: 40, scale: 0.85, opacity: 0 }}
-              animate={{
-                x: [-100, 0, -10, -25],
-                y: [40, 0, 5, 15],
-                scale: [0.85, 1.15, 1.05, 0.95],
-                opacity: [0, 1, 1, 0],
-              }}
-              transition={{ duration: 2.6, times: [0, 0.35, 0.75, 1] }}
-              className="absolute left-4 sm:left-12 bottom-20 z-40 w-40 sm:w-52 max-h-[36vh] h-auto filter drop-shadow-[0_12px_24px_rgba(255,23,68,0.7)]"
-            >
-              <img
-                src={getAssetUrl('images/spiderman-perched.png')}
-                alt="Classic Spider-Man Pulling Panel"
-                className="w-full h-auto object-contain"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: [0, 0, 1.35, 1, 0], opacity: [0, 0, 1, 1, 0] }}
-              transition={{ duration: 2.6, times: [0, 0.45, 0.62, 0.88, 1] }}
-              className="absolute top-1/3 right-10 z-50 bg-spider-cyan text-black font-comic text-2xl sm:text-3xl px-3.5 py-1 border-2 border-black shadow-comic rotate-6"
-            >
-              *ATTACH & PULL!*
             </motion.div>
           </div>
         )}

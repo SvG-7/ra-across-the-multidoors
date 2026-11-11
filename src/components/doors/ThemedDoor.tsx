@@ -45,7 +45,11 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
   };
 
   const hasAnimatedScene =
-    chapterNumber === 2 || chapterNumber === 3 || chapterNumber === 5 || chapterNumber === 6;
+    chapterNumber === 2 ||
+    chapterNumber === 3 ||
+    chapterNumber === 4 ||
+    chapterNumber === 5 ||
+    chapterNumber === 6;
 
   return (
     <div className="w-full flex flex-col items-center select-none">
