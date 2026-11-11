@@ -60,6 +60,7 @@ export type SyncConnectionStatus =
 
 export interface SharedResponses {
   worldDistribution: Record<string, number>;
+  chapter1?: Record<string, number>;
   chapter2: Record<string, number>;
   chapter3: Record<string, number>;
   chapter4: Record<string, number>;

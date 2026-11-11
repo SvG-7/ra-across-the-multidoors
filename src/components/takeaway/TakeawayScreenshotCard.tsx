@@ -79,7 +79,7 @@ export const TakeawayScreenshotCard: React.FC<TakeawayScreenshotCardProps> = ({
               RA: ACROSS THE MULTI-DOORS
             </div>
             <h1 className="font-comic text-3xl sm:text-4xl text-white uppercase tracking-wide leading-none">
-              {guide.title}
+              The Multiverse RA
             </h1>
             <p className="font-mono text-xs text-spider-cyan uppercase tracking-wider mt-1 font-bold">
               {formatCommunity()} &bull; {guide.answeredCount} / {guide.totalDecisions} Scenarios

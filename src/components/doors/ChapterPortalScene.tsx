@@ -173,20 +173,20 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
               <div className="flex items-center gap-1.5 text-spider-yellow border-b border-spider-yellow/35 pb-1.5">
                 <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                 <span className="font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wide">
-                  Floor Notice
+                  Peer Issue
                 </span>
               </div>
 
               <div className="space-y-1.5 my-auto">
                 <div className="bg-spider-yellow/20 border-l-2 border-spider-yellow px-2 py-1 text-[11px] sm:text-xs font-sans font-semibold text-white">
-                  Quiet Hours: 10 PM
+                  Shared Agreement
                 </div>
                 <div className="bg-white/5 border-l-2 border-slate-500 px-2 py-1 text-[10px] sm:text-xs font-sans text-gray-300">
-                  Shared Hallway
+                  Room &amp; Hall Boundaries
                 </div>
               </div>
 
-              <span className="text-[10px] font-mono text-gray-400">Peer reminder</span>
+              <span className="text-[10px] font-mono text-gray-400">Same-age peer</span>
             </div>
 
             {/* Right: Large Realistic Venom with Restrained Rim Light */}
@@ -258,7 +258,7 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
                 <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-[#191506] border-2 border-spider-yellow flex items-center justify-center shadow-comic-sm">
                   <Users className="w-5 h-5 text-spider-yellow" />
                 </div>
-                <span className="font-mono text-[10px] text-spider-yellow font-bold">Group</span>
+                <span className="font-mono text-[10px] text-spider-yellow font-bold">Group chat</span>
               </div>
               <div className="flex flex-col items-center gap-1">
                 <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-[#081A28] border-2 border-spider-cyan flex items-center justify-center shadow-comic-sm">
@@ -274,13 +274,13 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
                 <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-[#220912] border-2 border-spider-red flex items-center justify-center shadow-comic-sm">
                   <DoorClosed className="w-5 h-5 text-spider-red" />
                 </div>
-                <span className="font-mono text-[10px] text-spider-red font-bold">In-Person</span>
+                <span className="font-mono text-[10px] text-spider-red font-bold">In person</span>
               </div>
               <div className="flex flex-col items-center gap-1">
                 <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-[#170E29] border-2 border-purple-400 flex items-center justify-center shadow-comic-sm">
                   <Mail className="w-5 h-5 text-purple-400" />
                 </div>
-                <span className="font-mono text-[10px] text-purple-300 font-bold">Email</span>
+                <span className="font-mono text-[10px] text-purple-300 font-bold">Short email</span>
               </div>
             </div>
 
@@ -372,7 +372,7 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
                   Plan A
                 </span>
                 <span className="text-[10px] sm:text-xs font-sans text-gray-400 block mt-0.5">
-                  Muted &amp; missed
+                  Didn&apos;t land
                 </span>
               </div>
             </div>

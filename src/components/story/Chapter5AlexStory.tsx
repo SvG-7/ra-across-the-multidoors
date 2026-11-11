@@ -28,11 +28,11 @@ export const Chapter5AlexStory: React.FC<Chapter5AlexStoryProps> = ({
 
   return (
     <div className="w-full space-y-3 text-left">
-      <p className="text-sm sm:text-base font-sans text-gray-200 leading-snug">
-        Why was Ned hard to catch? Behind that deadbolt:
+      <p className="font-sans font-bold text-lg sm:text-xl text-white leading-snug">
+        What might you be missing about Ned’s day?
       </p>
 
-      {/* Directly Visible Schedule Realities (No Unnecessary Taps) */}
+      {/* Everyday Schedule Context (No communication preferences revealed yet) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
         {storyDetails.map((detail) => (
           <div
@@ -54,9 +54,8 @@ export const Chapter5AlexStory: React.FC<Chapter5AlexStoryProps> = ({
         ))}
       </div>
 
-      {/* Single Short Takeaway */}
       <p className="text-base sm:text-lg font-sans font-semibold text-amber-200 pt-1">
-        A closed door isn’t the whole story.
+        Being independent does not mean Ned needs zero connection.
       </p>
     </div>
   );

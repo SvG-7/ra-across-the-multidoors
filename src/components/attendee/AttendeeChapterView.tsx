@@ -104,11 +104,16 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
 
   return (
     <div className="w-full max-w-md md:max-w-3xl lg:max-w-5xl mx-auto px-4 py-4 sm:py-6 pb-16 select-none font-sans">
-      {/* Chapter 1: Opening Screen */}
+      {/* Chapter 1: Opening Screen (Separate RA Setting + Video Observation Question) */}
       {currentChapterNumber === 1 && (
         <Chapter1Welcome
+          chapterTitle={chapter.title}
           selectedCommunity={session.selectedCommunity}
+          selectedVideoChoice={session.answers[1]}
+          videoOptions={chapter.options}
+          videoCounts={sharedResponses.chapter1 || {}}
           onSelectCommunity={onSelectCommunity}
+          onSelectVideoObservation={(optId) => onSubmitAnswer(1, optId)}
           onContinue={onNextChapter}
           onTriggerEntryTransition={onTriggerEntryTransition}
           reducedMotion={reducedMotion}
@@ -138,7 +143,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
                 </button>
               )}
             </div>
-            <h1 className="font-comic text-3xl sm:text-4xl text-white uppercase tracking-wide leading-none">
+            <h1 className="font-comic text-2xl sm:text-3xl text-white uppercase tracking-wide leading-tight">
               {chapter.title}
             </h1>
           </div>
@@ -177,12 +182,12 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
                   </button>
                 )}
               </div>
-              <h1 className="font-comic text-4xl xl:text-5xl text-white uppercase tracking-wide leading-none">
+              <h1 className="font-comic text-3xl xl:text-4xl text-white uppercase tracking-wide leading-tight">
                 {chapter.title}
               </h1>
             </div>
 
-            {/* Chapter 5 (No Question): Short Idea & Visible Schedule */}
+            {/* Chapter 5 (No Question): Short Cue & Visible Schedule */}
             {currentChapterNumber === 5 && chapter.storyDetails && (
               <Chapter5AlexStory storyDetails={chapter.storyDetails} reducedMotion={reducedMotion} />
             )}
@@ -190,9 +195,23 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
             {/* Question Chapters (2, 3, 4, 6) */}
             {chapter.hasDecision && chapter.options && (
               <div className="space-y-3.5">
-                {/* Essential One-Sentence Context (only when needed) + Short Question */}
+                {/* Chapter 6: Show the 3 Important New Facts clearly before asking "What would you change?" */}
+                {currentChapterNumber === 6 && (
+                  <div className="p-3 bg-[#0C1220] border border-amber-400/50 rounded-xs space-y-1.5">
+                    <span className="font-mono text-[11px] uppercase font-bold text-amber-300 block">
+                      What you just learned about Ned
+                    </span>
+                    <ul className="text-sm font-sans text-gray-200 space-y-0.5 list-disc list-inside">
+                      <li>Ned mutes group chats.</li>
+                      <li>Unexpected visits are difficult.</li>
+                      <li>Short direct messages are easier to answer.</li>
+                    </ul>
+                  </div>
+                )}
+
+                {/* Essential Context (for Chapters 2, 3, 4) + Question */}
                 <div className="space-y-1">
-                  {chapter.situation && (
+                  {chapter.situation && currentChapterNumber !== 6 && (
                     <p className="text-sm sm:text-base font-sans text-gray-300 leading-snug">
                       {chapter.situation}
                     </p>
@@ -220,7 +239,7 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
                           soundEngine.playThwip();
                           onSubmitAnswer(currentChapterNumber, opt.id);
                         }}
-                        className={`w-full min-h-[64px] sm:min-h-[76px] p-3.5 rounded-sm border-2 flex items-center gap-3 text-left transition-all active:scale-[0.98] cursor-pointer shadow-comic-sm ${
+                        className={`w-full min-h-[64px] sm:min-h-[74px] p-3.5 rounded-sm border-2 flex items-center gap-3 text-left transition-all active:scale-[0.98] cursor-pointer shadow-comic-sm ${
                           isSelected
                             ? theme.selected
                             : `bg-[#0D1322] ${theme.border}`

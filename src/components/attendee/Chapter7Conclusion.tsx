@@ -140,10 +140,10 @@ export const Chapter7Conclusion: React.FC<Chapter7ConclusionProps> = ({
             7 / 7 &bull; {formatCommunityLabel()}
           </span>
           <h1 className="font-comic text-4xl sm:text-5xl text-white uppercase tracking-wide leading-none">
-            {guide.title}
+            The Multiverse RA
           </h1>
           <p className="text-sm sm:text-base font-sans text-gray-300 mt-1.5">
-            {guide.answeredCount} of {guide.totalDecisions} scenarios answered.
+            Your personal cheat sheet &bull; {guide.answeredCount} of {guide.totalDecisions} scenarios answered.
             {!guide.isComplete &&
               guide.missingChapters.length > 0 &&
               ` Remaining scenarios (Ch. ${guide.missingChapters.join(', ')}) are left blank rather than guessed.`}
@@ -180,8 +180,8 @@ export const Chapter7Conclusion: React.FC<Chapter7ConclusionProps> = ({
         <div className="lg:col-span-5 flex items-center">
           <ThemedDoor
             chapterNumber={7}
-            chapterTitle="My RA Field Guide"
-            doorTheme="Multiverse RA"
+            chapterTitle="The Multiverse RA"
+            doorTheme="The Multiverse RA"
             isOpen={true}
             reducedMotion={reducedMotion}
             showReplay={false}
@@ -205,10 +205,10 @@ export const Chapter7Conclusion: React.FC<Chapter7ConclusionProps> = ({
         <div className="flex items-center justify-between border-b border-gray-800 pb-4">
           <div>
             <h2 className="font-comic text-2xl sm:text-3xl text-white uppercase tracking-wide">
-              Personal Field Notes
+              My RA Field Guide (Cheat Sheet)
             </h2>
             <p className="text-xs sm:text-sm font-sans text-gray-400 mt-0.5">
-              Written from your saved decisions for you to keep after the session.
+              Built from your choices—keep this open during our activity and save it afterward.
             </p>
           </div>
           <img

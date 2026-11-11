@@ -1,80 +1,84 @@
 import React, { useState } from 'react';
 import {
-  DoorClosed,
-  KeyRound,
-  Layers,
-  Sparkles,
   Check,
   ChevronRight,
   Play,
+  BarChart3,
 } from 'lucide-react';
 import { soundEngine } from '../../audio/soundEffects';
-import { CommunityType } from '../../types';
+import { CommunityType, DecisionOption } from '../../types';
 import { ThemedDoor } from '../doors/ThemedDoor';
+import { GroupDistributionResults } from '../results/GroupDistributionResults';
 import { CinematicSpiderManEntrance } from '../animation/CinematicSpiderManEntrance';
 
 interface Chapter1WelcomeProps {
+  chapterTitle: string;
   selectedCommunity?: CommunityType;
+  selectedVideoChoice?: string;
+  videoOptions?: DecisionOption[];
+  videoCounts?: Record<string, number>;
   onSelectCommunity: (community: CommunityType) => void;
+  onSelectVideoObservation: (optionId: string) => void;
   onContinue: () => void;
   onTriggerEntryTransition?: () => void;
   reducedMotion?: boolean;
 }
 
+const VIDEO_TILE_STYLES = [
+  {
+    border: 'border-spider-red/75 hover:border-spider-red',
+    selected: 'bg-[#2C0B14] border-spider-red ring-2 ring-spider-red/50',
+    chipBg: 'bg-spider-red text-white',
+    shape: (
+      <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 fill-current">
+        <polygon points="8,2 14,13 2,13" />
+      </svg>
+    ),
+  },
+  {
+    border: 'border-spider-cyan/75 hover:border-spider-cyan',
+    selected: 'bg-[#082235] border-spider-cyan ring-2 ring-spider-cyan/50',
+    chipBg: 'bg-spider-cyan text-black',
+    shape: (
+      <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 fill-current">
+        <polygon points="8,1 15,8 8,15 1,8" />
+      </svg>
+    ),
+  },
+  {
+    border: 'border-amber-400/75 hover:border-amber-400',
+    selected: 'bg-[#281E07] border-amber-400 ring-2 ring-amber-400/50',
+    chipBg: 'bg-amber-400 text-black',
+    shape: (
+      <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 fill-current">
+        <circle cx="8" cy="8" r="6" />
+      </svg>
+    ),
+  },
+];
+
 export const Chapter1Welcome: React.FC<Chapter1WelcomeProps> = ({
+  chapterTitle,
   selectedCommunity,
+  selectedVideoChoice,
+  videoOptions = [],
+  videoCounts = {},
   onSelectCommunity,
+  onSelectVideoObservation,
   onContinue,
   reducedMotion = false,
 }) => {
   const [showCinematicEntrance, setShowCinematicEntrance] = useState(false);
+  const [showRoomVotes, setShowRoomVotes] = useState(false);
 
-  const communityTiles: {
-    type: CommunityType;
-    label: string;
-    hint: string;
-    accentBorder: string;
-    activeFill: string;
-    badgeBg: string;
-    icon: React.ReactNode;
-  }[] = [
-    {
-      type: 'Residence hall',
-      label: 'Residence Hall',
-      hint: 'Shared corridors & halls',
-      accentBorder: 'border-spider-red/70 hover:border-spider-red',
-      activeFill: 'bg-[#2B0C14] border-spider-red ring-2 ring-spider-red/50',
-      badgeBg: 'bg-spider-red text-white',
-      icon: <DoorClosed className="w-5 h-5" />,
-    },
-    {
-      type: 'Apartment community',
-      label: 'Apartment',
-      hint: 'Separate doors & leases',
-      accentBorder: 'border-spider-cyan/70 hover:border-spider-cyan',
-      activeFill: 'bg-[#082032] border-spider-cyan ring-2 ring-spider-cyan/50',
-      badgeBg: 'bg-spider-cyan text-black',
-      icon: <KeyRound className="w-5 h-5" />,
-    },
-    {
-      type: 'Both',
-      label: 'Both',
-      hint: 'Working across both styles',
-      accentBorder: 'border-amber-400/70 hover:border-amber-400',
-      activeFill: 'bg-[#261D07] border-amber-400 ring-2 ring-amber-400/50',
-      badgeBg: 'bg-amber-400 text-black',
-      icon: <Layers className="w-5 h-5" />,
-    },
-    {
-      type: 'New to the RA role',
-      label: 'New RA',
-      hint: 'Starting out in the role',
-      accentBorder: 'border-purple-400/70 hover:border-purple-400',
-      activeFill: 'bg-[#1D1030] border-purple-400 ring-2 ring-purple-400/50',
-      badgeBg: 'bg-purple-500 text-white',
-      icon: <Sparkles className="w-5 h-5" />,
-    },
+  const communityPills: { type: CommunityType; label: string }[] = [
+    { type: 'Residence hall', label: 'Residence Hall' },
+    { type: 'Apartment community', label: 'Apartment' },
+    { type: 'Both', label: 'Both' },
+    { type: 'New to the RA role', label: 'New RA' },
   ];
+
+  const selectedVideoOption = videoOptions.find((o) => o.id === selectedVideoChoice);
 
   return (
     <div className="w-full font-sans">
@@ -84,7 +88,7 @@ export const Chapter1Welcome: React.FC<Chapter1WelcomeProps> = ({
         reducedMotion={reducedMotion}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         {/* Visual Hero Stage (Left on Desktop, Top on Mobile) */}
         <div className="lg:col-span-6 space-y-3">
           <div className="flex items-center justify-between lg:hidden">
@@ -102,28 +106,25 @@ export const Chapter1Welcome: React.FC<Chapter1WelcomeProps> = ({
             </button>
           </div>
 
-          <div className="text-center lg:text-left lg:hidden">
+          <div className="text-left lg:hidden">
             <h1 className="font-comic text-3xl sm:text-4xl text-white uppercase tracking-wide leading-none">
-              Same Role. Different World.
+              {chapterTitle}
             </h1>
-            <p className="text-sm text-gray-300 mt-1.5">
-              Same mission of community and care, shaped by the doors we work behind.
-            </p>
           </div>
 
           <ThemedDoor
             chapterNumber={1}
-            chapterTitle="Same Role. Different World."
-            doorTheme="Two Worlds"
+            chapterTitle={chapterTitle}
+            doorTheme={chapterTitle}
             isOpen={true}
             reducedMotion={reducedMotion}
             showReplay={false}
           />
         </div>
 
-        {/* Heading + Community Picker + Next (Right on Desktop) */}
+        {/* Right Column: Background Pill Selector + Separate Video Observation Question */}
         <div className="lg:col-span-6 space-y-4 text-left">
-          <div className="hidden lg:block space-y-2">
+          <div className="hidden lg:block space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="font-mono text-xs font-bold text-spider-cyan">1 / 7</span>
               <button
@@ -139,57 +140,121 @@ export const Chapter1Welcome: React.FC<Chapter1WelcomeProps> = ({
               </button>
             </div>
             <h1 className="font-comic text-4xl xl:text-5xl text-white uppercase tracking-wide leading-none">
-              Same Role. Different World.
+              {chapterTitle}
             </h1>
-            <p className="text-base text-gray-300">
-              Same mission of community and care, shaped by the doors we work behind.
-            </p>
           </div>
 
-          <div>
-            <h2 className="font-sans font-bold text-lg sm:text-xl text-white mb-2.5">
-              Which community fits your role?
-            </h2>
-
-            <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-              {communityTiles.map((tile) => {
-                const isSelected = selectedCommunity === tile.type;
+          {/* 1. Opening Community Background Selection (for the personal guide later) */}
+          <div className="p-3 bg-[#0A101E] border border-gray-800 rounded-sm space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] uppercase tracking-wider text-gray-300 font-bold">
+                Your own RA community
+              </span>
+              {selectedCommunity && (
+                <span className="text-[11px] font-mono text-emerald-400 font-semibold">
+                  ✓ {selectedCommunity === 'New to the RA role' ? 'New RA' : selectedCommunity}
+                </span>
+              )}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+              {communityPills.map((pill) => {
+                const active = selectedCommunity === pill.type;
                 return (
                   <button
-                    key={tile.type}
+                    key={pill.type}
                     type="button"
                     onClick={() => {
-                      soundEngine.playThwip();
-                      onSelectCommunity(tile.type);
+                      soundEngine.playClick();
+                      onSelectCommunity(pill.type);
                     }}
-                    className={`min-h-[74px] p-3.5 rounded-sm border-2 text-left transition-all active:scale-[0.98] cursor-pointer flex flex-col justify-between gap-2 shadow-comic-sm ${
-                      isSelected
-                        ? tile.activeFill
-                        : `bg-[#0D1322] ${tile.accentBorder}`
+                    className={`min-h-[40px] px-2.5 py-1.5 rounded-xs border text-xs font-sans font-semibold transition-all cursor-pointer ${
+                      active
+                        ? 'bg-spider-yellow text-black border-black font-bold shadow-comic-sm'
+                        : 'bg-[#0F172A] text-gray-200 border-gray-700 hover:border-spider-cyan'
                     }`}
                   >
-                    <div className="flex items-center justify-between w-full">
-                      <span className={`w-8 h-8 rounded-xs flex items-center justify-center border border-black/40 ${tile.badgeBg}`}>
-                        {tile.icon}
-                      </span>
-                      {isSelected && (
-                        <span className="inline-flex items-center gap-0.5 text-[11px] font-mono font-bold text-spider-yellow uppercase">
-                          <Check className="w-3.5 h-3.5" />
-                          Selected
-                        </span>
-                      )}
-                    </div>
-                    <div>
-                      <span className="font-comic text-base sm:text-lg text-white uppercase tracking-wide block leading-tight">
-                        {tile.label}
-                      </span>
-                      <span className="text-xs font-sans text-gray-300 block mt-0.5 leading-snug">
-                        {tile.hint}
-                      </span>
-                    </div>
+                    {pill.label}
                   </button>
                 );
               })}
+            </div>
+          </div>
+
+          {/* 2. Separate Spoken-Discussion Observation Question About the Video */}
+          <div className="space-y-3 pt-1">
+            <div className="space-y-1">
+              <p className="text-sm font-sans text-gray-300 leading-snug">
+                Think about the morning video before we share out loud.
+              </p>
+              <h2 className="font-sans font-bold text-xl sm:text-2xl text-white leading-tight">
+                Which community looked more connected?
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2.5">
+              {videoOptions.map((opt, idx) => {
+                const isSelected = selectedVideoChoice === opt.id;
+                const theme = VIDEO_TILE_STYLES[idx % VIDEO_TILE_STYLES.length];
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => {
+                      soundEngine.playThwip();
+                      onSelectVideoObservation(opt.id);
+                    }}
+                    className={`w-full min-h-[58px] p-3.5 rounded-sm border-2 flex items-center gap-3 text-left transition-all active:scale-[0.98] cursor-pointer shadow-comic-sm ${
+                      isSelected ? theme.selected : `bg-[#0D1322] ${theme.border}`
+                    }`}
+                  >
+                    <span
+                      className={`w-8 h-8 rounded-xs flex items-center justify-center flex-shrink-0 border border-black/40 ${theme.chipBg}`}
+                      aria-hidden="true"
+                    >
+                      {theme.shape}
+                    </span>
+                    <span className="flex-1 font-sans font-semibold text-base text-white">
+                      {opt.label}
+                    </span>
+                    {isSelected && (
+                      <span className="w-6 h-6 rounded-full bg-spider-yellow text-black flex items-center justify-center flex-shrink-0">
+                        <Check className="w-4 h-4 stroke-[3]" />
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {selectedVideoOption?.consideration && (
+              <p className="text-sm font-sans text-spider-cyan bg-[#0A1324] border border-spider-cyan/40 rounded-xs px-3.5 py-2.5 leading-snug">
+                {selectedVideoOption.consideration}
+              </p>
+            )}
+
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  soundEngine.playClick();
+                  setShowRoomVotes(!showRoomVotes);
+                }}
+                className="inline-flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-spider-cyan cursor-pointer"
+              >
+                <BarChart3 className="w-3.5 h-3.5" />
+                <span>{showRoomVotes ? 'Hide room responses' : 'See room responses'}</span>
+              </button>
+
+              {showRoomVotes && (
+                <div className="mt-2">
+                  <GroupDistributionResults
+                    options={videoOptions}
+                    counts={videoCounts}
+                    userChoice={selectedVideoChoice}
+                    reducedMotion={reducedMotion}
+                  />
+                </div>
+              )}
             </div>
           </div>
 

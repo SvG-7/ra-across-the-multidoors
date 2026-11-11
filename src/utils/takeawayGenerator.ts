@@ -167,7 +167,7 @@ export const TOPIC_LEARNING_ANGLES: Record<string, LearningAngleEntry> = {
       'Starting with curiosity can leave the community standard blurry if you stop at listening without calmly naming what needs to change.',
     somethingToTry:
       'Give them 30 seconds to share what happened, then state the shared standard plainly without raising your tone.',
-    exampleScript: 'Say calmly: "Help me understand what was going on tonight—I also want to make sure folks next door can sleep after 10."',
+    exampleScript: 'Say calmly: "Help me understand what’s going on from your side—I also want to keep shared spaces fair for everyone living here."',
     whatThisPrioritizes: 'Lowering defensiveness with peers.',
     whatToWatchFor: 'Keeping shared expectations unmistakably clear afterward.',
     tryThisAction: 'Listen first, then restate the quiet-hours standard simply.',
@@ -175,19 +175,19 @@ export const TOPIC_LEARNING_ANGLES: Record<string, LearningAngleEntry> = {
   opt_c3_impact: {
     topic: 'Trust and boundaries',
     chapter: 3,
-    label: 'Explain impact on neighbors',
-    demonstrates: 'Grounding accountability in community care rather than pulling rank',
-    strengthTitle: 'Focusing accountability on neighbors, not authority',
+    label: 'Explain the impact',
+    demonstrates: 'Grounding accountability in shared living rather than pulling rank',
+    strengthTitle: 'Focusing accountability on shared living, not authority',
     whatYouLeanedToward:
-      'Connecting a concern to how neighbors sleep or study shows peers you aren’t nitpicking rules just for power.',
+      'Connecting a concern to how roommates or neighbors live together shows peers you aren’t nitpicking rules just to pull rank.',
     anotherApproachToExplore:
-      'Even a calm explanation can land like a lecture if the other person hasn’t had a brief moment to speak yet.',
+      'Even a calm explanation can land like a lecture if the other person hasn’t had a brief moment to share their side yet.',
     somethingToTry:
-      'Keep the impact explanation to one or two sentences, then pause and ask how you both can solve it for the night.',
-    exampleScript: 'Keep it brief: "The noise carries straight through the wall to people with early morning labs—what helps keep it down after 10?"',
-    whatThisPrioritizes: 'Shared living impact over rank.',
+      'Keep the impact explanation to one or two sentences, then pause and ask how you can handle it together.',
+    exampleScript: 'Keep it brief: "When this stays unresolved it wears on everyone sharing the space—what helps us fix it moving forward?"',
+    whatThisPrioritizes: 'Shared living impact over pulling rank.',
     whatToWatchFor: 'Giving peers room to respond so it stays two-way.',
-    tryThisAction: 'Pair one impact sentence with a practical question.',
+    tryThisAction: 'Pair one impact sentence with an open follow-up question.',
   },
   opt_c3_expectation: {
     topic: 'Trust and boundaries',
@@ -201,7 +201,7 @@ export const TOPIC_LEARNING_ANGLES: Record<string, LearningAngleEntry> = {
       'Leading only with the expectation can put a defensive resident further on guard if there is no space to talk calmly or step out of view.',
     somethingToTry:
       'Follow a clear boundary with a steady invitation to talk once the hallway moment settles.',
-    exampleScript: 'Follow up simply: "Quiet hours start at 10 so neighbors can sleep. How’s your week going otherwise?"',
+    exampleScript: 'Follow up simply: "We still need to hold the shared agreement here. How are things going on your end otherwise?"',
     whatThisPrioritizes: 'Clarity and fairness with peers.',
     whatToWatchFor: 'Adding warmth or space so peers don’t dig in defensively.',
     tryThisAction: 'Pair firm clarity with a calm follow-up check.',
@@ -209,7 +209,7 @@ export const TOPIC_LEARNING_ANGLES: Record<string, LearningAngleEntry> = {
   opt_c3_private: {
     topic: 'Trust and boundaries',
     chapter: 3,
-    label: 'Move to a private spot',
+    label: 'Talk privately',
     demonstrates: 'Face-saving de-escalation away from an audience',
     strengthTitle: 'Protecting dignity by stepping out of public view',
     whatYouLeanedToward:
@@ -228,7 +228,7 @@ export const TOPIC_LEARNING_ANGLES: Record<string, LearningAngleEntry> = {
   opt_c4_groupchat: {
     topic: 'Communication',
     chapter: 4,
-    label: 'Community group chat',
+    label: 'Group chat',
     demonstrates: 'Broad visibility for whole-floor updates',
     strengthTitle: 'Reaching the whole community quickly',
     whatYouLeanedToward:
@@ -262,7 +262,7 @@ export const TOPIC_LEARNING_ANGLES: Record<string, LearningAngleEntry> = {
   opt_c4_inperson: {
     topic: 'Communication',
     chapter: 4,
-    label: 'Knock for a chat',
+    label: 'In person',
     demonstrates: 'Warm, face-to-face personal outreach',
     strengthTitle: 'Bringing genuine personal warmth to check-ins',
     whatYouLeanedToward:
@@ -298,7 +298,7 @@ export const TOPIC_LEARNING_ANGLES: Record<string, LearningAngleEntry> = {
   opt_c6_timing: {
     topic: 'Adaptability',
     chapter: 6,
-    label: 'Ask best channel and time',
+    label: 'Confirm direct channel & timing',
     demonstrates: 'Matching communication method and timing to real routines',
     strengthTitle: 'Adapting your approach to their real week',
     whatYouLeanedToward:
@@ -315,7 +315,7 @@ export const TOPIC_LEARNING_ANGLES: Record<string, LearningAngleEntry> = {
   opt_c6_shorter: {
     topic: 'Adaptability',
     chapter: 6,
-    label: 'Keep messages shorter',
+    label: 'Switch to short direct messages',
     demonstrates: 'Cutting reply effort when time and energy are tight',
     strengthTitle: 'Making responses effortless for overworked residents',
     whatYouLeanedToward:
@@ -332,7 +332,7 @@ export const TOPIC_LEARNING_ANGLES: Record<string, LearningAngleEntry> = {
   opt_c6_time: {
     topic: 'Adaptability',
     chapter: 6,
-    label: 'Set a time to talk',
+    label: 'Set a time instead of drop-ins',
     demonstrates: 'Replacing surprise knocks with planned, predictable windows',
     strengthTitle: 'Trading surprise interruptions for planned check-ins',
     whatYouLeanedToward:
@@ -503,7 +503,7 @@ export function generateFieldGuide(session: AttendeeSession): FieldGuideData {
       priority: 100,
       chapters: [2, 4],
       title: 'Leaving room for comfortable, personal connection',
-      evidence: 'Chapters 2 & 4: Wait for a hallway moment + Knock for a chat',
+      evidence: 'Chapters 2 & 4: Wait for a hallway moment + In person',
       explanation: `Waiting for everyday openings and talking face-to-face keeps relationships warm and natural instead of transactional. ${formatCommunityContext(community)}`,
     });
   }
@@ -521,7 +521,7 @@ export function generateFieldGuide(session: AttendeeSession): FieldGuideData {
       priority: 96,
       chapters: [4, 6],
       title: 'Shifting away from drop-ins once timing got tight',
-      evidence: `Chapters 4 & 6: Knock for a chat → ${TOPIC_LEARNING_ANGLES[ch6!].label}`,
+      evidence: `Chapters 4 & 6: In person → ${TOPIC_LEARNING_ANGLES[ch6!].label}`,
       explanation:
         'You valued warm face-to-face contact at first, then changed your plan once you saw how surprise knocks disrupt sleep and work prep. That flexibility helps keep goodwill intact.',
     });
@@ -606,7 +606,7 @@ export function generateFieldGuide(session: AttendeeSession): FieldGuideData {
     actions.push({
       title: 'Complete Chapters 2, 3, 4, and 6',
       action: 'Use the menu above or walk chapter by chapter to record how you would handle each moment.',
-      exampleScript: 'Start in Chapter 2 ("The Quiet Door") and choose what you would actually try first.',
+      exampleScript: 'Start in Chapter 2 ("The Invisible Resident") and choose how you would start a connection.',
     });
   } else {
     // PRIMARY OPPORTUNITY (grounded in outreach/communication/adaptation combination)
@@ -662,7 +662,7 @@ export function generateFieldGuide(session: AttendeeSession): FieldGuideData {
       opportunities.push({
         label: 'Helping quiet residents connect with neighbors, not only you',
         evidence: 'From your Chapter 4 and 6 choices',
-        text: 'Short, well-timed direct messages work smoothly for one-on-one support. What personal texts alone can overlook is helping an isolated resident discover one neighbor nearby who shares a class, major, or late work schedule.',
+        text: 'Short, well-timed direct messages work smoothly for one-on-one support. What personal texts alone can overlook is helping a busy resident discover one neighbor nearby who shares a class, major, or late work schedule.',
         detail: 'Community feels lighter for both of you when support isn’t bottlenecked exclusively through the RA.',
       });
       actions.push({
@@ -706,7 +706,7 @@ export function generateFieldGuide(session: AttendeeSession): FieldGuideData {
         actions.push({
           title: 'Pair a clear boundary with one open question',
           action: 'Name the floor impact cleanly, then give the resident ten seconds to explain before wrapping up.',
-          exampleScript: 'Say steadily: "We need music down after 10 so neighbors can sleep—what’s going on from your side tonight?"',
+          exampleScript: 'Say steadily: "We still need to keep the shared standard here—what’s going on from your side so we can figure this out?"',
         });
       } else if (isCalmPeerDialogue) {
         const ch3Angle = TOPIC_LEARNING_ANGLES[ch3];

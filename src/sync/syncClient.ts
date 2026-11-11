@@ -13,6 +13,7 @@ const NTFY_WS = `wss://ntfy.sh/${NTFY_TOPIC}/ws`;
 
 export const INITIAL_SHARED_RESPONSES: SharedResponses = {
   worldDistribution: {},
+  chapter1: {},
   chapter2: {},
   chapter3: {},
   chapter4: {},
@@ -149,6 +150,7 @@ class SessionManager {
 
   private recalculateAggregate() {
     const worldDist: Record<string, number> = {};
+    const ch1Dist: Record<string, number> = {};
     const ch2Dist: Record<string, number> = {};
     const ch3Dist: Record<string, number> = {};
     const ch4Dist: Record<string, number> = {};
@@ -170,6 +172,7 @@ class SessionManager {
         countWithAnswers++;
       }
 
+      if (rec.answers[1]) ch1Dist[rec.answers[1]] = (ch1Dist[rec.answers[1]] || 0) + 1;
       if (rec.answers[2]) ch2Dist[rec.answers[2]] = (ch2Dist[rec.answers[2]] || 0) + 1;
       if (rec.answers[3]) ch3Dist[rec.answers[3]] = (ch3Dist[rec.answers[3]] || 0) + 1;
       if (rec.answers[4]) ch4Dist[rec.answers[4]] = (ch4Dist[rec.answers[4]] || 0) + 1;
@@ -202,6 +205,7 @@ class SessionManager {
 
     this.sharedResponses = {
       worldDistribution: worldDist,
+      chapter1: ch1Dist,
       chapter2: ch2Dist,
       chapter3: ch3Dist,
       chapter4: ch4Dist,
@@ -214,6 +218,7 @@ class SessionManager {
 
     const sharedCopy: SharedResponses = {
       worldDistribution: { ...worldDist },
+      chapter1: { ...ch1Dist },
       chapter2: { ...ch2Dist },
       chapter3: { ...ch3Dist },
       chapter4: { ...ch4Dist },
