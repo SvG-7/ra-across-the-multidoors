@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  ChevronRight, 
-  ChevronLeft, 
-  RotateCcw, 
-  BarChart3
+import {
+  ChevronRight,
+  ChevronLeft,
+  RotateCcw,
+  BarChart3,
+  Check,
 } from 'lucide-react';
-import { ChapterData, AttendeeSession, CommunityType, SharedResponses, CollectiveContribution } from '../../types';
-import { StateCueBadge } from '../ui/StateCueBadge';
+import {
+  ChapterData,
+  AttendeeSession,
+  CommunityType,
+  SharedResponses,
+  CollectiveContribution,
+} from '../../types';
 import { ThemedDoor } from '../doors/ThemedDoor';
 import { Chapter1Welcome } from './Chapter1Welcome';
 import { Chapter5AlexStory } from '../story/Chapter5AlexStory';
-import { ChapterTakeaway } from '../takeaway/ChapterTakeaway';
-import { CommunicationRouteGraphic } from '../animation/CommunicationRouteGraphic';
-import { AttendeeWebProgress } from '../web/AttendeeWebProgress';
 import { GroupDistributionResults } from '../results/GroupDistributionResults';
 import { Chapter7Conclusion } from './Chapter7Conclusion';
 import { soundEngine } from '../../audio/soundEffects';
@@ -34,14 +36,59 @@ interface AttendeeChapterViewProps {
   reducedMotion?: boolean;
 }
 
+const TILE_STYLES = [
+  {
+    name: 'red',
+    border: 'border-spider-red/75 hover:border-spider-red',
+    selected: 'bg-[#2C0B14] border-spider-red ring-2 ring-spider-red/50',
+    chipBg: 'bg-spider-red text-white',
+    shape: (
+      <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 fill-current">
+        <polygon points="8,2 14,13 2,13" />
+      </svg>
+    ),
+  },
+  {
+    name: 'cyan',
+    border: 'border-spider-cyan/75 hover:border-spider-cyan',
+    selected: 'bg-[#082235] border-spider-cyan ring-2 ring-spider-cyan/50',
+    chipBg: 'bg-spider-cyan text-black',
+    shape: (
+      <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 fill-current">
+        <polygon points="8,1 15,8 8,15 1,8" />
+      </svg>
+    ),
+  },
+  {
+    name: 'amber',
+    border: 'border-amber-400/75 hover:border-amber-400',
+    selected: 'bg-[#281E07] border-amber-400 ring-2 ring-amber-400/50',
+    chipBg: 'bg-amber-400 text-black',
+    shape: (
+      <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 fill-current">
+        <circle cx="8" cy="8" r="6" />
+      </svg>
+    ),
+  },
+  {
+    name: 'purple',
+    border: 'border-purple-400/75 hover:border-purple-400',
+    selected: 'bg-[#1D1030] border-purple-400 ring-2 ring-purple-400/50',
+    chipBg: 'bg-purple-500 text-white',
+    shape: (
+      <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 fill-current">
+        <rect x="2.5" y="2.5" width="11" height="11" rx="1.5" />
+      </svg>
+    ),
+  },
+];
+
 export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
   chapter,
   session,
   sharedResponses,
-  collectiveContributions: _collectiveContributions,
   onSelectCommunity,
   onSubmitAnswer,
-  onToggleStoryReveal,
   onNextChapter,
   onPrevChapter,
   onJumpToChapter,
@@ -51,47 +98,13 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
 }) => {
   const currentChapterNumber = chapter.number;
   const userChoice = session.answers[currentChapterNumber];
-  const hasAnswered = !!userChoice;
-  const [showSharedResults, setShowSharedResults] = useState(false);
+  const [showRoomVotes, setShowRoomVotes] = useState(false);
 
-  // Retrieve Chapter 4 choice for Chapter 6 recall
-  const ch4OptionId = session.answers[4];
-  const getCh4Details = () => {
-    if (!ch4OptionId) return null;
-    switch (ch4OptionId) {
-      case 'opt_c4_groupchat':
-        return { label: 'Community group chat', channelType: 'groupchat' as const };
-      case 'opt_c4_directmsg':
-        return { label: 'Personal message', channelType: 'directmsg' as const };
-      case 'opt_c4_inperson':
-        return { label: 'In-person conversation', channelType: 'inperson' as const };
-      case 'opt_c4_email':
-        return { label: 'Short email', channelType: 'email' as const };
-      default:
-        return null;
-    }
-  };
-  const ch4Details = getCh4Details();
-
-  // Find active option details
   const selectedOptionObj = chapter.options?.find((o) => o.id === userChoice);
 
-  // Count web connections formed
-  const webConnectionsCount = Object.keys(session.answers).length;
-
   return (
-    <div className="w-full max-w-md mx-auto px-4 py-3 pb-24 flex flex-col items-center select-none font-sans">
-      {/* 1. Header Progress & State Cue Badge */}
-      <StateCueBadge
-        currentChapter={currentChapterNumber}
-        totalChapters={7}
-        hasAnswered={hasAnswered}
-        hasDecision={chapter.hasDecision}
-        guideCue={chapter.guideCue}
-        reducedMotion={reducedMotion}
-      />
-
-      {/* Chapter 1: Introduction & World Selection */}
+    <div className="w-full max-w-md md:max-w-3xl lg:max-w-5xl mx-auto px-4 py-4 sm:py-6 pb-16 select-none font-sans">
+      {/* Chapter 1: Opening Screen */}
       {currentChapterNumber === 1 && (
         <Chapter1Welcome
           selectedCommunity={session.selectedCommunity}
@@ -102,280 +115,219 @@ export const AttendeeChapterView: React.FC<AttendeeChapterViewProps> = ({
         />
       )}
 
-      {/* Chapters 2 through 7 */}
-      {currentChapterNumber > 1 && (
-        <div className="w-full flex flex-col items-center text-center">
-          {/* Comic Issue & Mission Header Badge (Chapters 2-6) */}
-          {currentChapterNumber < 7 && (
-            <div className="w-full mb-3">
-              <div className="inline-block bg-spider-red text-white px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider border-2 border-black shadow-comic -rotate-1 mb-2">
-                ISSUE #{currentChapterNumber} &bull; {currentChapterNumber === 6 ? 'CROSSROADS: SUPERPOWER ADAPTATION' : currentChapterNumber === 5 ? 'DOSSIER: LIFE BEHIND THE DEADBOLT' : currentChapterNumber === 4 ? 'MISSION: TRANSMISSION LANGUAGES' : currentChapterNumber === 3 ? 'MISSION: RELATIONSHIP DYNAMICS' : 'MISSION: THE INVISIBLE RESIDENT'}
-              </div>
-              <h1 className="font-comic text-3xl sm:text-4xl text-white tracking-wide uppercase leading-tight drop-shadow-[2px_2px_0px_#000]">
-                {chapter.title}
-              </h1>
-              <p className="text-xs sm:text-sm font-sans text-gray-300 max-w-sm mx-auto mt-1 leading-snug">
-                {chapter.introduction}
-              </p>
+      {/* Chapters 2–6: Kahoot-Style Visual Clarity */}
+      {currentChapterNumber > 1 && currentChapterNumber < 7 && (
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-center">
+          {/* Mobile Header above artwork */}
+          <div className="lg:hidden space-y-1 text-left">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-xs font-bold text-spider-cyan">
+                {currentChapterNumber} / 7
+              </span>
+              {currentChapterNumber === 5 && onReplayTransition && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundEngine.playClick();
+                    onReplayTransition('4_to_5');
+                  }}
+                  className="inline-flex items-center gap-1 text-xs font-mono text-amber-300 hover:text-white cursor-pointer"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Replay Ch. 4&rarr;5</span>
+                </button>
+              )}
             </div>
-          )}
+            <h1 className="font-comic text-3xl sm:text-4xl text-white uppercase tracking-wide leading-none">
+              {chapter.title}
+            </h1>
+          </div>
 
-          {/* Chapter Themed Door Graphic (Chapters 2-6) */}
-          {currentChapterNumber < 7 && (
+          {/* Left Column (Desktop) / Top Visual (Mobile): Large Visual Focus */}
+          <div className="lg:col-span-6">
             <ThemedDoor
               key={currentChapterNumber}
               chapterNumber={currentChapterNumber}
               chapterTitle={chapter.title}
               doorTheme={chapter.doorTheme}
-              isOpen={hasAnswered || currentChapterNumber === 5}
+              isOpen={true}
               reducedMotion={reducedMotion}
             />
-          )}
+          </div>
 
-          {/* Replay Control for Chapter 4 -> 5 Entrance */}
-          {currentChapterNumber === 5 && onReplayTransition && (
-            <button
-              type="button"
-              onClick={() => {
-                soundEngine.playClick();
-                onReplayTransition('4_to_5');
-              }}
-              className="mb-3 px-3 py-1.5 bg-black/75 hover:bg-black text-amber-200 hover:text-amber-100 border border-amber-500/45 hover:border-amber-400 rounded-sm font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-comic-sm active:scale-95 transition-all cursor-pointer"
-            >
-              <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
-              <span>Replay Ch. 4&rarr;5 Transition</span>
-            </button>
-          )}
-
-          {/* Chapter 5 Story Discovery: Behind Alex's Closed Door */}
-          {currentChapterNumber === 5 && chapter.storyDetails && (
-            <Chapter5AlexStory
-              storyDetails={chapter.storyDetails}
-              revealedIds={session.revealedStoryIds}
-              onToggleReveal={onToggleStoryReveal}
-              reducedMotion={reducedMotion}
-            />
-          )}
-
-          {/* Chapters 2, 3, 4, 6 Decision Scenarios */}
-          {chapter.hasDecision && chapter.options && (
-            <div className="w-full mt-3">
-              {/* Situation Brief Panel */}
-              {chapter.situation && (
-                <div className="w-full bg-[#090D18] border-2 border-black p-3.5 sm:p-4 rounded-sm shadow-comic mb-4 text-left">
-                  <div className="flex items-center gap-1.5 text-spider-yellow text-[10px] font-mono font-bold uppercase tracking-wider mb-1">
-                    <span>SCENARIO</span>
-                  </div>
-                  <p className="text-sm sm:text-base font-sans text-white leading-snug">
-                    {chapter.situation}
-                  </p>
-                </div>
-              )}
-
-              {/* Scope Note (for Chapter 3 boundary protocols) */}
-              {chapter.scopeNote && (
-                <div className="p-2.5 bg-black/60 border border-spider-cyan/40 rounded-xs text-[11px] font-mono text-gray-300 leading-normal text-left mb-4">
-                  <span className="text-spider-cyan font-bold">NOTE: </span>
-                  {chapter.scopeNote}
-                </div>
-              )}
-
-              {/* Chapter 6: Recall and explicitly reference Chapter 4 choice */}
-              {currentChapterNumber === 6 && ch4Details && (
-                <div className="w-full p-3.5 bg-gradient-to-r from-spider-dark via-[#180A18] to-spider-dark border-2 border-spider-magenta/80 rounded-sm shadow-comic text-left mb-4">
-                  <div className="flex items-center gap-1.5 text-spider-magenta text-[10px] font-mono font-bold uppercase tracking-wider mb-1">
-                    <span>PAST APPROACH RECALLED</span>
-                  </div>
-                  <p className="text-xs sm:text-sm font-sans text-gray-200 leading-snug">
-                    Earlier in Chapter 4, you leaned toward:{' '}
-                    <span className="font-comic text-sm sm:text-base text-white px-2 py-0.5 bg-spider-magenta/30 border border-spider-magenta rounded-xs inline-block my-0.5">
-                      "{ch4Details.label}"
-                    </span>
-                  </p>
-                  <p className="text-[11px] font-sans text-gray-400 mt-1">
-                    {ch4Details.channelType === 'groupchat'
-                      ? "Ned explains that large group chats are routinely muted due to work shifts. Now choose an approach to explore."
-                      : ch4Details.channelType === 'inperson' ? "Ned explains that unscheduled visits can catch them away or resting between shifts. Now choose an approach to explore." : ch4Details.channelType === 'email' ? "Ned explains that crowded inboxes are easy to miss between shifts, and brief direct notes are easier to answer. Now choose an approach to explore." : "Your earlier choice already favored personal messaging. Now decide how to adjust timing, length, or contact frequency."}
-                  </p>
-                </div>
-              )}
-
-              {/* Decision Prompt Banner */}
-              <div className="w-full text-left mb-2.5">
-                <span className="bg-spider-yellow text-black px-2 py-0.5 text-[11px] font-mono font-bold uppercase tracking-wide border border-black shadow-comic-sm">
-                  YOUR DECISION
+          {/* Right Column (Desktop) / Lower Stack (Mobile): Question, Tiles, Nav */}
+          <div className="lg:col-span-6 flex flex-col space-y-4 text-left">
+            {/* Desktop Heading & Progress */}
+            <div className="hidden lg:block space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs font-bold text-spider-cyan">
+                  {currentChapterNumber} / 7
                 </span>
-                <h3 className="font-sans font-bold text-lg sm:text-xl text-white mt-1">
-                  {chapter.decisionPrompt}
-                </h3>
+                {currentChapterNumber === 5 && onReplayTransition && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundEngine.playClick();
+                      onReplayTransition('4_to_5');
+                    }}
+                    className="inline-flex items-center gap-1 text-xs font-mono text-amber-300 hover:text-white cursor-pointer"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Replay Ch. 4&rarr;5</span>
+                  </button>
+                )}
               </div>
+              <h1 className="font-comic text-4xl xl:text-5xl text-white uppercase tracking-wide leading-none">
+                {chapter.title}
+              </h1>
+            </div>
 
-              {/* 4 Interactive Option Cards */}
-              <div className="space-y-2.5 mb-4 text-left">
-                {chapter.options.map((opt) => {
-                  const isSelected = userChoice === opt.id;
-                  return (
-                    <button
-                      key={opt.id}
-                      onClick={() => {
-                        soundEngine.playThwip();
-                        onSubmitAnswer(currentChapterNumber, opt.id);
-                      }}
-                      className={`w-full min-h-[54px] p-3.5 sm:p-4 border-2 rounded-sm flex items-center justify-between active:scale-[0.98] transition-all cursor-pointer shadow-sm ${
-                        isSelected
-                          ? 'bg-spider-red text-white border-black shadow-comic font-bold'
-                          : 'bg-black/60 hover:bg-spider-cyan/15 border-gray-700 hover:border-spider-cyan text-gray-200 font-medium'
-                      }`}
-                    >
-                      <span className="text-sm sm:text-base font-sans pr-2 leading-snug">
-                        {opt.label}
-                      </span>
-                      <span
-                        className={`text-xs font-mono uppercase flex-shrink-0 ${
-                          isSelected ? 'text-spider-yellow font-bold' : 'text-spider-cyan'
+            {/* Chapter 5 (No Question): Short Idea & Visible Schedule */}
+            {currentChapterNumber === 5 && chapter.storyDetails && (
+              <Chapter5AlexStory storyDetails={chapter.storyDetails} reducedMotion={reducedMotion} />
+            )}
+
+            {/* Question Chapters (2, 3, 4, 6) */}
+            {chapter.hasDecision && chapter.options && (
+              <div className="space-y-3.5">
+                {/* Essential One-Sentence Context (only when needed) + Short Question */}
+                <div className="space-y-1">
+                  {chapter.situation && (
+                    <p className="text-sm sm:text-base font-sans text-gray-300 leading-snug">
+                      {chapter.situation}
+                    </p>
+                  )}
+                  <h2 className="font-sans font-bold text-xl sm:text-2xl text-white leading-tight pt-0.5">
+                    {chapter.decisionPrompt}
+                  </h2>
+                  {chapter.scopeNote && (
+                    <p className="text-xs font-mono text-gray-400 pt-0.5">
+                      {chapter.scopeNote}
+                    </p>
+                  )}
+                </div>
+
+                {/* Large Kahoot-Style Answer Tiles */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                  {chapter.options.map((opt, idx) => {
+                    const isSelected = userChoice === opt.id;
+                    const theme = TILE_STYLES[idx % TILE_STYLES.length];
+                    return (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => {
+                          soundEngine.playThwip();
+                          onSubmitAnswer(currentChapterNumber, opt.id);
+                        }}
+                        className={`w-full min-h-[64px] sm:min-h-[76px] p-3.5 rounded-sm border-2 flex items-center gap-3 text-left transition-all active:scale-[0.98] cursor-pointer shadow-comic-sm ${
+                          isSelected
+                            ? theme.selected
+                            : `bg-[#0D1322] ${theme.border}`
                         }`}
                       >
-                        {isSelected ? '✓ CHOSEN' : 'SELECT →'}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Chapter 4 Route Graphic */}
-              {currentChapterNumber === 4 && hasAnswered && ch4Details && (
-                <div className="w-full my-3">
-                  <CommunicationRouteGraphic
-                    channelType={ch4Details.channelType}
-                    reducedMotion={reducedMotion}
-                  />
+                        <span
+                          className={`w-8 h-8 rounded-xs flex items-center justify-center flex-shrink-0 border border-black/40 ${theme.chipBg}`}
+                          aria-hidden="true"
+                        >
+                          {theme.shape}
+                        </span>
+                        <span className="flex-1 font-sans font-semibold text-sm sm:text-base text-white leading-snug">
+                          {opt.label}
+                        </span>
+                        {isSelected && (
+                          <span className="w-6 h-6 rounded-full bg-spider-yellow text-black flex items-center justify-center flex-shrink-0">
+                            <Check className="w-4 h-4 stroke-[3]" />
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
-              )}
 
-              {/* Supportive Reflection Callout for Selected Option */}
-              {selectedOptionObj?.consideration && (
-                <motion.div
-                  initial={reducedMotion ? false : { opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="w-full p-3 bg-black/70 border border-spider-cyan/60 rounded-xs text-xs sm:text-sm font-sans text-gray-200 leading-snug text-left mb-3"
-                >
-                  <span className="font-bold text-spider-cyan font-mono text-xs uppercase block mb-0.5">
-                    Another Approach to Explore:
-                  </span>
-                  {selectedOptionObj.consideration}
-                </motion.div>
-              )}
-            </div>
-          )}
+                {/* Brief Immediate Feedback Line */}
+                {selectedOptionObj?.consideration && (
+                  <p className="text-sm font-sans text-spider-cyan bg-[#0A1324] border border-spider-cyan/40 rounded-xs px-3.5 py-2.5 leading-snug">
+                    {selectedOptionObj.consideration}
+                  </p>
+                )}
 
-          {/* Shared Audience Responses (Expandable & Non-intrusive) */}
-          {chapter.hasDecision && chapter.options && (
-            <div className="w-full my-2">
+                {/* Discreet Optional Room Poll Peek */}
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundEngine.playClick();
+                      setShowRoomVotes(!showRoomVotes);
+                    }}
+                    className="inline-flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-spider-cyan cursor-pointer"
+                  >
+                    <BarChart3 className="w-3.5 h-3.5" />
+                    <span>{showRoomVotes ? 'Hide room responses' : 'See room responses'}</span>
+                  </button>
+
+                  {showRoomVotes && (
+                    <div className="mt-2">
+                      <GroupDistributionResults
+                        options={chapter.options}
+                        counts={
+                          sharedResponses[
+                            `chapter${currentChapterNumber}` as
+                              | 'chapter2'
+                              | 'chapter3'
+                              | 'chapter4'
+                              | 'chapter6'
+                          ] || {}
+                        }
+                        userChoice={userChoice}
+                        reducedMotion={reducedMotion}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Clear Back & Next Navigation */}
+            <div className="pt-2 border-t border-gray-800/80 flex items-center justify-between gap-3">
               <button
-                onClick={() => setShowSharedResults(!showSharedResults)}
-                className="w-full py-2 px-3 bg-black/40 hover:bg-black/60 border border-gray-800 rounded-sm text-xs font-mono text-gray-400 hover:text-spider-cyan flex items-center justify-between cursor-pointer"
+                type="button"
+                onClick={() => {
+                  soundEngine.playClick();
+                  onPrevChapter();
+                }}
+                className="min-h-[48px] px-4 py-2.5 bg-[#0C111E] hover:bg-black text-gray-200 border-2 border-gray-700 hover:border-gray-500 rounded-sm font-comic text-base uppercase tracking-wide flex items-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer"
               >
-                <span className="flex items-center gap-1.5">
-                  <BarChart3 className="w-3.5 h-3.5 text-spider-cyan" />
-                  <span>
-                    {showSharedResults ? 'Hide Audience Poll Distribution' : 'View Audience Poll Distribution'}
-                  </span>
-                </span>
-                <span className="text-[10px] text-gray-500">
-                  {showSharedResults ? '▲ Close' : '▼ Expand'}
-                </span>
+                <ChevronLeft className="w-4 h-4" />
+                <span>Back</span>
               </button>
 
-              {showSharedResults && (
-                <div className="mt-2">
-                  <GroupDistributionResults
-                    options={chapter.options}
-                    counts={
-                      (sharedResponses[
-                        `chapter${currentChapterNumber}` as 'chapter2' | 'chapter3' | 'chapter4' | 'chapter6'
-                      ] || {})
-                    }
-                    userChoice={userChoice}
-                    reducedMotion={reducedMotion}
-                  />
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Personal Growing Spiderweb (Chapters 2-6) */}
-          {webConnectionsCount > 0 && currentChapterNumber < 7 && (
-            <AttendeeWebProgress
-              connectionsCount={webConnectionsCount}
-              answers={session.answers}
-              ch4Choice={session.answers[4]}
-              ch6Choice={session.answers[6]}
-              reducedMotion={reducedMotion}
-            />
-          )}
-
-          {/* Core Chapter Takeaway Banner (Chapters 2-6) */}
-          {currentChapterNumber < 7 && (
-            <ChapterTakeaway
-              chapterNumber={currentChapterNumber}
-              takeaway={chapter.takeaway}
-              reducedMotion={reducedMotion}
-            />
-          )}
-
-          {/* Chapter 7: Simplified Personal Takeaway & Exploration */}
-          {currentChapterNumber === 7 && (
-            <div className="w-full my-3">
-              <Chapter7Conclusion
-                session={session}
-                sharedResponses={sharedResponses}
-                onJumpToChapter={onJumpToChapter}
-                reducedMotion={reducedMotion}
-              />
-            </div>
-          )}
-
-          {/* Navigation Bar (Next & Back Buttons) */}
-          <div className="w-full mt-4 pt-4 border-t border-gray-800 flex items-center justify-between gap-3">
-            {/* Back Button */}
-            <button
-              onClick={() => {
-                soundEngine.playClick();
-                onPrevChapter();
-              }}
-              className="py-3 px-4 bg-black/60 hover:bg-black text-gray-300 hover:text-white text-sm font-comic tracking-wide uppercase border border-gray-700 rounded-sm flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer min-h-[48px]"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              <span>Back to Ch. {currentChapterNumber - 1}</span>
-            </button>
-
-            {/* Next Button */}
-            {currentChapterNumber < 7 && (
               <button
+                type="button"
                 onClick={() => {
                   soundEngine.playClick();
                   onNextChapter();
                 }}
-                className="flex-1 py-3.5 px-5 bg-spider-red hover:bg-spider-crimson text-white text-lg font-comic tracking-wider uppercase border-2 border-black rounded-sm shadow-comic flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer min-h-[50px]"
+                className="flex-1 min-h-[48px] px-6 py-2.5 bg-spider-red hover:bg-spider-crimson text-white font-comic text-lg sm:text-xl uppercase tracking-wider border-2 border-black rounded-sm shadow-comic flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer"
               >
-                <span>Continue to Ch. {currentChapterNumber + 1}</span>
+                <span>Next</span>
                 <ChevronRight className="w-5 h-5" />
               </button>
-            )}
-
-            {currentChapterNumber === 7 && (
-              <button
-                onClick={() => {
-                  soundEngine.playClick();
-                  onJumpToChapter(1);
-                }}
-                className="py-3 px-4 bg-spider-cyan hover:bg-spider-blue text-black font-comic text-sm tracking-wide uppercase border-2 border-black rounded-sm shadow-comic flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer min-h-[48px]"
-              >
-                <RotateCcw className="w-4 h-4" />
-                <span>Return to Start</span>
-              </button>
-            )}
+            </div>
           </div>
+        </div>
+      )}
+
+      {/* Chapter 7: Detailed Scrollable Field Guide + Explorer */}
+      {currentChapterNumber === 7 && (
+        <div className="w-full space-y-4">
+          <Chapter7Conclusion
+            session={session}
+            sharedResponses={sharedResponses}
+            onJumpToChapter={onJumpToChapter}
+            onPrevChapter={onPrevChapter}
+            reducedMotion={reducedMotion}
+          />
         </div>
       )}
     </div>

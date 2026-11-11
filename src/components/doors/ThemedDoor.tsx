@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { RotateCcw } from 'lucide-react';
 import { ChapterPortalScene } from './ChapterPortalScene';
 import { soundEngine } from '../../audio/soundEffects';
 
@@ -9,6 +10,7 @@ interface ThemedDoorProps {
   doorTheme: string;
   isOpen: boolean;
   reducedMotion?: boolean;
+  showReplay?: boolean;
 }
 
 export const ThemedDoor: React.FC<ThemedDoorProps> = ({
@@ -17,87 +19,41 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
   doorTheme,
   isOpen: initialIsOpen,
   reducedMotion = false,
+  showReplay = true,
 }) => {
-  // Allow user to tap and inspect the portal scene anytime
   const [manualOpen, setManualOpen] = useState(false);
   const [replayTick, setReplayTick] = useState(0);
   const isOpen = initialIsOpen || manualOpen;
 
-  // Bespoke door styling per chapter
-  const getDoorDetails = () => {
+  const getDoorColor = () => {
     switch (chapterNumber) {
       case 1:
-        return {
-          doorColor: '#FF1744',
-          accent: '#FFE600',
-          numberLabel: 'DOOR 101 // TWO WORLDS',
-          subLabel: 'TRADITIONAL & APARTMENT',
-          title: 'One Mission, Two Worlds',
-        };
+        return '#FF1744';
       case 2:
-        return {
-          doorColor: '#1E293B',
-          accent: '#00F0FF',
-          numberLabel: 'ROOM 204 // NED',
-          subLabel: 'THE QUIET CORRIDOR',
-          title: 'The Invisible Resident',
-        };
+        return '#1E293B';
       case 3:
-        return {
-          doorColor: '#0F172A',
-          accent: '#FF1744',
-          numberLabel: 'DOOR 312 // PEER REALITY',
-          subLabel: 'COMMUNAL BOUNDARIES',
-          title: 'Same Title, Different Relationships',
-        };
+        return '#0F172A';
       case 4:
-        return {
-          doorColor: '#0A192F',
-          accent: '#FFE600',
-          numberLabel: 'PORTAL 408 // SIGNALS',
-          subLabel: 'COMMUNICATION CHANNELS',
-          title: 'Two Communication Languages',
-        };
+        return '#0A192F';
       case 5:
-        return {
-          doorColor: '#111827',
-          accent: '#00FFA3',
-          numberLabel: 'APT 502 // NED’S SUITE',
-          subLabel: 'INDEPENDENCE & DEMANDS',
-          title: 'Independence Doesn’t Mean Isolation',
-        };
+        return '#111827';
       case 6:
-        return {
-          doorColor: '#270817',
-          accent: '#FF007F',
-          numberLabel: 'WARP 601 // GLITCH',
-          subLabel: 'ADAPTIVE SHIFT',
-          title: 'When Superpowers Fail',
-        };
-      case 7:
+        return '#270817';
       default:
-        return {
-          doorColor: '#0B1120',
-          accent: '#00F0FF',
-          numberLabel: 'NEXUS // THE MULTIVERSE',
-          subLabel: 'SHARED WEB OF RAs',
-          title: 'The Multiverse RA',
-        };
+        return '#0B1120';
     }
   };
 
-  const details = getDoorDetails();
-  const effectiveTitle = chapterTitle !== 'Chapter Portal' ? chapterTitle : details.title;
+  const hasAnimatedScene =
+    chapterNumber === 2 || chapterNumber === 3 || chapterNumber === 5 || chapterNumber === 6;
 
   return (
-    <div className="w-full flex flex-col items-center my-3 select-none">
-      {/* Door Frame Container */}
+    <div className="w-full flex flex-col items-center select-none">
+      {/* Main Visual Stage */}
       <div
-        className={`relative w-full max-w-[360px] sm:max-w-[400px] ${
-          chapterNumber === 2 || chapterNumber === 3 || chapterNumber === 5 || chapterNumber === 6
-            ? 'h-[315px] sm:h-[345px]'
-            : 'h-[250px] sm:h-[275px]'
-        } bg-black border-3 sm:border-4 border-black rounded-sm shadow-comic overflow-hidden cursor-pointer`}
+        className={`relative w-full max-w-[440px] lg:max-w-none ${
+          chapterNumber === 7 ? 'h-[200px] sm:h-[225px] lg:h-[340px]' : 'h-[240px] sm:h-[285px] lg:h-[400px]'
+        } bg-black border-3 sm:border-4 border-black rounded-sm shadow-comic overflow-hidden`}
         style={{ perspective: 1000 }}
         onClick={() => {
           if (!isOpen) {
@@ -105,91 +61,53 @@ export const ThemedDoor: React.FC<ThemedDoorProps> = ({
             setManualOpen(true);
           }
         }}
-        title={isOpen ? 'Portal Open' : 'Tap to open door portal'}
       >
-        {/* Background Behind the Door: Distinct Illustrated Spider-Man Scene */}
         <div className="absolute inset-0 z-0">
           <ChapterPortalScene
             key={`${chapterNumber}-${replayTick}`}
             isRevealed={isOpen}
             replayKey={replayTick}
             chapterNumber={chapterNumber}
-            chapterTitle={effectiveTitle}
+            chapterTitle={chapterTitle}
             doorTheme={doorTheme}
             reducedMotion={reducedMotion}
           />
         </div>
 
-        {/* The Swinging Door Leaf */}
-        <motion.div
-          initial={false}
-          animate={
-            reducedMotion
-              ? { opacity: isOpen ? 0.08 : 1, pointerEvents: isOpen ? 'none' : 'auto' }
-              : {
-                  rotateY: isOpen ? -96 : 0,
-                  transformOrigin: 'left center',
-                  pointerEvents: isOpen ? 'none' : 'auto',
-                }
-          }
-          transition={{ duration: 0.75, ease: [0.25, 1, 0.5, 1] }}
-          className="absolute inset-0 border-r-4 border-black p-3.5 flex flex-col justify-between shadow-2xl z-20"
-          style={{
-            backgroundColor: details.doorColor,
-            backfaceVisibility: 'hidden',
-          }}
-        >
-          {/* Halftone texture overlay */}
-          <div className="absolute inset-0 bg-halftone opacity-30 pointer-events-none" />
-
-          {/* Door Dec / Room Number Plate */}
-          <div className="relative z-10 bg-black/90 border border-white/20 p-2 rounded-xs shadow-md">
-            <div className="text-[11px] font-mono font-bold tracking-wider" style={{ color: details.accent }}>
-              {details.numberLabel}
-            </div>
-            <div className="text-[9.5px] font-sans text-gray-200 tracking-wide uppercase font-medium">
-              {details.subLabel}
-            </div>
-          </div>
-
-          {/* Door Peephole and Hardware */}
-          <div className="relative z-10 flex items-center justify-end pr-3">
-            <div className="w-5 h-5 rounded-full bg-spider-yellow border-2 border-black shadow-comic-sm flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-black" />
-            </div>
-          </div>
-
-          {/* Bottom Door Kickplate */}
-          <div className="relative z-10 border-t-2 border-black/80 pt-1.5 flex justify-between items-center text-[10px] font-mono text-white/80">
-            <span>CH. {chapterNumber} &bull; TAP TO ENTER</span>
-            <span className="uppercase text-[9px] tracking-wider text-spider-yellow font-bold">
-              {isOpen ? 'OPEN' : 'LOCKED'}
-            </span>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Door Subtitle Caption */}
-      <div className="mt-1.5 text-center flex flex-wrap items-center justify-center gap-2">
-        <span className="text-[11px] font-mono text-gray-400 uppercase tracking-wider">
-          {doorTheme}
-        </span>
+        {/* Optional Swing Overlay only when explicitly closed */}
         {!isOpen && (
-          <button type="button" className="text-[9px] font-mono text-spider-cyan underline cursor-pointer bg-transparent border-0 p-0" onClick={() => setManualOpen(true)}>
-            (Open Portal)
-          </button>
+          <motion.div
+            initial={false}
+            animate={
+              reducedMotion
+                ? { opacity: 1 }
+                : { rotateY: 0, transformOrigin: 'left center' }
+            }
+            className="absolute inset-0 border-r-4 border-black p-4 flex flex-col justify-between shadow-2xl z-20 cursor-pointer"
+            style={{ backgroundColor: getDoorColor(), backfaceVisibility: 'hidden' }}
+          >
+            <div className="bg-black/85 border border-white/20 px-3 py-1.5 rounded-xs w-fit font-mono text-xs font-bold text-spider-cyan uppercase">
+              Door 0{chapterNumber}
+            </div>
+            <div className="self-end w-6 h-6 rounded-full bg-spider-yellow border-2 border-black shadow-comic-sm" />
+            <div className="text-xs font-mono text-white/80 uppercase">Tap to open</div>
+          </motion.div>
         )}
-        {isOpen && (chapterNumber === 2 || chapterNumber === 3 || chapterNumber === 5 || chapterNumber === 6) && (
+
+        {/* Discreet Corner Replay Trigger (no competing text chrome) */}
+        {isOpen && showReplay && hasAnimatedScene && (
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
+              soundEngine.playClick();
               setReplayTick((t) => t + 1);
             }}
-            className="text-[10px] font-mono text-gray-300 hover:text-spider-cyan bg-black/70 border border-gray-700 hover:border-spider-cyan/60 px-1.5 py-0.5 rounded-2xs cursor-pointer transition-colors"
-            title="Replay portal animation"
+            className="absolute top-2.5 right-2.5 z-30 inline-flex items-center gap-1 px-2.5 py-1 bg-black/75 hover:bg-black text-gray-200 hover:text-spider-cyan border border-white/20 hover:border-spider-cyan/60 rounded-xs text-[11px] font-mono uppercase cursor-pointer backdrop-blur-xs transition-colors"
+            title="Replay scene"
           >
-            Replay Scene
+            <RotateCcw className="w-3 h-3" />
+            <span>Replay</span>
           </button>
         )}
       </div>

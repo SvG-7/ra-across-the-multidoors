@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { getAssetUrl } from '../../utils/assets';
-import { 
-  Sparkles, 
-  MessageSquare, 
-  Mail, 
-  Users, 
-  Phone, 
-  DoorClosed, 
-  Lock, 
-  Home, 
-  Clock, 
-  Briefcase, 
-  GraduationCap, Eye,
-  ArrowRight
+import {
+  MessageSquare,
+  Mail,
+  Users,
+  DoorClosed,
+  Lock,
+  ArrowRight,
+  Clock,
 } from 'lucide-react';
 
 interface ChapterPortalSceneProps {
@@ -27,8 +22,6 @@ interface ChapterPortalSceneProps {
 
 export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
   chapterNumber,
-  chapterTitle,
-  doorTheme,
   isRevealed = true,
   replayKey = 0,
   reducedMotion = false,
@@ -48,272 +41,163 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
       return;
     }
     setCh6Phase('check');
-    const tPause = window.setTimeout(() => setCh6Phase('pause'), 1550);
-    const tStep = window.setTimeout(() => setCh6Phase('step'), 2650);
+    const tPause = window.setTimeout(() => setCh6Phase('pause'), 1100);
+    const tStep = window.setTimeout(() => setCh6Phase('step'), 1900);
     return () => {
       window.clearTimeout(tPause);
       window.clearTimeout(tStep);
     };
   }, [chapterNumber, isRevealed, replayKey, reducedMotion]);
+
   return (
-    <div className="relative w-full h-full overflow-hidden bg-[#060810] flex flex-col justify-between p-2.5 sm:p-3 select-none">
-      {/* Background Halftone & Ambient Glow */}
-      <div className="absolute inset-0 bg-halftone opacity-35 pointer-events-none z-0" />
-      <div className="absolute top-0 right-0 w-36 h-36 bg-spider-red/15 rounded-full blur-2xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-36 h-36 bg-spider-cyan/15 rounded-full blur-2xl pointer-events-none" />
+    <div className="relative w-full h-full overflow-hidden bg-[#060810] flex flex-col select-none">
+      {/* Subtle Background Texture & Accent */}
+      <div className="absolute inset-0 bg-halftone opacity-25 pointer-events-none z-0" />
 
-      {/* Top Header: Supporting Caption & Chapter Title */}
-      <div className="relative z-20 flex items-start justify-between gap-2 border-b border-white/15 pb-1.5 bg-black/50 px-2 py-1 rounded-xs backdrop-blur-xs">
-        <div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-spider-cyan animate-pulse" />
-            <span className="font-mono text-[9px] uppercase tracking-widest text-spider-yellow font-bold">
-              PORTAL UNLOCKED &bull; CH. {chapterNumber}
-            </span>
-            {chapterNumber === 2 && (
-              <span className="text-[8px] font-mono uppercase bg-white/15 text-gray-200 px-1 rounded-2xs border border-white/20">
-                NOIR INVESTIGATION
-              </span>
-            )}
-            {chapterNumber === 3 && (
-              <span className="text-[8px] font-mono uppercase bg-slate-800/90 text-gray-200 px-1.5 rounded-2xs border border-slate-500/60">
-                SYMBIOTE BOUNDARIES
-              </span>
-            )}
-            {chapterNumber === 5 && (
-              <span className="text-[8px] font-mono uppercase bg-amber-950/75 text-amber-200 px-1.5 rounded-2xs border border-amber-500/45">
-                QUIET PERSPECTIVE
-              </span>
-            )}
-            {chapterNumber === 6 && (
-              <span className="text-[8px] font-mono uppercase bg-slate-900/90 text-gray-200 px-1.5 rounded-2xs border border-gray-600/70">
-                GROUNDED APPROACH
-              </span>
-            )}
-          </div>
-          <h3 className="font-comic text-sm sm:text-base text-white uppercase tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-            {chapterTitle}
-          </h3>
-        </div>
-        <span className="text-[9px] font-mono text-gray-300 bg-white/10 px-1.5 py-0.5 rounded-xs border border-white/10 flex-shrink-0">
-          {chapterNumber === 7 ? 'FINALE' : `ISSUE #${chapterNumber}`}
-        </span>
-      </div>
-
-      {/* Central Illustrated Scene per Chapter */}
-      <div className="relative z-10 flex-1 min-h-0 w-full my-1 flex items-center justify-center overflow-hidden">
+      <div className="relative z-10 flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden">
         {/* ================================================================= */}
-        {/* CHAPTER 1: ONE MISSION, TWO WORLDS (CLASSIC SPIDER-MAN)           */}
+        {/* CHAPTER 1: ONE MISSION, TWO WORLDS                                */}
         {/* ================================================================= */}
         {chapterNumber === 1 && (
-          <div className="relative w-full h-full flex items-center justify-between px-2">
-            {/* Left: Apartment Entrance (Exterior breezeway, deadbolt, porch lamp) */}
-            <div className="w-[34%] h-[92%] bg-[#0A1220] border border-spider-cyan/50 rounded-xs p-1.5 flex flex-col justify-between shadow-comic-sm">
-              <div className="flex items-center justify-between text-[8px] font-mono text-spider-cyan">
-                <span className="font-bold">APT 502</span>
-                <Lock className="w-2.5 h-2.5" />
+          <div className="relative w-full h-full flex items-center justify-between px-4 sm:px-6 bg-gradient-to-b from-[#070B14] to-[#05070C]">
+            {/* Left Abstract Apartment Entrance */}
+            <div className="w-[30%] h-[78%] bg-[#0A1424] border-2 border-spider-cyan/60 rounded-xs p-2.5 flex flex-col justify-between shadow-comic-sm">
+              <div className="flex items-center justify-between text-spider-cyan">
+                <span className="font-mono text-[10px] sm:text-xs font-bold uppercase">Apt</span>
+                <Lock className="w-3.5 h-3.5" />
               </div>
-              <div className="my-auto text-center">
-                <div className="w-8 h-12 mx-auto bg-[#070D18] border border-gray-600 rounded-xs flex items-center justify-center relative">
-                  <div className="w-1.5 h-1.5 rounded-full bg-spider-yellow absolute right-1" />
-                </div>
-                <span className="text-[7.5px] font-sans text-gray-300 block mt-1">Outdoor Breezeway</span>
+              <div className="w-10 h-14 sm:w-12 sm:h-16 mx-auto bg-[#060C16] border border-slate-600 rounded-xs relative flex items-center justify-end pr-1.5">
+                <div className="w-2 h-2 rounded-full bg-spider-yellow" />
               </div>
-              <div className="text-[7px] font-mono text-gray-400 text-center border-t border-gray-800 pt-0.5">
-                APARTMENTS
-              </div>
+              <span className="font-sans text-[11px] sm:text-xs text-gray-300 text-center">
+                Private doors
+              </span>
             </div>
 
-            {/* Center: Classic Spider-Man Anchoring Both Worlds */}
+            {/* Center: Classic Spider-Man Linking Both Settings */}
             <motion.div
-              initial={reducedMotion ? false : { scale: 0.85, opacity: 0 }}
+              initial={reducedMotion ? false : { scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="relative z-20 flex flex-col items-center justify-center w-[30%]"
+              transition={{ duration: 0.45 }}
+              className="relative z-20 w-[38%] h-full flex items-center justify-center py-2"
             >
-              {/* Web lines extending to both entrances */}
               <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none" viewBox="0 0 100 100">
-                <line x1="50" y1="50" x2="-20" y2="25" stroke="#00F0FF" strokeWidth="2" strokeDasharray="3 2" />
-                <line x1="50" y1="50" x2="120" y2="25" stroke="#FF1744" strokeWidth="2" strokeDasharray="3 2" />
+                <line x1="50" y1="45" x2="-15" y2="28" stroke="#00F0FF" strokeWidth="2" strokeDasharray="3 2" />
+                <line x1="50" y1="45" x2="115" y2="28" stroke="#FF1744" strokeWidth="2" strokeDasharray="3 2" />
               </svg>
               <img
                 src={getAssetUrl('images/spiderman-perched.png')}
-                alt="Classic Spider-Man between Worlds"
-                className="w-24 sm:w-28 h-auto max-h-full object-contain filter drop-shadow-[0_8px_16px_rgba(255,23,68,0.7)]"
+                alt="Spider-Man connecting residence hall and apartment living"
+                className="h-auto max-h-[88%] w-auto max-w-full object-contain filter drop-shadow-[0_10px_20px_rgba(255,23,68,0.65)]"
+                loading="eager"
               />
             </motion.div>
 
-            {/* Right: Residence Hall Entrance (Communal double doors, interior glow) */}
-            <div className="w-[34%] h-[92%] bg-[#1E0911] border border-spider-red/50 rounded-xs p-1.5 flex flex-col justify-between shadow-comic-sm">
-              <div className="flex items-center justify-between text-[8px] font-mono text-spider-yellow">
-                <span className="font-bold">HALL 101</span>
-                <DoorClosed className="w-2.5 h-2.5" />
+            {/* Right Abstract Residence Hall Entrance */}
+            <div className="w-[30%] h-[78%] bg-[#1C0911] border-2 border-spider-red/60 rounded-xs p-2.5 flex flex-col justify-between shadow-comic-sm">
+              <div className="flex items-center justify-between text-spider-yellow">
+                <span className="font-mono text-[10px] sm:text-xs font-bold uppercase">Hall</span>
+                <DoorClosed className="w-3.5 h-3.5" />
               </div>
-              <div className="my-auto text-center">
-                <div className="w-10 h-12 mx-auto bg-gradient-to-t from-spider-red/30 to-spider-yellow/20 border border-spider-yellow/40 rounded-xs flex items-center justify-center">
-                  <div className="w-0.5 h-10 bg-black/60" />
-                </div>
-                <span className="text-[7.5px] font-sans text-gray-200 block mt-1">Shared Corridor</span>
+              <div className="w-12 h-14 sm:w-14 sm:h-16 mx-auto bg-gradient-to-t from-spider-red/30 to-spider-yellow/20 border border-spider-yellow/50 rounded-xs flex items-center justify-center">
+                <div className="w-0.5 h-12 bg-black/70" />
               </div>
-              <div className="text-[7px] font-mono text-gray-300 text-center border-t border-gray-800 pt-0.5">
-                RESIDENCE HALL
-              </div>
+              <span className="font-sans text-[11px] sm:text-xs text-gray-200 text-center">
+                Shared halls
+              </span>
             </div>
           </div>
         )}
 
         {/* ================================================================= */}
-        {/* CHAPTER 2: THE INVISIBLE RESIDENT — SPIDER-MAN NOIR CORRIDOR SCENE */}
-        {/* Rebuilt: Recognizable apartment corridor, Ned's door, directional  */}
-        {/* lighting, soft moving shadows, prominent Spider-Man Noir in depth */}
+        {/* CHAPTER 2: THE QUIET DOOR (SPIDER-MAN NOIR — FULL-BODY UNCLIPPED) */}
         {/* ================================================================= */}
         {chapterNumber === 2 && (
-          <div className="relative w-full h-full flex items-center justify-between px-2 overflow-hidden bg-gradient-to-b from-[#080B12] via-[#0E1420] to-[#05070D]">
-            {/* Background 1: Wood Plank Flooring with Perspective Depth Lines */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-40" viewBox="0 0 360 220" preserveAspectRatio="none">
-              {/* Floorboard lines converging to horizon */}
-              <line x1="0" y1="220" x2="140" y2="130" stroke="#253248" strokeWidth="1" />
-              <line x1="90" y1="220" x2="165" y2="130" stroke="#253248" strokeWidth="1" />
-              <line x1="180" y1="220" x2="190" y2="130" stroke="#253248" strokeWidth="1" />
-              <line x1="270" y1="220" x2="215" y2="130" stroke="#253248" strokeWidth="1" />
-              <line x1="360" y1="220" x2="240" y2="130" stroke="#253248" strokeWidth="1" />
-              {/* Horizontal Floorboard Joints */}
-              <line x1="40" y1="180" x2="320" y2="180" stroke="#1B2638" strokeWidth="0.8" />
-              <line x1="90" y1="150" x2="270" y2="150" stroke="#1B2638" strokeWidth="0.8" />
-            </svg>
-
-            {/* Background 2: Moving Venetian Blind Shadow Slats across the corridor */}
+          <div className="relative w-full h-full flex items-end justify-between px-3 sm:px-5 pt-2 pb-1 overflow-hidden bg-gradient-to-b from-[#080B12] via-[#0E1420] to-[#05070D]">
+            {/* Directional Light Shaft & Perspective Lines */}
+            <div className="absolute top-0 left-0 w-[68%] h-full bg-gradient-to-r from-amber-100/15 via-white/5 to-transparent pointer-events-none" />
             <motion.div
-              initial={reducedMotion ? false : { x: -8 }}
-              animate={reducedMotion ? undefined : { x: [ -8, 6, -8 ] }}
+              initial={reducedMotion ? false : { x: -6 }}
+              animate={reducedMotion ? undefined : { x: [-6, 6, -6] }}
               transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute inset-0 pointer-events-none opacity-30 bg-[repeating-linear-gradient(-35deg,rgba(0,0,0,0.85)_0px,rgba(0,0,0,0.85)_14px,transparent_14px,transparent_28px)]"
+              className="absolute inset-0 pointer-events-none opacity-25 bg-[repeating-linear-gradient(-35deg,rgba(0,0,0,0.85)_0px,rgba(0,0,0,0.85)_14px,transparent_14px,transparent_28px)]"
             />
 
-            {/* Directional Corridor Light Beam from Left Sconce / Window */}
-            <div className="absolute top-0 left-0 w-[65%] h-full bg-gradient-to-r from-amber-100/15 via-white/5 to-transparent pointer-events-none" />
-
-            {/* Foreground Noir Taut Web Strand in top corner (Depth Layer) */}
-            <svg className="absolute top-0 right-0 w-32 h-20 pointer-events-none z-30 opacity-70" viewBox="0 0 120 80">
-              <line x1="120" y1="0" x2="20" y2="45" stroke="#FFFFFF" strokeWidth="1.2" strokeDasharray="3 2" />
-              <line x1="120" y1="15" x2="50" y2="60" stroke="#C8D2E0" strokeWidth="0.9" />
-              <circle cx="20" cy="45" r="2" fill="#FFFFFF" />
+            {/* Foreground Web Accent */}
+            <svg className="absolute top-0 left-0 w-24 h-16 pointer-events-none z-20 opacity-55" viewBox="0 0 120 80">
+              <line x1="0" y1="0" x2="95" y2="42" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3 2" />
             </svg>
 
-            {/* LEFT / MID-GROUND: Ned's Door 204 with Architectural Molding */}
-            <div className="relative z-10 w-[47%] h-[94%] bg-[#0A0F1A] border-2 border-gray-700/80 rounded-xs p-2 flex flex-col justify-between shadow-[4px_4px_16px_rgba(0,0,0,0.9)]">
-              {/* Door Molding Header & Vintage Plaque */}
-              <div className="border-b border-gray-700/80 pb-1">
-                <div className="bg-[#121929] border border-gray-600 px-1.5 py-0.5 rounded-2xs flex items-center justify-between">
-                  <span className="font-mono text-[8.5px] text-spider-yellow font-bold uppercase tracking-wider">
-                    DOOR 204 &bull; NED
-                  </span>
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400/80 shadow-[0_0_6px_#FBBF24]" />
-                </div>
-                <span className="text-[7px] font-mono text-gray-400 block mt-0.5 pl-0.5">
-                  Apartment Corridor
+            {/* Left: Abstract Quiet Door 204 */}
+            <div className="relative z-10 w-[40%] h-[88%] mb-2 bg-[#0A0F1A] border-2 border-slate-600/80 rounded-xs p-2.5 sm:p-3.5 flex flex-col justify-between shadow-[6px_6px_18px_rgba(0,0,0,0.9)]">
+              <div className="flex items-center justify-between bg-[#121929] border border-slate-600 px-2 py-1 rounded-2xs">
+                <span className="font-mono text-xs sm:text-sm text-spider-yellow font-bold tracking-wider">
+                  204
+                </span>
+                <Lock className="w-3.5 h-3.5 text-amber-300" />
+              </div>
+
+              <div className="w-full flex-1 my-2.5 bg-[#080C15] border border-slate-700/70 rounded-2xs flex items-center justify-end pr-2.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-amber-300/80 shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+              </div>
+
+              {/* Warm under-door light strip */}
+              <div className="w-full h-1.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent rounded-full opacity-85" />
+            </div>
+
+            {/* Right: Full-Body Unclipped Spider-Man Noir */}
+            <motion.div
+              initial={reducedMotion ? false : { x: 16, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.55, ease: 'easeOut' }}
+              className="relative z-20 w-[56%] h-full min-h-0 flex items-end justify-center pt-1"
+            >
+              <div className="absolute inset-x-4 top-4 bottom-2 rounded-full bg-[radial-gradient(ellipse_at_50%_42%,rgba(226,232,240,0.18),transparent_72%)] pointer-events-none" />
+              <img
+                src={getAssetUrl('images/spiderman-noir.png')}
+                alt="Spider-Man Noir beside a quiet hallway door"
+                className="relative z-10 h-auto max-h-[95%] w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_0_6px_rgba(226,232,240,0.22)] drop-shadow-[0_8px_16px_rgba(0,0,0,0.95)]"
+                loading="eager"
+              />
+            </motion.div>
+          </div>
+        )}
+
+        {/* ================================================================= */}
+        {/* CHAPTER 3: PEER TENSION (REALISTIC VENOM LARGE & WELL-SEPARATED)   */}
+        {/* ================================================================= */}
+        {chapterNumber === 3 && (
+          <div className="relative w-full h-full flex items-end justify-between px-3 sm:px-5 pt-2 pb-1 overflow-hidden bg-gradient-to-b from-[#090B12] via-[#101828] to-[#05070C]">
+            {/* Left: Minimal Wall Policy Notice */}
+            <div className="relative z-10 w-[34%] h-[82%] mb-3 bg-[#17130A] border-2 border-spider-yellow/85 rounded-xs p-2.5 sm:p-3.5 flex flex-col justify-between shadow-comic-sm">
+              <div className="flex items-center gap-1.5 text-spider-yellow border-b border-spider-yellow/35 pb-1.5">
+                <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+                <span className="font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wide">
+                  Floor Notice
                 </span>
               </div>
 
-              {/* Wooden Door Panels & Antique Deadbolt */}
-              <div className="my-auto py-1 flex flex-col items-center justify-center">
-                <div className="w-full h-16 bg-[#0E1524] border border-gray-700 rounded-2xs p-1.5 flex flex-col justify-between relative shadow-inner">
-                  {/* Upper Inset Panel */}
-                  <div className="w-full h-6 bg-[#080D17] border border-gray-800 rounded-2xs flex items-center justify-between px-2">
-                    <span className="text-[6.5px] font-mono text-gray-400">STUDIO RESIDENCE</span>
-                    <Lock className="w-2.5 h-2.5 text-spider-yellow" />
-                  </div>
-                  {/* Lower Inset Panel & Brass Knocker */}
-                  <div className="w-full h-6 bg-[#080D17] border border-gray-800 rounded-2xs flex items-center justify-between px-2">
-                    <span className="text-[6.5px] font-mono text-gray-400">PRIVATE SPACE</span>
-                    <div className="w-2.5 h-2.5 rounded-full border border-amber-300/80 flex items-center justify-center">
-                      <div className="w-1 h-1 rounded-full bg-amber-400" />
-                    </div>
-                  </div>
+              <div className="space-y-1.5 my-auto">
+                <div className="bg-spider-yellow/20 border-l-2 border-spider-yellow px-2 py-1 text-[11px] sm:text-xs font-sans font-semibold text-white">
+                  Quiet Hours: 10 PM
                 </div>
-
-                {/* Warm Amber Glow Seeping from under the Door (Independent Life Inside) */}
-                <div className="w-full h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-[1.5px] mt-1 opacity-80" />
+                <div className="bg-white/5 border-l-2 border-slate-500 px-2 py-1 text-[10px] sm:text-xs font-sans text-gray-300">
+                  Shared Hallway
+                </div>
               </div>
 
-              {/* Bottom Observation Cue: Thoughtful outreach, not surveillance */}
-              <div className="text-[7px] font-mono text-gray-300 flex items-center gap-1 border-t border-gray-800/80 pt-1">
-                <Eye className="w-2.5 h-2.5 text-spider-cyan flex-shrink-0" />
-                <span className="truncate">Respecting Autonomy</span>
-              </div>
+              <span className="text-[10px] font-mono text-gray-400">Peer reminder</span>
             </div>
 
-            {/* RIGHT / FOREGROUND: SPIDER-MAN NOIR (Full Unclipped Head-to-Boot Framing) */}
-            <motion.div
-              initial={reducedMotion ? false : { x: 18, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="relative z-20 w-[49%] h-full min-h-0 flex flex-col items-center justify-end pt-2 pb-1"
-            >
-              {/* Subtle Ambient Movement: Gentle Downward Settle Keeps Full Hat Clearance */}
+            {/* Right: Large Realistic Venom with Restrained Rim Light */}
+            <div className="relative z-20 w-[62%] h-full min-h-0 flex items-end justify-center pt-1 overflow-hidden">
               <motion.div
-                animate={reducedMotion ? undefined : { y: [0, 2, 0] }}
+                animate={reducedMotion ? undefined : { opacity: [0.6, 0.9, 0.6] }}
                 transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-                className="relative w-full h-full min-h-0 flex items-end justify-center"
-              >
-                {/* Dramatic Cast Shadow underneath boots */}
-                <div className="absolute -bottom-0.5 w-24 h-3.5 bg-black/90 rounded-full blur-[3px] pointer-events-none" />
-
-                {/* Spider-Man Noir Full Character Image */}
-                <img
-                  src={getAssetUrl('images/spiderman-noir.png')}
-                  alt="Spider-Man Noir observing Ned's doorway"
-                  className="h-[92%] max-h-full w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_6px_14px_rgba(0,0,0,0.95)] contrast-110"
-                  loading="eager"
-                />
-              </motion.div>
-            </motion.div>
-          </div>
-        )}
-
-        {/* ================================================================= */}
-        {/* CHAPTER 3: SAME TITLE, DIFFERENT RELATIONSHIPS (VENOM)            */}
-        {/* Symbiote boundary entrance & communal accountability dynamics      */}
-        {/* ================================================================= */}
-        {chapterNumber === 3 && (
-          <div className="relative w-full h-full flex items-center justify-between px-2 overflow-hidden bg-gradient-to-b from-[#090B12] via-[#0E1320] to-[#05070C]">
-            {/* Left Corridor Door */}
-            <div className="relative z-10 w-[23%] h-[92%] bg-[#0F131F] border border-gray-700 rounded-xs p-1.5 flex flex-col justify-between">
-              <span className="font-mono text-[8px] text-gray-300 font-bold">ROOM 301</span>
-              <div className="w-full h-12 bg-black/50 border border-gray-800 rounded-xs flex items-center justify-center">
-                <span className="text-[7px] font-mono text-gray-400">STUDENT</span>
-              </div>
-              <span className="text-[7px] font-mono text-gray-400 text-center">PEER DOOR</span>
-            </div>
-
-            {/* Center: Community Noticeboard (Readable & Clear of Symbiote Strands) */}
-            <div className="relative z-10 w-[33%] h-[94%] bg-[#18140C] border-2 border-spider-yellow/90 rounded-xs p-1.5 flex flex-col justify-between shadow-comic-sm">
-              <div className="text-[8px] font-mono font-bold text-spider-yellow uppercase border-b border-spider-yellow/40 pb-0.5 text-center">
-                HALL BULLETIN
-              </div>
-              <div className="space-y-1 text-left px-0.5">
-                <div className="bg-spider-yellow/20 border-l border-spider-yellow p-0.5 text-[7px] font-sans text-white">
-                  &bull; Quiet Hours: 10 PM
-                </div>
-                <div className="bg-spider-cyan/20 border-l border-spider-cyan p-0.5 text-[7px] font-sans text-white">
-                  &bull; Floor Standards
-                </div>
-              </div>
-              <div className="text-[6.5px] font-mono text-gray-300 text-center leading-tight">
-                SHARED ACCOUNTABILITY
-              </div>
-            </div>
-
-            {/* Right: Realistic VENOM with Restrained Edge Lighting & Ambient Strands */}
-            <div className="relative z-20 w-[42%] h-full min-h-0 flex items-end justify-center pt-1 pb-0.5 overflow-hidden">
-              {/* Restrained Edge Lighting Separating Dark Symbiote Skin from Backdrop */}
-              <motion.div
-                animate={reducedMotion ? undefined : { opacity: [0.55, 0.85, 0.55] }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute inset-x-1 top-2 bottom-2 rounded-full bg-[radial-gradient(ellipse_at_50%_40%,rgba(148,163,184,0.34),rgba(56,189,248,0.14)_48%,transparent_74%)] pointer-events-none z-0"
+                className="absolute inset-x-2 top-2 bottom-2 rounded-full bg-[radial-gradient(ellipse_at_50%_40%,rgba(148,163,184,0.38),rgba(56,189,248,0.16)_50%,transparent_75%)] pointer-events-none z-0"
               />
 
-              {/* Subtle Symbiote Perimeter Strands Anchored Along Outer Edges */}
+              {/* Subtle Symbiote Boundary Strands */}
               <svg
                 className="absolute inset-0 w-full h-full pointer-events-none z-10"
                 viewBox="0 0 140 220"
@@ -339,340 +223,242 @@ export const ChapterPortalScene: React.FC<ChapterPortalSceneProps> = ({
                 />
               </svg>
 
-              {/* Venom Framed Without Stretching or Clipping Face/Chest Emblem */}
               <motion.div
                 initial={reducedMotion || !isRevealed ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.75, ease: 'easeOut' }}
+                transition={{ duration: 0.65, ease: 'easeOut' }}
                 className="relative z-20 w-full h-full min-h-0 flex items-end justify-center"
               >
-                <div className="relative w-full h-full min-h-0 flex items-end justify-center">
-                  <div className="absolute -bottom-0.5 w-24 h-3 bg-black/90 rounded-full blur-[3px] pointer-events-none" />
-                  <img
-                    src={getAssetUrl('images/venom-character.png')}
-                    alt="Venom beside residence hall corridor bulletin board"
-                    className="h-auto max-h-[95%] w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_0_5px_rgba(148,163,184,0.45)] drop-shadow-[0_6px_14px_rgba(0,0,0,0.95)]"
-                    loading="eager"
-                  />
-                </div>
+                <img
+                  src={getAssetUrl('images/venom-character.png')}
+                  alt="Venom facing peer accountability scenario"
+                  className="h-auto max-h-[95%] w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_0_6px_rgba(148,163,184,0.48)] drop-shadow-[0_8px_16px_rgba(0,0,0,0.95)]"
+                  loading="eager"
+                />
               </motion.div>
             </div>
           </div>
         )}
 
         {/* ================================================================= */}
-        {/* CHAPTER 4: TWO COMMUNICATION LANGUAGES (CLASSIC SPIDER-MAN)       */}
+        {/* CHAPTER 4: HOW WOULD YOU REACH THEM? (COMMUNICATION CHANNELS)      */}
         {/* ================================================================= */}
         {chapterNumber === 4 && (
-          <div className="relative w-full h-full flex items-center justify-center px-1">
-            {/* Communication Symbols Matrix */}
-            <div className="absolute inset-0 flex items-center justify-between px-3 pointer-events-none">
-              {/* Left Symbols */}
-              <div className="flex flex-col gap-3">
-                <div className="w-9 h-9 rounded-full bg-[#0C1A2E] border-2 border-spider-cyan flex items-center justify-center shadow-comic-sm">
-                  <Phone className="w-4 h-4 text-spider-cyan" />
-                </div>
-                <div className="w-9 h-9 rounded-full bg-[#181126] border-2 border-spider-yellow flex items-center justify-center shadow-comic-sm">
-                  <MessageSquare className="w-4 h-4 text-spider-yellow" />
-                </div>
-              </div>
+          <div className="relative w-full h-full flex items-center justify-center px-4 bg-gradient-to-b from-[#070E1A] to-[#050811]">
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 360 220">
+              <line x1="180" y1="110" x2="54" y2="55" stroke="#FFE600" strokeWidth="2.5" strokeDasharray="4 3" />
+              <line x1="180" y1="110" x2="54" y2="165" stroke="#00F0FF" strokeWidth="2.5" strokeDasharray="4 3" />
+              <line x1="180" y1="110" x2="306" y2="55" stroke="#FF1744" strokeWidth="2.5" strokeDasharray="4 3" />
+              <line x1="180" y1="110" x2="306" y2="165" stroke="#C084FC" strokeWidth="2.5" strokeDasharray="4 3" />
+            </svg>
 
-              {/* Right Symbols */}
-              <div className="flex flex-col gap-3">
-                <div className="w-9 h-9 rounded-full bg-[#200A15] border-2 border-spider-red flex items-center justify-center shadow-comic-sm">
-                  <Users className="w-4 h-4 text-spider-red" />
+            {/* Left Nodes */}
+            <div className="absolute inset-y-0 left-3 sm:left-6 flex flex-col justify-around py-5 pointer-events-none z-10">
+              <div className="flex flex-col items-center gap-1">
+                <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-[#191506] border-2 border-spider-yellow flex items-center justify-center shadow-comic-sm">
+                  <Users className="w-5 h-5 text-spider-yellow" />
                 </div>
-                <div className="w-9 h-9 rounded-full bg-[#0D1F1C] border-2 border-emerald-400 flex items-center justify-center shadow-comic-sm">
-                  <Mail className="w-4 h-4 text-emerald-400" />
+                <span className="font-mono text-[10px] text-spider-yellow font-bold">Group</span>
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-[#081A28] border-2 border-spider-cyan flex items-center justify-center shadow-comic-sm">
+                  <MessageSquare className="w-5 h-5 text-spider-cyan" />
                 </div>
+                <span className="font-mono text-[10px] text-spider-cyan font-bold">Personal</span>
               </div>
             </div>
 
-            {/* Radiating Web Strands connecting all 4 symbols */}
-            <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none" viewBox="0 0 300 120">
-              <line x1="150" y1="60" x2="35" y2="30" stroke="#00F0FF" strokeWidth="2.5" strokeDasharray="3 2" />
-              <line x1="150" y1="60" x2="35" y2="90" stroke="#FFE600" strokeWidth="2.5" strokeDasharray="3 2" />
-              <line x1="150" y1="60" x2="265" y2="30" stroke="#FF1744" strokeWidth="2.5" strokeDasharray="3 2" />
-              <line x1="150" y1="60" x2="265" y2="90" stroke="#00FFA3" strokeWidth="2.5" strokeDasharray="3 2" />
-            </svg>
+            {/* Right Nodes */}
+            <div className="absolute inset-y-0 right-3 sm:right-6 flex flex-col justify-around py-5 pointer-events-none z-10">
+              <div className="flex flex-col items-center gap-1">
+                <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-[#220912] border-2 border-spider-red flex items-center justify-center shadow-comic-sm">
+                  <DoorClosed className="w-5 h-5 text-spider-red" />
+                </div>
+                <span className="font-mono text-[10px] text-spider-red font-bold">In-Person</span>
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-[#170E29] border-2 border-purple-400 flex items-center justify-center shadow-comic-sm">
+                  <Mail className="w-5 h-5 text-purple-400" />
+                </div>
+                <span className="font-mono text-[10px] text-purple-300 font-bold">Email</span>
+              </div>
+            </div>
 
-            {/* Center: Dynamic Classic Spider-Man Connecting Symbols */}
+            {/* Center: Large Spider-Man */}
             <motion.div
-              initial={reducedMotion ? false : { scale: 0.8, opacity: 0 }}
+              initial={reducedMotion ? false : { scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="relative z-20 flex flex-col items-center"
+              transition={{ duration: 0.45 }}
+              className="relative z-20 h-full flex items-center justify-center py-3"
             >
               <img
                 src={getAssetUrl('images/spiderman-hero-portrait.png')}
-                alt="Spider-Man Connecting Communication Symbols"
-                className="w-24 sm:w-28 h-auto object-contain filter drop-shadow-[0_8px_20px_rgba(0,240,255,0.7)]"
+                alt="Spider-Man choosing between communication channels"
+                className="h-auto max-h-[82%] w-auto max-w-[165px] sm:max-w-[200px] lg:max-w-[250px] object-contain filter drop-shadow-[0_10px_22px_rgba(0,240,255,0.45)]"
+                loading="eager"
               />
             </motion.div>
           </div>
         )}
 
         {/* ================================================================= */}
-        {/* CHAPTER 5: INDEPENDENCE DOESN'T MEAN ISOLATION (CLASSIC PETER)     */}
-        {/* Reflective rooftop scene overlooking apartment windows at dusk     */}
+        {/* CHAPTER 5: CLOSED DOOR, FULL PLATE (REFLECTIVE ROOFTOP SCENE)     */}
         {/* ================================================================= */}
         {chapterNumber === 5 && (
-          <div className="relative w-full h-full flex items-center justify-between px-2 overflow-hidden bg-gradient-to-b from-[#090D18] via-[#101625] to-[#070A12]">
-            {/* Distant Apartment Building Silhouette & Soft Lit Windows (Background Depth) */}
-            <div className="absolute inset-y-0 right-0 w-[52%] pointer-events-none overflow-hidden">
-              <div className="absolute right-3 top-2 w-24 h-24 bg-amber-500/12 rounded-full blur-2xl" />
-              <div className="absolute right-2 bottom-5 w-36 h-[86%] bg-[#0B101D]/90 border-l border-t border-slate-700/50 rounded-tl-xs flex flex-col justify-center gap-2 px-3 py-2">
-                <div className="grid grid-cols-3 gap-1.5 opacity-80">
-                  {[0.35, 0.75, 0.25, 0.65, 0.2, 0.8].map((baseOp, idx) => (
-                    <motion.div
-                      key={idx}
-                      animate={reducedMotion ? undefined : { opacity: [baseOp, Math.min(0.95, baseOp + 0.22), baseOp] }}
-                      transition={{ duration: 4.5 + idx * 0.7, repeat: Infinity, ease: 'easeInOut' }}
-                      className="h-3 rounded-[1px] bg-amber-300/65 border border-amber-200/30"
-                    />
-                  ))}
-                </div>
+          <div className="relative w-full h-full flex items-end justify-center px-3 overflow-hidden bg-gradient-to-b from-[#080C17] via-[#101829] to-[#060910]">
+            {/* Background Illuminated Apartment Windows */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              <div className="absolute left-6 sm:left-10 bottom-5 w-32 sm:w-44 h-[78%] bg-[#090E1A]/90 border border-slate-700/50 rounded-t-xs p-3 grid grid-cols-3 gap-2">
+                {[0.35, 0.85, 0.25, 0.7, 0.2, 0.9, 0.45, 0.75, 0.3].map((baseOp, idx) => (
+                  <motion.div
+                    key={idx}
+                    animate={reducedMotion ? undefined : { opacity: [baseOp, Math.min(0.95, baseOp + 0.2), baseOp] }}
+                    transition={{ duration: 4.5 + idx * 0.6, repeat: Infinity, ease: 'easeInOut' }}
+                    className="h-4 sm:h-5 rounded-[1px] bg-amber-300/65 border border-amber-200/30"
+                  />
+                ))}
+              </div>
+              <div className="absolute right-6 sm:right-12 top-6 w-28 sm:w-36 h-[68%] bg-[#080C16]/85 border border-slate-800/70 rounded-t-xs p-2.5 grid grid-cols-2 gap-2 opacity-70">
+                {[0.55, 0.2, 0.75, 0.3, 0.65, 0.25].map((op, idx) => (
+                  <div key={idx} style={{ opacity: op }} className="h-4 rounded-[1px] bg-amber-200/45" />
+                ))}
               </div>
             </div>
 
-            {/* Left: Apartment Evening Schedule & Realities (Main Context) */}
-            <div className="relative z-10 w-[53%] h-[94%] bg-[#090E1A]/92 border-2 border-gray-700/90 rounded-xs p-1.5 flex flex-col justify-between shadow-comic-sm">
-              <div className="flex items-center justify-between border-b border-gray-700 pb-1">
-                <span className="font-mono text-[8px] text-amber-300 font-bold uppercase">
-                  NED&apos;S REALITIES // 502
-                </span>
-                <span className="text-[7px] font-mono text-amber-200/80">EVENING</span>
-              </div>
-
-              {/* Resident Realities Grid */}
-              <div className="grid grid-cols-2 gap-1 py-1">
-                <div className="p-1 bg-[#11192A] border border-gray-700 rounded-xs flex items-center gap-1">
-                  <GraduationCap className="w-3 h-3 text-spider-cyan flex-shrink-0" />
-                  <span className="text-[7px] font-mono text-gray-200">Classes</span>
-                </div>
-                <div className="p-1 bg-[#11192A] border border-gray-700 rounded-xs flex items-center gap-1">
-                  <Briefcase className="w-3 h-3 text-spider-yellow flex-shrink-0" />
-                  <span className="text-[7px] font-mono text-gray-200">Work Shift</span>
-                </div>
-                <div className="p-1 bg-[#11192A] border border-gray-700 rounded-xs flex items-center gap-1">
-                  <Home className="w-3 h-3 text-spider-red flex-shrink-0" />
-                  <span className="text-[7px] font-mono text-gray-200">Home Care</span>
-                </div>
-                <div className="p-1 bg-[#11192A] border border-gray-700 rounded-xs flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-emerald-400 flex-shrink-0" />
-                  <span className="text-[7px] font-mono text-gray-200">Limited Time</span>
-                </div>
-              </div>
-
-              <div className="text-[7px] font-mono text-amber-100/85 text-center border-t border-gray-800 pt-0.5 truncate">
-                Seeing Beyond First Impressions
-              </div>
-            </div>
-
-            {/* Right: Reflective Classic Spider-Man Seated Quietly on Rooftop Ledge */}
-            <motion.div
-              initial={reducedMotion ? false : { opacity: 0, x: 8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="relative z-20 w-[45%] h-full min-h-0 flex flex-col items-center justify-end pt-1.5"
+            {/* Gently Swaying Foreground Web Strand */}
+            <motion.svg
+              animate={reducedMotion ? undefined : { rotate: [-1.2, 1.2, -1.2] }}
+              transition={{ duration: 6.2, repeat: Infinity, ease: 'easeInOut' }}
+              style={{ transformOrigin: 'top right' }}
+              className="absolute -top-1 right-0 w-24 h-24 pointer-events-none z-30 opacity-65"
+              viewBox="0 0 80 80"
             >
-              {/* Gently Moving Foreground Web Strand at Upper Right Edge */}
-              <motion.svg
-                animate={reducedMotion ? undefined : { rotate: [-1.2, 1.2, -1.2] }}
-                transition={{ duration: 6.2, repeat: Infinity, ease: 'easeInOut' }}
-                style={{ transformOrigin: 'top right' }}
-                className="absolute -top-1 right-0 w-16 h-16 pointer-events-none z-30 opacity-65"
-                viewBox="0 0 80 80"
-              >
-                <line x1="78" y1="0" x2="18" y2="58" stroke="#CBD5E1" strokeWidth="1" strokeDasharray="2 2" />
-                <line x1="55" y1="0" x2="36" y2="40" stroke="#94A3B8" strokeWidth="0.8" />
-              </motion.svg>
+              <line x1="78" y1="0" x2="18" y2="58" stroke="#CBD5E1" strokeWidth="1" strokeDasharray="2 2" />
+              <line x1="55" y1="0" x2="36" y2="40" stroke="#94A3B8" strokeWidth="0.8" />
+            </motion.svg>
 
-              {/* Soft Dusk Rim Contrast Behind Suit */}
-              <div className="relative z-10 w-full h-[88%] min-h-0 flex items-end justify-center pb-0.5">
-                <div className="absolute inset-x-3 top-4 bottom-2 rounded-full bg-[radial-gradient(ellipse_at_50%_45%,rgba(251,191,36,0.18),rgba(56,189,248,0.08)_52%,transparent_75%)] pointer-events-none" />
+            {/* Reflective Classic Spider-Man Seated Quietly on Rooftop Ledge */}
+            <motion.div
+              initial={reducedMotion ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: 'easeOut' }}
+              className="relative z-20 w-full h-full min-h-0 flex flex-col items-center justify-end pt-2"
+            >
+              <div className="relative z-10 w-full h-[90%] min-h-0 flex items-end justify-center">
+                <div className="absolute inset-x-10 top-4 bottom-2 rounded-full bg-[radial-gradient(ellipse_at_50%_45%,rgba(251,191,36,0.22),rgba(56,189,248,0.1)_52%,transparent_75%)] pointer-events-none" />
                 <img
                   src={getAssetUrl('images/spiderman-reflective.png')}
                   alt="Classic Spider-Man sitting thoughtfully on a rooftop ledge overlooking apartment windows"
-                  className="relative z-10 h-auto max-h-full w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_0_6px_rgba(251,191,36,0.22)] drop-shadow-[0_6px_14px_rgba(0,0,0,0.92)]"
+                  className="relative z-10 h-auto max-h-full w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_0_8px_rgba(251,191,36,0.22)] drop-shadow-[0_8px_16px_rgba(0,0,0,0.92)]"
                   loading="eager"
                 />
               </div>
-
-              {/* Rooftop Concrete Ledge Base */}
-              <div className="relative z-20 w-[94%] h-3.5 bg-gradient-to-b from-slate-600/90 to-slate-900 border-t-2 border-slate-400/50 rounded-t-2xs shadow-[0_-2px_8px_rgba(0,0,0,0.65)]" />
+              <div className="relative z-20 w-[86%] h-3.5 bg-gradient-to-b from-slate-600/90 to-slate-900 border-t-2 border-slate-400/55 rounded-t-2xs shadow-[0_-2px_8px_rgba(0,0,0,0.65)]" />
             </motion.div>
           </div>
         )}
 
         {/* ================================================================= */}
-        {/* CHAPTER 6: WHEN SUPERPOWERS FAIL (POWERLESS GROUNDED SPIDER-MAN)  */}
-        {/* Inactive wrist-shooter -> quiet pause -> ordinary step toward door */}
+        {/* CHAPTER 6: PLAN B (POWERLESS GROUNDED SPIDER-MAN)                 */}
         {/* ================================================================= */}
         {chapterNumber === 6 && (
-          <div className="relative w-full h-full flex items-end justify-between px-2 pb-2 pt-1 overflow-hidden bg-gradient-to-b from-[#0A0E17] via-[#0F141F] to-[#07090E]">
-            {/* Grounded Corridor Floor Plane */}
-            <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-black/80 to-slate-900/40 border-t border-white/10 pointer-events-none" />
+          <div className="relative w-full h-full flex items-end justify-between px-3 sm:px-5 pb-2 pt-2 overflow-hidden bg-gradient-to-b from-[#090D16] via-[#101624] to-[#06090F]">
+            <div className="absolute inset-x-0 bottom-0 h-7 bg-gradient-to-t from-black/85 to-slate-900/40 border-t border-white/10 pointer-events-none" />
 
-            {/* Left Quiet Context Cue: Usual Superpowers Inactive (No Glow, No Sparks) */}
-            <div className="relative z-10 w-[27%] h-[88%] flex flex-col justify-between">
-              <div className="p-1.5 bg-[#101622]/90 border border-gray-700/80 rounded-xs text-left">
-                <span className="text-[7px] font-mono text-gray-400 uppercase block font-bold">
-                  HABIT PAUSED
+            {/* Left Quiet Understated Humor Cue ("Plan A stalled") */}
+            <div className="relative z-10 w-[24%] h-[82%] mb-2 flex flex-col justify-center">
+              <div className="p-2 sm:p-2.5 bg-[#0F1523]/90 border border-slate-700 rounded-xs text-center">
+                <span className="font-mono text-[10px] sm:text-xs text-gray-400 uppercase font-bold block line-through decoration-spider-red">
+                  Plan A
                 </span>
-                <span className="text-[6.5px] font-sans text-gray-300 leading-tight block mt-0.5">
-                  Broadcast &amp; quick fix fail
-                </span>
-              </div>
-
-              <div className="bg-black/85 border border-gray-700 px-1.5 py-1 rounded-2xs text-left">
-                <span className="block text-[6px] font-mono uppercase text-gray-400">
-                  {ch6Phase === 'check' ? '01 // WRIST CHECK' : ch6Phase === 'pause' ? '02 // QUIET PAUSE' : '03 // NEXT STEP'}
-                </span>
-                <span className="block text-[7px] font-sans text-gray-200 font-medium leading-tight">
-                  {ch6Phase === 'check'
-                    ? 'Nothing happens'
-                    : ch6Phase === 'pause'
-                    ? 'Grounded stillness'
-                    : 'A different approach'}
+                <span className="text-[10px] sm:text-xs font-sans text-gray-400 block mt-0.5">
+                  Muted &amp; missed
                 </span>
               </div>
             </div>
 
-            {/* Center: Grounded Powerless Classic Spider-Man (Zero Glow, Zero Leap, Grounded Stance) */}
-            <div className="relative z-20 w-[39%] h-full min-h-0 flex items-end justify-center pt-1">
+            {/* Center: Grounded Powerless Classic Spider-Man */}
+            <div className="relative z-20 w-[42%] h-full min-h-0 flex items-end justify-center pt-1">
               <motion.div
                 initial={reducedMotion ? false : { opacity: 0.92, x: -4 }}
                 animate={{
-                  x: ch6Phase === 'step' ? 6 : ch6Phase === 'pause' ? 0 : -4,
-                  opacity: ch6Phase === 'check' ? 0.92 : 1,
+                  x: ch6Phase === 'step' ? 6 : 0,
+                  opacity: ch6Phase === 'check' ? 0.94 : 1,
                 }}
-                transition={{ duration: 0.65, ease: 'easeOut' }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
                 className="relative w-full h-full min-h-0 flex items-end justify-center"
               >
-                <div className="absolute -bottom-0.5 w-16 h-2.5 bg-black/85 rounded-full blur-[2px] pointer-events-none" />
+                <div className="absolute -bottom-0.5 w-20 h-3 bg-black/85 rounded-full blur-[2px] pointer-events-none" />
                 <img
                   src={getAssetUrl('images/spiderman-grounded.png')}
-                  alt="Classic Spider-Man standing grounded in a corridor without web or electrical powers"
-                  className="h-auto max-h-[94%] w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_0_5px_rgba(148,163,184,0.28)] drop-shadow-[0_6px_12px_rgba(0,0,0,0.9)]"
+                  alt="Classic Spider-Man standing grounded beside Plan B doorway"
+                  className="h-auto max-h-[95%] w-auto max-w-full object-contain object-bottom filter drop-shadow-[0_0_5px_rgba(148,163,184,0.3)] drop-shadow-[0_6px_12px_rgba(0,0,0,0.9)]"
                   loading="eager"
                 />
               </motion.div>
             </div>
 
-            {/* Right: Illuminated Calm Route Doorway ("A DIFFERENT APPROACH") */}
+            {/* Right: Lit Open Doorway ("Plan B") */}
             <motion.div
               animate={{
-                borderColor: ch6Phase === 'step' ? 'rgba(251, 191, 36, 0.78)' : 'rgba(251, 191, 36, 0.38)',
-                boxShadow: ch6Phase === 'step' ? '0 0 24px rgba(251, 191, 36, 0.22)' : '0 0 8px rgba(251, 191, 36, 0.08)',
+                borderColor: ch6Phase === 'step' ? 'rgba(251, 191, 36, 0.85)' : 'rgba(251, 191, 36, 0.45)',
+                boxShadow: ch6Phase === 'step' ? '0 0 26px rgba(251, 191, 36, 0.25)' : '0 0 8px rgba(251, 191, 36, 0.08)',
               }}
-              transition={{ duration: 0.6 }}
-              className="relative z-10 w-[31%] h-[92%] bg-gradient-to-t from-amber-500/20 via-amber-200/10 to-[#0C121E] border-2 rounded-xs p-1.5 flex flex-col justify-between text-right"
+              transition={{ duration: 0.5 }}
+              className="relative z-10 w-[30%] h-[88%] mb-1 bg-gradient-to-t from-amber-500/20 via-amber-200/10 to-[#0C121E] border-2 rounded-xs p-2 sm:p-3 flex flex-col justify-between items-center text-center"
             >
-              <div className="flex items-center justify-end gap-1 text-amber-300">
-                <span className="text-[7px] font-mono uppercase font-bold tracking-wider">OPEN ROUTE</span>
-                <ArrowRight className="w-2.5 h-2.5 flex-shrink-0" />
+              <div className="flex items-center gap-1 text-amber-300 font-mono text-[10px] sm:text-xs font-bold uppercase">
+                <span>Try</span>
+                <ArrowRight className="w-3 h-3" />
               </div>
 
-              <div className="my-auto mx-auto w-10 h-14 bg-gradient-to-b from-amber-100/30 via-amber-200/20 to-amber-500/35 border border-amber-300/60 rounded-2xs flex items-end justify-center pb-1">
-                <div className="w-5 h-1 bg-amber-200/90 rounded-full blur-[1px]" />
+              <div className="w-10 h-16 sm:w-14 sm:h-20 bg-gradient-to-b from-amber-100/35 via-amber-200/20 to-amber-500/40 border border-amber-300/65 rounded-2xs flex items-end justify-center pb-1.5">
+                <div className="w-5 h-1 bg-amber-200/95 rounded-full blur-[1px]" />
               </div>
 
-              <div>
-                <span className="block font-comic text-[11px] sm:text-xs text-amber-200 uppercase leading-none tracking-wide">
-                  A different approach
-                </span>
-                <span className="block text-[6.5px] font-sans text-gray-300 mt-0.5">
-                  Personal &amp; low-pressure
-                </span>
-              </div>
+              <span className="font-comic text-base sm:text-xl text-amber-200 uppercase leading-none tracking-wide">
+                Plan B
+              </span>
             </motion.div>
           </div>
         )}
 
         {/* ================================================================= */}
-        {/* CHAPTER 7: THE MULTIVERSE RA (ALL THREE SPIDER-MEN)                */}
-        {/* Worlds converge around the personal web finale                    */}
+        {/* CHAPTER 7: ALL THREE SPIDER-MEN                                   */}
         {/* ================================================================= */}
         {chapterNumber === 7 && (
-          <div className="relative w-full h-full flex items-center justify-between px-2 bg-[#080D1A]">
-            {/* Left: Glowing Spider Silhouette Constellation */}
-            <div className="w-[46%] h-[94%] bg-[#080D1A] border-2 border-spider-cyan rounded-xs p-1.5 flex flex-col justify-between shadow-comic-sm">
-              <div className="flex items-center justify-between border-b border-gray-800 pb-0.5">
-                <span className="font-mono text-[7.5px] text-spider-yellow uppercase font-bold">
-                  YOUR PERSONAL WEB
-                </span>
-                <Sparkles className="w-3 h-3 text-spider-cyan" />
-              </div>
-
-              {/* Mini Spider Web Insignia */}
-              <div className="my-auto flex items-center justify-center">
-                <svg viewBox="0 0 100 80" className="w-20 h-14" fill="none">
-                  {/* Central Body */}
-                  <ellipse cx="50" cy="35" rx="7" ry="6" fill="#FF1744" stroke="#00F0FF" strokeWidth="1.5" />
-                  <ellipse cx="50" cy="50" rx="10" ry="14" fill="#FF1744" stroke="#00F0FF" strokeWidth="1.5" />
-                  {/* 8 Legs */}
-                  <path d="M 45 32 Q 30 18 18 20" stroke="#00F0FF" strokeWidth="2" strokeLinecap="round" />
-                  <path d="M 55 32 Q 70 18 82 20" stroke="#00F0FF" strokeWidth="2" strokeLinecap="round" />
-                  <path d="M 44 36 Q 25 30 12 38" stroke="#FFE600" strokeWidth="2" strokeLinecap="round" />
-                  <path d="M 56 36 Q 75 30 88 38" stroke="#FFE600" strokeWidth="2" strokeLinecap="round" />
-                  <path d="M 43 45 Q 22 55 14 68" stroke="#00FFA3" strokeWidth="2" strokeLinecap="round" />
-                  <path d="M 57 45 Q 78 55 86 68" stroke="#00FFA3" strokeWidth="2" strokeLinecap="round" />
-                  <path d="M 46 54 Q 30 72 24 78" stroke="#FF007F" strokeWidth="2" strokeLinecap="round" />
-                  <path d="M 54 54 Q 70 72 76 78" stroke="#FF007F" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-              </div>
-
-              <div className="text-[6.5px] font-mono text-gray-300 text-center border-t border-gray-800 pt-0.5">
-                4 DECISIONS &bull; 8 LEGS COMPLETE
-              </div>
-            </div>
-
-            {/* Right: TRIO OF HEROES (Classic, Miles, and Noir Together) */}
+          <div className="relative w-full h-full flex items-center justify-around px-3 py-3 bg-gradient-to-b from-[#0A1122] via-[#080D1A] to-[#050811]">
+            <div className="absolute inset-6 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(0,240,255,0.12),rgba(255,23,68,0.08)_50%,transparent_75%)] pointer-events-none" />
             <motion.div
-              initial={reducedMotion ? false : { x: 20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="w-[52%] h-full flex items-center justify-around px-1 relative"
+              initial={reducedMotion ? false : { y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.45 }}
+              className="relative z-10 w-full h-full flex items-center justify-around gap-2"
             >
-              {/* Spider-Man Noir on Left */}
-              <div className="flex flex-col items-center">
+              <div className="w-[30%] h-full flex items-center justify-center">
                 <img
                   src={getAssetUrl('images/spiderman-noir.png')}
                   alt="Spider-Man Noir"
-                  className="w-12 sm:w-14 h-auto object-contain filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]"
+                  className="h-auto max-h-[86%] w-auto max-w-full object-contain filter drop-shadow-[0_0_8px_rgba(226,232,240,0.22)] drop-shadow-[0_6px_12px_rgba(0,0,0,0.85)]"
                 />
-                <span className="text-[6px] font-mono text-gray-300">NOIR</span>
               </div>
-
-              {/* Classic Peter Parker in Center */}
-              <div className="flex flex-col items-center -mt-2">
+              <div className="w-[36%] h-full flex items-center justify-center">
                 <img
                   src={getAssetUrl('images/spiderman-perched.png')}
                   alt="Classic Spider-Man"
-                  className="w-14 sm:w-16 h-auto object-contain filter drop-shadow-[0_6px_12px_rgba(255,23,68,0.7)]"
+                  className="h-auto max-h-[90%] w-auto max-w-full object-contain filter drop-shadow-[0_6px_16px_rgba(255,23,68,0.6)]"
                 />
-                <span className="text-[6px] font-mono text-spider-red font-bold">PETER</span>
               </div>
-
-              {/* Miles Morales on Right */}
-              <div className="flex flex-col items-center">
+              <div className="w-[30%] h-full flex items-center justify-center">
                 <img
                   src={getAssetUrl('images/spiderman-miles.png')}
                   alt="Miles Morales"
-                  className="w-12 sm:w-14 h-auto object-contain filter drop-shadow-[0_4px_8px_rgba(255,230,0,0.6)]"
+                  className="h-auto max-h-[84%] w-auto max-w-full object-contain filter drop-shadow-[0_4px_12px_rgba(255,230,0,0.5)]"
                 />
-                <span className="text-[6px] font-mono text-spider-yellow">MILES</span>
               </div>
             </motion.div>
           </div>
         )}
-      </div>
-
-      {/* Bottom Footer Caption */}
-      <div className="relative z-20 flex items-center justify-between text-[8px] sm:text-[9px] font-mono text-gray-300 bg-black/60 px-2 py-0.5 rounded-xs border border-white/10">
-        <span className="text-spider-cyan truncate">{doorTheme}</span>
-        <span className="uppercase text-spider-yellow font-bold flex-shrink-0">STAGE ACTIVE</span>
       </div>
     </div>
   );

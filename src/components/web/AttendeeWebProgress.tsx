@@ -407,7 +407,7 @@ export const AttendeeWebProgress: React.FC<AttendeeWebProgressProps> = ({
       </div>
 
       {/* Interactive Leg Pair Selector Buttons (Touch Targets) */}
-      <div className="grid grid-cols-4 gap-1.5 mt-2.5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2.5">
         {[
           { ch: 2, label: 'Legs 1-2 (Ch 2)', answered: hasCh2, color: 'text-spider-cyan border-spider-cyan' },
           { ch: 3, label: 'Legs 3-4 (Ch 3)', answered: hasCh3, color: 'text-spider-yellow border-spider-yellow' },
